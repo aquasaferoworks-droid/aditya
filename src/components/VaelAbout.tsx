@@ -35,7 +35,7 @@ export function VaelAbout() {
           </div>
           <div className="absolute -bottom-8 -left-8 w-32 h-32 border border-primary/20 -z-10" />
           <div className="absolute top-10 right-[-10px] writing-vertical-rl text-[10px] tracking-[0.5em] text-primary/40 uppercase">
-            Est. 1998
+            Est. 2010
           </div>
         </div>
 
@@ -46,18 +46,18 @@ export function VaelAbout() {
               Where <span className="text-primary not-italic">silence</span> <br /> speaks loudest.
             </h2>
             <p className="text-muted-foreground leading-relaxed font-body text-base md:text-lg">
-              With over two decades behind the lens, VAEL has carved a singular language in world cinema — intimate yet epic, quiet yet thunderous. From Cannes to Sundance, the work speaks before any word is said.
+              With over a decade behind the lens, Errol Aditya has carved a singular language in world cinema — intimate yet epic, quiet yet thunderous. From global festivals to commercial excellence, the work speaks before any word is said.
             </p>
             <p className="text-muted-foreground leading-relaxed font-body text-sm md:text-base">
-              Rooted in the belief that every frame holds a heartbeat, VAEL collaborates with the world&apos;s most ambitious brands, studios, and storytellers to create images that endure beyond the screen.
+              Rooted in the belief that every frame holds a heartbeat, Errol collaborates with ambitious brands, studios, and storytellers to create images that endure beyond the screen.
             </p>
           </div>
 
           <div className="grid grid-cols-3 gap-8 pt-12 border-t border-border">
             {[
-              { val: '47', label: 'Films Directed' },
-              { val: '23', label: 'Festival Awards' },
-              { val: '180+', label: 'Global Clients' },
+              { val: '24', label: 'Films Directed' },
+              { val: '12', label: 'Festival Awards' },
+              { val: '80+', label: 'Global Clients' },
             ].map((stat, i) => (
               <div key={i} className="space-y-2">
                 <div className="text-4xl md:text-5xl font-headline text-primary">{stat.val}</div>

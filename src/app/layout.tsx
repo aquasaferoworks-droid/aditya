@@ -2,8 +2,8 @@ import type {Metadata} from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'VAEL Studio — Director Portfolio',
-  description: 'Between the light and shadow. Cinematic worlds by VAEL.',
+  title: 'Errol Aditya — Director Portfolio',
+  description: 'Between the light and shadow. Cinematic worlds by Errol Aditya.',
 };
 
 export default function RootLayout({

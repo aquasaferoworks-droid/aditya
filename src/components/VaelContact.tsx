@@ -20,7 +20,7 @@ export function VaelContact() {
           <div className="space-y-8">
             <div className="space-y-1">
               <span className="text-[9px] tracking-[0.4em] uppercase text-primary">Studio Email</span>
-              <a href="mailto:studio@vael.film" className="text-2xl font-headline hover:text-primary transition-colors italic">studio@vael.film</a>
+              <a href="mailto:studio@erroladitya.com" className="text-2xl font-headline hover:text-primary transition-colors italic">studio@erroladitya.com</a>
             </div>
             <div className="space-y-1">
               <span className="text-[9px] tracking-[0.4em] uppercase text-primary">Representation</span>
@@ -28,7 +28,7 @@ export function VaelContact() {
             </div>
             <div className="space-y-1">
               <span className="text-[9px] tracking-[0.4em] uppercase text-primary">Locations</span>
-              <p className="text-lg md:text-2xl font-headline italic">Los Angeles / London / Paris</p>
+              <p className="text-lg md:text-2xl font-headline italic">Mumbai / London / New York</p>
             </div>
           </div>
         </div>
