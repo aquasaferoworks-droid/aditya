@@ -1,4 +1,3 @@
-
 import { VaelHeader } from '@/components/VaelHeader';
 import { VaelAbout } from '@/components/VaelAbout';
 import { VaelFilms } from '@/components/VaelFilms';

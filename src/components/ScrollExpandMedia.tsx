@@ -1,4 +1,3 @@
-
 'use client';
 
 import {
@@ -11,6 +10,7 @@ import {
 } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 interface ScrollExpandMediaProps {
   mediaType?: 'video' | 'image';
@@ -186,10 +186,10 @@ const ScrollExpandMedia = ({
               src={bgImageSrc}
               alt='Background'
               fill
-              className='w-screen h-screen object-cover object-center grayscale'
+              className='w-screen h-screen object-cover object-center grayscale opacity-20'
               priority
             />
-            <div className='absolute inset-0 bg-background/40' />
+            <div className='absolute inset-0 bg-background/60' />
           </motion.div>
 
           <div className='container mx-auto flex flex-col items-center justify-start relative z-10'>
@@ -201,7 +201,7 @@ const ScrollExpandMedia = ({
                   height: `${mediaHeight}px`,
                   maxWidth: '95vw',
                   maxHeight: '85vh',
-                  boxShadow: '0px 0px 50px rgba(0, 0, 0, 0.1)',
+                  boxShadow: '0px 0px 50px rgba(0, 0, 0, 0.05)',
                 }}
               >
                 {mediaType === 'video' ? (
@@ -220,9 +220,9 @@ const ScrollExpandMedia = ({
                       disableRemotePlayback
                     />
                     <motion.div
-                      className='absolute inset-0 bg-primary/10'
-                      initial={{ opacity: 0.2 }}
-                      animate={{ opacity: 0.1 - scrollProgress * 0.1 }}
+                      className='absolute inset-0 bg-primary/5'
+                      initial={{ opacity: 0.1 }}
+                      animate={{ opacity: 0.05 - scrollProgress * 0.05 }}
                       transition={{ duration: 0.2 }}
                     />
                   </div>
@@ -235,9 +235,9 @@ const ScrollExpandMedia = ({
                       className='w-full h-full object-cover grayscale'
                     />
                     <motion.div
-                      className='absolute inset-0 bg-primary/10'
-                      initial={{ opacity: 0.2 }}
-                      animate={{ opacity: 0.1 - scrollProgress * 0.1 }}
+                      className='absolute inset-0 bg-primary/5'
+                      initial={{ opacity: 0.1 }}
+                      animate={{ opacity: 0.05 - scrollProgress * 0.05 }}
                       transition={{ duration: 0.2 }}
                     />
                   </div>
@@ -254,7 +254,7 @@ const ScrollExpandMedia = ({
                   )}
                   {scrollToExpand && (
                     <p
-                      className='text-[10px] tracking-[0.3em] uppercase text-primary/60 mt-4'
+                      className='text-[10px] tracking-[0.3em] uppercase text-muted-foreground mt-4'
                       style={{ transform: `translateX(${textTranslateX}vw)` }}
                     >
                       {scrollToExpand}
@@ -264,18 +264,19 @@ const ScrollExpandMedia = ({
               </div>
 
               <div
-                className={`flex items-center justify-center text-center gap-2 w-full relative z-10 transition-none flex-col ${
+                className={cn(
+                  'flex items-center justify-center text-center gap-2 w-full relative z-10 transition-none flex-col',
                   textBlend ? 'mix-blend-difference' : 'mix-blend-normal'
-                }`}
+                )}
               >
                 <motion.h2
-                  className='font-headline text-[clamp(2rem,8vw,6rem)] leading-[0.9] tracking-tighter italic text-foreground transition-none'
+                  className='font-headline text-[clamp(2.5rem,8vw,6.5rem)] leading-[0.9] tracking-tighter italic text-foreground transition-none'
                   style={{ transform: `translateX(-${textTranslateX}vw)` }}
                 >
                   {firstWord}
                 </motion.h2>
                 <motion.h2
-                  className='font-headline text-[clamp(2rem,8vw,6rem)] leading-[0.9] tracking-tighter text-primary not-italic transition-none'
+                  className='font-headline text-[clamp(2.5rem,8vw,6.5rem)] leading-[0.9] tracking-tighter text-primary not-italic transition-none'
                   style={{ transform: `translateX(${textTranslateX}vw)` }}
                 >
                   {restOfTitle}
