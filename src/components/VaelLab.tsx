@@ -48,7 +48,7 @@ export function VaelLab() {
   };
 
   return (
-    <section id="lab" className="py-32 md:py-48 px-8 md:px-16 bg-card">
+    <section id="lab" className="py-32 md:py-48 px-8 md:px-16 bg-muted/30">
       <div className="max-w-5xl mx-auto space-y-16">
         <div className="text-center space-y-4">
           <span className="text-[10px] tracking-[0.5em] uppercase text-primary/60 block">The Laboratory</span>
@@ -61,7 +61,7 @@ export function VaelLab() {
 
         <Tabs defaultValue="treatment" className="w-full">
           <div className="flex justify-center mb-12">
-            <TabsList className="bg-background/50 p-1 rounded-none h-auto gap-2">
+            <TabsList className="bg-background border p-1 rounded-none h-auto gap-2">
               <TabsTrigger 
                 value="treatment" 
                 className="rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-[10px] tracking-[0.2em] uppercase px-8 py-3 h-auto"
@@ -84,7 +84,7 @@ export function VaelLab() {
                   <Label className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground">Story Premise</Label>
                   <Textarea 
                     placeholder="Enter a brief narrative spark..." 
-                    className="min-h-[160px] bg-background border-border/40 focus-visible:ring-primary rounded-none font-body text-sm p-6"
+                    className="min-h-[160px] bg-background border-border focus-visible:ring-primary rounded-none font-body text-sm p-6"
                     value={premise}
                     onChange={(e) => setPremise(e.target.value)}
                   />
@@ -99,7 +99,7 @@ export function VaelLab() {
                 </Button>
               </div>
 
-              <div className="min-h-[300px] border border-border/20 bg-background/30 p-8 relative">
+              <div className="min-h-[300px] border border-border bg-background p-8 relative shadow-sm">
                 {!visionResult && !isVisionLoading && (
                   <div className="h-full flex flex-col items-center justify-center text-center opacity-30 grayscale">
                     <Film className="w-12 h-12 mb-4 text-primary" />
@@ -140,7 +140,7 @@ export function VaelLab() {
                       <Label className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground">Lighting Style</Label>
                       <Input 
                         placeholder="Noir, Chiaroscuro..." 
-                        className="bg-background border-border/40 focus-visible:ring-primary rounded-none h-12"
+                        className="bg-background border-border focus-visible:ring-primary rounded-none h-12"
                         value={lighting}
                         onChange={(e) => setLighting(e.target.value)}
                       />
@@ -149,7 +149,7 @@ export function VaelLab() {
                       <Label className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground">Film Genre</Label>
                       <Input 
                         placeholder="Sci-Fi, Western..." 
-                        className="bg-background border-border/40 focus-visible:ring-primary rounded-none h-12"
+                        className="bg-background border-border focus-visible:ring-primary rounded-none h-12"
                         value={genre}
                         onChange={(e) => setGenre(e.target.value)}
                       />
@@ -166,7 +166,7 @@ export function VaelLab() {
                 </Button>
               </div>
 
-              <div className="min-h-[300px] border border-border/20 bg-background/30 p-8 relative">
+              <div className="min-h-[300px] border border-border bg-background p-8 relative shadow-sm">
                 {!scriptResult && !isScriptLoading && (
                   <div className="h-full flex flex-col items-center justify-center text-center opacity-30 grayscale">
                     <Sparkles className="w-12 h-12 mb-4 text-primary" />

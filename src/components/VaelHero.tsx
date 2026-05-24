@@ -4,14 +4,14 @@ import Link from 'next/link';
 
 export function VaelHero() {
   return (
-    <section id="hero" className="relative h-screen min-h-[700px] flex items-end overflow-hidden pb-20 px-8 md:px-16">
-      <div className="absolute inset-0 z-0 bg-background">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_60%_30%,rgba(193,108,39,0.15)_0%,transparent_70%)]" />
+    <section id="hero" className="relative h-screen min-h-[700px] flex items-end overflow-hidden pb-20 px-8 md:px-16 bg-background">
+      <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_60%_30%,rgba(193,108,39,0.05)_0%,transparent_70%)]" />
         <div className="absolute inset-0 grain-overlay" />
         <div className="absolute inset-0 cinematic-vignette" />
       </div>
 
-      <div className="absolute top-0 left-8 md:left-16 w-px h-[60%] bg-gradient-to-b from-transparent via-primary/50 to-transparent" />
+      <div className="absolute top-0 left-8 md:left-16 w-px h-[60%] bg-gradient-to-b from-transparent via-primary/30 to-transparent" />
       <div className="absolute right-12 top-1/2 -translate-y-1/2 writing-vertical-rl text-[10px] tracking-[0.4em] text-muted-foreground uppercase opacity-60">
         Director — DP — Storyteller
       </div>
@@ -22,7 +22,7 @@ export function VaelHero() {
           <span className="text-[10px] tracking-[0.4em] uppercase text-primary font-body">Award-Winning Director</span>
         </div>
 
-        <h1 className="font-headline text-[clamp(3.5rem,10vw,8rem)] leading-[0.9] tracking-tighter mb-8 italic">
+        <h1 className="font-headline text-[clamp(3.5rem,10vw,8rem)] leading-[0.9] tracking-tighter mb-8 italic text-foreground">
           Between <br /> 
           the <span className="text-primary not-italic">light</span> & shadow
         </h1>
