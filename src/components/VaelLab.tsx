@@ -8,8 +8,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Loader2, Sparkles, Film, Lightbulb } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Loader2, Sparkles, Film, Lightbulb, PlayCircle } from 'lucide-react';
+import Image from 'next/image';
 
 export function VaelLab() {
   const [premise, setPremise] = useState('');
@@ -49,13 +49,13 @@ export function VaelLab() {
 
   return (
     <section id="lab" className="py-32 md:py-48 px-8 md:px-16 bg-muted/30">
-      <div className="max-w-5xl mx-auto space-y-16">
+      <div className="max-w-6xl mx-auto space-y-16">
         <div className="text-center space-y-4">
-          <span className="text-[10px] tracking-[0.5em] uppercase text-primary/60 block">The Laboratory</span>
-          <h2 className="text-4xl md:text-7xl font-headline italic">Vision <span className="text-primary not-italic">Augmentation</span></h2>
+          <span className="text-[10px] tracking-[0.5em] uppercase text-primary/60 block">R&D / Process</span>
+          <h2 className="text-4xl md:text-7xl font-headline italic">Director's <span className="text-primary not-italic">Lab</span></h2>
           <p className="max-w-2xl mx-auto text-muted-foreground font-body text-sm leading-relaxed">
-            Collaborative AI tools designed to push the boundaries of cinematic conceptualization. 
-            Translate abstract premises into visceral visual treatments.
+            Collaborative AI tools to translate abstract sparks into cinematic treatments. 
+            Bridge the gap between vision and execution.
           </p>
         </div>
 
@@ -78,7 +78,7 @@ export function VaelLab() {
           </div>
 
           <TabsContent value="treatment" className="space-y-8 animate-in fade-in duration-500">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
               <div className="space-y-6">
                 <div className="space-y-4">
                   <Label className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground">Story Premise</Label>
@@ -95,35 +95,53 @@ export function VaelLab() {
                   className="w-full rounded-none bg-primary text-primary-foreground py-6 h-auto text-[11px] tracking-[0.2em] uppercase group"
                 >
                   {isVisionLoading ? <Loader2 className="mr-2 animate-spin" /> : <Sparkles className="mr-2 w-4 h-4" />}
-                  Generate Visual Treatment
+                  Generate Treatment
                 </Button>
               </div>
 
-              <div className="min-h-[300px] border border-border bg-background p-8 relative shadow-sm">
+              <div className="min-h-[400px] border border-border bg-background relative shadow-sm overflow-hidden">
                 {!visionResult && !isVisionLoading && (
-                  <div className="h-full flex flex-col items-center justify-center text-center opacity-30 grayscale">
-                    <Film className="w-12 h-12 mb-4 text-primary" />
-                    <p className="font-headline italic text-lg">Waiting for your vision...</p>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-8">
+                    <div className="relative w-full aspect-video mb-6 grayscale opacity-20">
+                       <Image 
+                        src="https://picsum.photos/seed/lab1/800/450" 
+                        alt="Lab Preview" 
+                        fill 
+                        className="object-cover" 
+                      />
+                    </div>
+                    <p className="font-headline italic text-lg opacity-40">Waiting for your vision...</p>
                   </div>
                 )}
                 {isVisionLoading && (
-                  <div className="h-full flex flex-col items-center justify-center">
-                    <div className="w-full max-w-xs space-y-4 animate-pulse">
-                      <div className="h-4 bg-primary/20 rounded w-3/4" />
-                      <div className="h-4 bg-primary/10 rounded w-full" />
-                      <div className="h-4 bg-primary/10 rounded w-5/6" />
-                    </div>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center p-8 bg-background/80 backdrop-blur-sm z-10">
+                    <Loader2 className="w-12 h-12 animate-spin text-primary mb-4" />
+                    <p className="text-[10px] tracking-widest uppercase text-primary animate-pulse">Rendering Cinematic Data...</p>
                   </div>
                 )}
                 {visionResult && (
-                  <div className="space-y-8 animate-in zoom-in-95 duration-500">
+                  <div className="p-8 space-y-8 animate-in zoom-in-95 duration-500">
+                     <div className="relative w-full aspect-video border border-primary/20 overflow-hidden">
+                        <Image 
+                          src="https://picsum.photos/seed/rendered-vision/800/450" 
+                          alt="Rendered Reference" 
+                          fill 
+                          className="object-cover" 
+                          data-ai-hint="cinematic reference"
+                        />
+                        <div className="absolute inset-0 bg-black/20" />
+                        <div className="absolute bottom-4 left-4 flex items-center gap-2">
+                           <PlayCircle className="w-4 h-4 text-white" />
+                           <span className="text-[9px] uppercase tracking-widest text-white">Visual Mood Reference</span>
+                        </div>
+                    </div>
                     <div className="space-y-3">
                       <h4 className="text-[10px] tracking-[0.2em] uppercase text-primary font-body">Atmosphere</h4>
                       <p className="text-muted-foreground text-sm leading-relaxed italic">{visionResult.atmosphereDescription}</p>
                     </div>
                     <div className="space-y-3">
                       <h4 className="text-[10px] tracking-[0.2em] uppercase text-primary font-body">Cinematic Treatment</h4>
-                      <p className="text-foreground text-sm leading-relaxed font-body whitespace-pre-wrap">{visionResult.cinematicTreatment}</p>
+                      <p className="text-foreground text-sm leading-relaxed font-body whitespace-pre-wrap border-l border-primary/20 pl-4">{visionResult.cinematicTreatment}</p>
                     </div>
                   </div>
                 )}
@@ -132,7 +150,7 @@ export function VaelLab() {
           </TabsContent>
 
           <TabsContent value="script" className="space-y-8 animate-in fade-in duration-500">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
               <div className="space-y-6">
                 <div className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
@@ -162,28 +180,45 @@ export function VaelLab() {
                   className="w-full rounded-none bg-primary text-primary-foreground py-6 h-auto text-[11px] tracking-[0.2em] uppercase group"
                 >
                   {isScriptLoading ? <Loader2 className="mr-2 animate-spin" /> : <Lightbulb className="mr-2 w-4 h-4" />}
-                  Ideate Script Concept
+                  Ideate Script
                 </Button>
               </div>
 
-              <div className="min-h-[300px] border border-border bg-background p-8 relative shadow-sm">
+              <div className="min-h-[400px] border border-border bg-background relative shadow-sm overflow-hidden">
                 {!scriptResult && !isScriptLoading && (
-                  <div className="h-full flex flex-col items-center justify-center text-center opacity-30 grayscale">
-                    <Sparkles className="w-12 h-12 mb-4 text-primary" />
-                    <p className="font-headline italic text-lg">Define style and genre...</p>
+                   <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-8">
+                    <div className="relative w-full aspect-video mb-6 grayscale opacity-20">
+                       <Image 
+                        src="https://picsum.photos/seed/lab2/800/450" 
+                        alt="Lab Preview" 
+                        fill 
+                        className="object-cover" 
+                      />
+                    </div>
+                    <p className="font-headline italic text-lg opacity-40">Define style and genre...</p>
                   </div>
                 )}
                 {isScriptLoading && (
-                   <div className="h-full flex flex-col items-center justify-center">
-                    <div className="w-full max-w-xs space-y-4 animate-pulse">
-                      <div className="h-4 bg-accent/20 rounded w-3/4" />
-                      <div className="h-4 bg-accent/10 rounded w-full" />
-                      <div className="h-4 bg-accent/10 rounded w-5/6" />
-                    </div>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center p-8 bg-background/80 backdrop-blur-sm z-10">
+                    <Loader2 className="w-12 h-12 animate-spin text-accent mb-4" />
+                    <p className="text-[10px] tracking-widest uppercase text-accent animate-pulse">Analyzing Story Structures...</p>
                   </div>
                 )}
                 {scriptResult && (
-                  <div className="space-y-8 animate-in slide-in-from-bottom-4 duration-500">
+                  <div className="p-8 space-y-8 animate-in slide-in-from-bottom-4 duration-500">
+                    <div className="relative w-full aspect-[21/9] border border-accent/20 overflow-hidden">
+                        <Image 
+                          src="https://picsum.photos/seed/script-viz/800/450" 
+                          alt="Script Visualizer" 
+                          fill 
+                          className="object-cover" 
+                          data-ai-hint="film storyboard"
+                        />
+                        <div className="absolute inset-0 bg-black/40" />
+                        <div className="absolute top-4 right-4 flex items-center gap-2">
+                           <span className="text-[8px] uppercase tracking-widest text-white/60 bg-white/10 px-2 py-1">Concept Viz</span>
+                        </div>
+                    </div>
                     <div className="space-y-3">
                       <h4 className="text-[10px] tracking-[0.2em] uppercase text-primary font-body">Storytelling Hooks</h4>
                       <ul className="space-y-2 list-none">
@@ -196,7 +231,7 @@ export function VaelLab() {
                     </div>
                     <div className="space-y-3">
                       <h4 className="text-[10px] tracking-[0.2em] uppercase text-primary font-body">Scene Directions</h4>
-                      <p className="text-foreground text-sm leading-relaxed font-body whitespace-pre-wrap border-l border-primary/20 pl-4">{scriptResult.sceneDirections}</p>
+                      <p className="text-foreground text-sm leading-relaxed font-body whitespace-pre-wrap border-l border-primary/20 pl-4 italic">{scriptResult.sceneDirections}</p>
                     </div>
                   </div>
                 )}
