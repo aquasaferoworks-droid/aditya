@@ -11,7 +11,7 @@ export function VaelHeader() {
       <div className="hidden md:flex items-center gap-12 font-body text-[10px] tracking-[0.25em] uppercase">
         <Link href="#about" className="hover:text-primary transition-colors">About</Link>
         <Link href="#work" className="hover:text-primary transition-colors">Work</Link>
-        <Link href="#lab" className="hover:text-primary transition-colors">Director Lab</Link>
+        <Link href="#awards" className="hover:text-primary transition-colors">Recognition</Link>
         <Link href="#contact" className="hover:text-primary transition-colors">Contact</Link>
       </div>
 

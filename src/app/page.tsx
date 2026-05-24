@@ -2,7 +2,6 @@ import { VaelHeader } from '@/components/VaelHeader';
 import { VaelHero } from '@/components/VaelHero';
 import { VaelAbout } from '@/components/VaelAbout';
 import { VaelFilms } from '@/components/VaelFilms';
-import { VaelLab } from '@/components/VaelLab';
 import { VaelReel } from '@/components/VaelReel';
 import { VaelAwards } from '@/components/VaelAwards';
 import { VaelContact } from '@/components/VaelContact';
@@ -15,7 +14,6 @@ export default function Home() {
       <VaelHero />
       <VaelAbout />
       <VaelFilms />
-      <VaelLab />
       <VaelReel />
       <VaelAwards />
       <VaelContact />
