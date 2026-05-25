@@ -6,11 +6,11 @@ import { VaelAwards } from '@/components/VaelAwards';
 import { VaelContact } from '@/components/VaelContact';
 import { VaelFooter } from '@/components/VaelFooter';
 import ScrollExpandMedia from '@/components/ScrollExpandMedia';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export default function Home() {
-  const heroBg = PlaceHolderImages.find(img => img.id === 'hero-bg')?.imageUrl || '';
-  const reelVideo = "https://player.vimeo.com/external/494252666.hd.mp4?s=2f5577346418342774d009fa5d60893325c8991b&profile_id=175";
+  const heroBg = "https://picsum.photos/seed/vael-hero/1920/1080";
+  // Using 'Hawthorn' as the main reel video
+  const reelVideo = "https://youtu.be/gJKxIAmhbvg";
   
   return (
     <main className="relative selection:bg-primary/30">

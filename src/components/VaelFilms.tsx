@@ -1,13 +1,22 @@
 import Image from 'next/image';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Play } from 'lucide-react';
 
 const films = [
-  { id: 'film-1', tag: 'Narrative', title: 'Hawthorn', meta: 'Feature Film — 2024 — 112 min', award: 'Cannes 2024' },
-  { id: 'film-2', tag: 'Short', title: 'Vermilion', meta: 'Short Film — 2023 — 28 min', award: 'Sundance 2023' },
-  { id: 'film-3', tag: 'Documentary', title: 'Nocturne', meta: 'Documentary — 2023 — 88 min', award: 'Berlin 2023' },
-  { id: 'film-4', tag: 'Commercial', title: 'Aureate', meta: 'Brand Film — 2022 — 4 min', award: 'Cannes Lions' },
-  { id: 'film-5', tag: 'Narrative', title: 'Stillwater', meta: 'Feature Film — 2022 — 97 min', award: 'Venice 2022' },
+  { id: 'gJKxIAmhbvg', tag: 'Feature', title: 'Hawthorn', meta: '2024 — 112 min', award: 'Cannes 2024' },
+  { id: 'QdEZtNyJb5g', tag: 'Short', title: 'Vermilion', meta: '2023 — 28 min', award: 'Sundance 2023' },
+  { id: 'O1p-JVaAQV0', tag: 'Documentary', title: 'Nocturne', meta: '2023 — 88 min', award: 'Berlin 2023' },
+  { id: 'xTrPSfbWa0w', tag: 'Commercial', title: 'Aureate', meta: 'Brand Film — 4 min', award: 'Cannes Lions' },
+  { id: '4UATuJFYKfg', tag: 'Narrative', title: 'Stillwater', meta: '2022 — 97 min', award: 'Venice 2022' },
+  { id: 'sroIT5FQMqs', tag: 'Short', title: 'Echoes', meta: '2023 — 15 min', award: 'TIFF Nominee' },
+  { id: 'BYhQMzGxHmg', tag: 'Commercial', title: 'Prism', meta: 'Commercial — 2 min', award: 'Clio Gold' },
+  { id: 'eFhx307ykrk', tag: 'Documentary', title: 'Solace', meta: '2024 — 45 min', award: 'IDFA Selection' },
+  { id: 'lya8BHX-8SY', tag: 'Commercial', title: 'Kinetic', meta: 'Fashion Film — 3 min', award: 'Vogue Awards' },
+  { id: 'BG9F0xyy0RI', tag: 'Feature', title: 'Meridian', meta: '2022 — 105 min', award: 'Locarno Silver' },
+  { id: 'hOBJXvR2n_8', tag: 'Short', title: 'Zenith', meta: '2021 — 12 min', award: 'Clermont-Ferrand' },
+  { id: '2Y11kXDacR0', tag: 'Commercial', title: 'Flux', meta: 'Branded Content — 5 min', award: 'D&AD Pencil' },
+  { id: 'WBE9PCT4Qk8', tag: 'Narrative', title: 'Origin', meta: '2021 — 82 min', award: 'Tribeca Winner' },
+  { id: '6_FgbBV43q8', tag: 'Commercial', title: 'Apex', meta: 'Sport Film — 1 min', award: 'One Show' },
+  { id: 'JWqyYj-9Gvs', tag: 'Experimental', title: 'Void', meta: '2024 — 8 min', award: 'SXSW Alt' },
 ];
 
 export function VaelFilms() {
@@ -25,24 +34,20 @@ export function VaelFilms() {
         </p>
       </div>
 
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-px bg-border/20 border border-border/20">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-border/20 border border-border/20">
         {films.map((film, idx) => {
-          const img = PlaceHolderImages.find(p => p.id === film.id);
           const isLarge = idx === 0;
           return (
             <div 
               key={film.id} 
-              className={`group relative overflow-hidden bg-black aspect-video cursor-pointer transition-all ${isLarge ? 'md:col-span-2 md:aspect-[21/9]' : ''}`}
+              className={`group relative overflow-hidden bg-black aspect-video cursor-pointer transition-all ${isLarge ? 'md:col-span-2 lg:col-span-2 md:aspect-[21/9]' : ''}`}
             >
-              {img && (
-                <Image 
-                  src={img.imageUrl} 
-                  alt={film.title}
-                  fill
-                  className="object-cover opacity-80 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110"
-                  data-ai-hint={img.imageHint}
-                />
-              )}
+              <Image 
+                src={`https://img.youtube.com/vi/${film.id}/maxresdefault.jpg`} 
+                alt={film.title}
+                fill
+                className="object-cover opacity-80 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110"
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
               
               <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
