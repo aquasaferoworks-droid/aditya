@@ -7,7 +7,7 @@ import {
   ReactNode,
 } from 'react';
 import Image from 'next/image';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 interface ScrollExpandMediaProps {
   mediaType?: 'video' | 'image';
@@ -112,11 +112,12 @@ const ScrollExpandMedia = ({
             animate={{ opacity: 1 - scrollProgress }}
             transition={{ duration: 0.1 }}
           >
+            {/* Grayscale removed from background image */}
             <Image
               src={bgImageSrc}
               alt='Background'
               fill
-              className='object-cover grayscale brightness-110 opacity-20'
+              className='object-cover brightness-110 opacity-20'
               priority
             />
           </motion.div>
@@ -154,11 +155,12 @@ const ScrollExpandMedia = ({
                   </div>
                 ) : (
                   <div className='relative w-full h-full'>
+                    {/* Grayscale removed from hero image */}
                     <Image
                       src={mediaSrc}
                       alt={title || 'Media content'}
                       fill
-                      className='object-cover rounded-none grayscale'
+                      className='object-cover rounded-none'
                     />
                     <motion.div
                       className='absolute inset-0 bg-black/50'

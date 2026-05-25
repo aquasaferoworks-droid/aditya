@@ -12,13 +12,13 @@ export function VaelAwards() {
 
   return (
     <section id="awards" className="relative py-32 md:py-48 px-8 md:px-16 bg-background overflow-hidden">
-      {/* Background Cinematic Texture */}
+      {/* Background Cinematic Texture - Grayscale removed */}
       <div className="absolute right-0 top-0 w-1/2 h-full opacity-5 pointer-events-none">
         <Image 
           src="https://picsum.photos/seed/awards-bg/1000/1500" 
           alt="Cinematic Texture" 
           fill 
-          className="object-cover grayscale"
+          className="object-cover"
         />
       </div>
 
@@ -42,7 +42,7 @@ export function VaelAwards() {
               src="https://picsum.photos/seed/festival/800/450" 
               alt="Festival Appearance" 
               fill 
-              className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
+              className="object-cover hover:scale-105 transition-all duration-700"
               data-ai-hint="film festival"
             />
           </div>

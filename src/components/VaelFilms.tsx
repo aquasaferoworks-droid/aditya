@@ -26,7 +26,6 @@ export function VaelFilms() {
   const [hoveredFilm, setHoveredFilm] = useState<string | null>(null);
 
   const getCleanYoutubeEmbed = (id: string, isHovered: boolean) => {
-    // Mute required for autoplay
     return `https://www.youtube.com/embed/${id}?autoplay=${isHovered ? 1 : 0}&mute=1&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&fs=0&loop=1&playlist=${id}&enablejsapi=1`;
   };
 
@@ -56,13 +55,13 @@ export function VaelFilms() {
               onMouseLeave={() => setHoveredFilm(null)}
               className={`group relative overflow-hidden bg-black aspect-video cursor-pointer transition-all ${isLarge ? 'md:col-span-2 lg:col-span-2 md:aspect-[21/9]' : ''}`}
             >
-              {/* Thumbnail Image - Hidden on hover to reveal video */}
+              {/* Thumbnail Image - Grayscale REMOVED */}
               <div className={`absolute inset-0 z-20 transition-opacity duration-700 pointer-events-none ${isHovered ? 'opacity-0' : 'opacity-100'}`}>
                 <Image 
                   src={`https://img.youtube.com/vi/${film.id}/maxresdefault.jpg`} 
                   alt={film.title}
                   fill
-                  className="object-cover grayscale group-hover:scale-110 transition-transform duration-1000"
+                  className="object-cover group-hover:scale-110 transition-transform duration-1000"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80" />
               </div>
@@ -76,7 +75,6 @@ export function VaelFilms() {
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   />
-                  {/* Mask to ensure clean UI */}
                   <div className="absolute inset-0 z-20" />
                 </div>
               )}
@@ -100,7 +98,6 @@ export function VaelFilms() {
                 <p className="text-[10px] tracking-[0.2em] text-white/50 uppercase font-body">{film.meta}</p>
               </div>
               
-              {/* Branding Mask */}
               <div className="absolute top-0 right-0 w-24 h-16 pointer-events-none z-[50] bg-transparent" />
             </div>
           )
