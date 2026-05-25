@@ -56,14 +56,14 @@ const ScrollExpandMedia = ({
     if (!mounted) return;
     if (!mediaFullyExpanded) {
       document.body.style.overflow = 'hidden';
-      window.scrollTo(0, 0);
+      // Ensure we stay at top during intro
+      if (scrollProgress < 1) {
+        window.scrollTo(0, 0);
+      }
     } else {
       document.body.style.overflow = 'auto';
     }
-    return () => {
-      document.body.style.overflow = 'auto';
-    };
-  }, [mediaFullyExpanded, mounted]);
+  }, [mediaFullyExpanded, mounted, scrollProgress]);
 
   useEffect(() => {
     if (!mounted) return;
@@ -71,49 +71,65 @@ const ScrollExpandMedia = ({
     const updateProgress = (delta: number) => {
       setScrollProgress((prev) => {
         const newProgress = Math.min(Math.max(prev + delta, 0), 1);
+        
         if (newProgress >= 1) {
           setMediaFullyExpanded(true);
           setShowContent(true);
-        } else if (newProgress < 0.8) {
+        } else if (newProgress < 0.95) {
+          // Keep content hidden until very close to full expansion
           setShowContent(false);
         }
+        
         return newProgress;
       });
     };
 
     const handleWheel = (e: WheelEvent) => {
       if (mediaFullyExpanded) {
+        // If at the very top and scrolling up, contract the media
         if (window.scrollY <= 5 && e.deltaY < 0) {
           setMediaFullyExpanded(false);
-          updateProgress(-0.01);
+          updateProgress(-0.02);
+          e.preventDefault();
         }
         return;
       }
 
       e.preventDefault();
+      // Sensitivity for desktop
       const scrollDelta = e.deltaY * 0.0015;
       updateProgress(scrollDelta);
     };
 
     const handleTouchStart = (e: TouchEvent) => {
-      if (!mediaFullyExpanded) {
-        touchStartY.current = e.touches[0].clientY;
-      }
+      touchStartY.current = e.touches[0].clientY;
     };
 
     const handleTouchMove = (e: TouchEvent) => {
-      if (mediaFullyExpanded) return;
       if (touchStartY.current === null) return;
 
       const currentY = e.touches[0].clientY;
       const deltaY = touchStartY.current - currentY;
-      touchStartY.current = currentY;
+      
+      if (mediaFullyExpanded) {
+        // If at the top of the page and swiping down (to see hero)
+        if (window.scrollY <= 5 && deltaY < -10) {
+          setMediaFullyExpanded(false);
+          updateProgress(deltaY * 0.004);
+          if (e.cancelable) e.preventDefault();
+        }
+        // Update touch start for smooth tracking
+        touchStartY.current = currentY;
+        return;
+      }
 
-      // Prevent default to stop browser scrolling
+      // Still in expansion mode
       if (e.cancelable) e.preventDefault();
       
-      const scrollDelta = deltaY * 0.003;
+      // Sensitivity for mobile touch
+      const scrollDelta = deltaY * 0.0045;
       updateProgress(scrollDelta);
+      touchStartY.current = currentY;
     };
 
     const handleTouchEnd = () => {
