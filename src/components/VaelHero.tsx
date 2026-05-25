@@ -5,7 +5,7 @@ import Link from 'next/link';
 export function VaelHero() {
   return (
     <section id="hero" className="relative h-screen min-h-[700px] flex items-end overflow-hidden pb-20 px-8 md:px-16 bg-black">
-      {/* Cinematic Video Background - Optimized for Loop and Speed */}
+      {/* Cinematic Video Background - Restored to normal scale */}
       <div className="absolute inset-0 z-0">
         <video
           autoPlay
@@ -13,7 +13,7 @@ export function VaelHero() {
           loop
           playsInline
           preload="auto"
-          className="absolute inset-0 w-full h-full object-cover opacity-70 scale-105 animate-slow-zoom"
+          className="absolute inset-0 w-full h-full object-cover opacity-70"
           poster="https://picsum.photos/seed/vael-hero/1920/1080"
         >
           <source 

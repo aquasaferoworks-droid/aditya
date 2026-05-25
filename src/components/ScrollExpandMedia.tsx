@@ -107,7 +107,7 @@ const ScrollExpandMedia = ({
     <div className='transition-colors duration-700 ease-in-out overflow-x-hidden bg-black'>
       <section className='relative flex flex-col items-center justify-start min-h-[100dvh]'>
         <div className='relative w-full flex flex-col items-center min-h-[100dvh]'>
-          {/* Background Video Container - Solid Black Base, No Fog */}
+          {/* Background Video Container - Solid Black Base, No scaling/zoom */}
           <motion.div
             className='absolute inset-0 z-0 h-full bg-black'
             initial={{ opacity: 0 }}
@@ -121,7 +121,7 @@ const ScrollExpandMedia = ({
                 muted
                 loop
                 playsInline
-                className='w-full h-full object-cover opacity-100'
+                className='w-full h-full object-cover opacity-100 scale-100'
               />
             ) : bgImageSrc ? (
               <Image
@@ -133,7 +133,7 @@ const ScrollExpandMedia = ({
               />
             ) : null}
             {/* Subtle vignette for cinematic focus */}
-            <div className="absolute inset-0 bg-radial from-transparent via-transparent to-black/40 pointer-events-none" />
+            <div className="absolute inset-0 bg-radial from-transparent via-transparent to-black/60 pointer-events-none" />
           </motion.div>
 
           <div className='container mx-auto flex flex-col items-center justify-start relative z-10'>
