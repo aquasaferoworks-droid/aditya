@@ -9,9 +9,10 @@ import { VaelPlatforms } from '@/components/VaelPlatforms';
 import ScrollExpandMedia from '@/components/ScrollExpandMedia';
 
 export default function Home() {
-  const heroBg = "https://picsum.photos/seed/vael-hero/1920/1080";
-  // The user provided premium cinematic video source for the middle box
+  // Foreground/Middle Box Video
   const heroVideo = "https://aquasaferoworks.sirv.com/1103193_1080p_Endurance_1280x720.mp4";
+  // Background Video
+  const heroBgVideo = "https://aquasaferoworks.sirv.com/6013655_People_Men_1280x720.mp4";
   
   return (
     <main className="relative selection:bg-primary/30">
@@ -20,7 +21,7 @@ export default function Home() {
       <ScrollExpandMedia
         mediaType="video"
         mediaSrc={heroVideo}
-        bgImageSrc={heroBg}
+        bgVideoSrc={heroBgVideo}
         title="Architecture of Emotion"
         date="2026 Directing Reel"
         scrollToExpand="Scroll to Experience"

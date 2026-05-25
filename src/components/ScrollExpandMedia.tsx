@@ -2,7 +2,6 @@
 
 import {
   useEffect,
-  useRef,
   useState,
   ReactNode,
 } from 'react';
@@ -13,7 +12,8 @@ interface ScrollExpandMediaProps {
   mediaType?: 'video' | 'image';
   mediaSrc: string;
   posterSrc?: string;
-  bgImageSrc: string;
+  bgImageSrc?: string;
+  bgVideoSrc?: string;
   title?: string;
   date?: string;
   scrollToExpand?: string;
@@ -26,6 +26,7 @@ const ScrollExpandMedia = ({
   mediaSrc,
   posterSrc,
   bgImageSrc,
+  bgVideoSrc,
   title,
   date,
   scrollToExpand,
@@ -112,14 +113,24 @@ const ScrollExpandMedia = ({
             animate={{ opacity: 1 - scrollProgress }}
             transition={{ duration: 0.1 }}
           >
-            {/* Grayscale removed from background image */}
-            <Image
-              src={bgImageSrc}
-              alt='Background'
-              fill
-              className='object-cover brightness-110 opacity-20'
-              priority
-            />
+            {bgVideoSrc ? (
+              <video
+                src={bgVideoSrc}
+                autoPlay
+                muted
+                loop
+                playsInline
+                className='w-full h-full object-cover brightness-110 opacity-20'
+              />
+            ) : bgImageSrc ? (
+              <Image
+                src={bgImageSrc}
+                alt='Background'
+                fill
+                className='object-cover brightness-110 opacity-20'
+                priority
+              />
+            ) : null}
           </motion.div>
 
           <div className='container mx-auto flex flex-col items-center justify-start relative z-10'>
@@ -155,7 +166,6 @@ const ScrollExpandMedia = ({
                   </div>
                 ) : (
                   <div className='relative w-full h-full'>
-                    {/* Grayscale removed from hero image */}
                     <Image
                       src={mediaSrc}
                       alt={title || 'Media content'}
