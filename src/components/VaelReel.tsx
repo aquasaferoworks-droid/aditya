@@ -2,10 +2,11 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 interface Frame {
   id: number;
-  video: string;
+  youtubeId: string;
   defaultPos: { x: number; y: number; w: number; h: number };
   corner: string;
   edgeHorizontal: string;
@@ -16,7 +17,7 @@ interface Frame {
 }
 
 interface FrameComponentProps {
-  video: string;
+  youtubeId: string;
   width: number | string;
   height: number | string;
   className?: string;
@@ -31,7 +32,7 @@ interface FrameComponentProps {
 }
 
 function FrameComponent({
-  video,
+  youtubeId,
   width,
   height,
   className = "",
@@ -44,15 +45,9 @@ function FrameComponent({
   showFrame,
   isHovered,
 }: FrameComponentProps) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    if (isHovered) {
-      videoRef.current?.play().catch(() => {});
-    } else {
-      videoRef.current?.pause();
-    }
-  }, [isHovered]);
+  const getCleanYoutubeEmbed = (id: string) => {
+    return `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&fs=0&loop=1&playlist=${id}&enablejsapi=1`;
+  };
 
   return (
     <div
@@ -63,7 +58,7 @@ function FrameComponent({
         transition: "width 0.3s ease-in-out, height 0.3s ease-in-out",
       }}
     >
-      <div className="relative w-full h-full overflow-hidden">
+      <div className="relative w-full h-full overflow-hidden bg-black">
         <div
           className="absolute inset-0 flex items-center justify-center"
           style={{
@@ -77,22 +72,34 @@ function FrameComponent({
           }}
         >
           <div
-            className="w-full h-full overflow-hidden"
+            className="w-full h-full overflow-hidden relative"
             style={{
               transform: `scale(${mediaSize})`,
               transformOrigin: "center",
               transition: "transform 0.3s ease-in-out",
             }}
           >
-            <video
-              className="w-full h-full object-cover"
-              src={video}
-              loop
-              muted
-              playsInline
-              autoPlay
-              ref={videoRef}
+            {/* Thumbnail - Always present, fades out on hover */}
+            <Image
+              src={`https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`}
+              alt="Reel Thumbnail"
+              fill
+              className={`object-cover transition-opacity duration-500 ${isHovered ? 'opacity-0' : 'opacity-100'}`}
             />
+            
+            {/* Video - Loads only on hover for performance and autoplay */}
+            {isHovered && (
+              <div className="absolute inset-0 z-10 pointer-events-none scale-[1.3]">
+                <iframe
+                  className="w-full h-full"
+                  src={getCleanYoutubeEmbed(youtubeId)}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                />
+                {/* Overlay to block YT interactions */}
+                <div className="absolute inset-0 z-20" />
+              </div>
+            )}
           </div>
         </div>
 
@@ -158,48 +165,54 @@ function FrameComponent({
 
 export function VaelReel() {
   const [hovered, setHovered] = useState<{ row: number; col: number } | null>(null);
-  const hoverSize = 6;
-  const gapSize = 4;
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const hoverSize = isMobile ? 5 : 6;
+  const gapSize = isMobile ? 2 : 4;
 
   const cornerSvg = `data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 64V2H64' stroke='white' stroke-width='1'/%3E%3C/svg%3E`;
   const edgeHSvg = `data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 2H64' stroke='white' stroke-width='1'/%3E%3C/svg%3E`;
   const edgeVSvg = `data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 0V64' stroke='white' stroke-width='1'/%3E%3C/svg%3E`;
 
-  const reelVideos = [
-    "https://res.cloudinary.com/dy4bqxt8p/video/upload/v1779622196/new107_qhrklf.mp4",
-    "https://res.cloudinary.com/dy4bqxt8p/video/upload/v1779621768/new105_meaomd.mp4",
-    "https://res.cloudinary.com/dy4bqxt8p/video/upload/v1779622220/new108_k1a47m.mp4",
-    "https://res.cloudinary.com/dy4bqxt8p/video/upload/v1779622196/new107_qhrklf.mp4",
-    "https://res.cloudinary.com/dy4bqxt8p/video/upload/v1779621768/new105_meaomd.mp4",
-    "https://res.cloudinary.com/dy4bqxt8p/video/upload/v1779622220/new108_k1a47m.mp4",
-    "https://res.cloudinary.com/dy4bqxt8p/video/upload/v1779622196/new107_qhrklf.mp4",
-    "https://res.cloudinary.com/dy4bqxt8p/video/upload/v1779621768/new105_meaomd.mp4",
-    "https://res.cloudinary.com/dy4bqxt8p/video/upload/v1779622220/new108_k1a47m.mp4",
+  // The provided YouTube IDs
+  const youtubeVideos = [
+    "gJKxIAmhbvg", "QdEZtNyJb5g", "O1p-JVaAQV0",
+    "xTrPSfbWa0w", "4UATuJFYKfg", "sroIT5FQMqs",
+    "BYhQMzGxHmg", "eFhx307ykrk", "lya8BHX-8SY",
   ];
 
-  const frames: Frame[] = reelVideos.map((vid, i) => ({
+  const frames: Frame[] = youtubeVideos.map((id, i) => ({
     id: i,
-    video: vid,
+    youtubeId: id,
     defaultPos: { x: (i % 3) * 4, y: Math.floor(i / 3) * 4, w: 4, h: 4 },
     corner: cornerSvg,
     edgeHorizontal: edgeHSvg,
     edgeVertical: edgeVSvg,
     mediaSize: 1.1,
-    borderThickness: 2,
-    borderSize: 96,
+    borderThickness: isMobile ? 1 : 2,
+    borderSize: isMobile ? 98 : 96,
   }));
 
   const getRowSizes = () => {
     if (hovered === null) return "4fr 4fr 4fr";
     const { row } = hovered;
-    const nonHoveredSize = (12 - hoverSize) / 2;
+    const totalUnits = 12;
+    const nonHoveredSize = (totalUnits - hoverSize) / 2;
     return [0, 1, 2].map((r) => (r === row ? `${hoverSize}fr` : `${nonHoveredSize}fr`)).join(" ");
   };
 
   const getColSizes = () => {
     if (hovered === null) return "4fr 4fr 4fr";
     const { col } = hovered;
-    const nonHoveredSize = (12 - hoverSize) / 2;
+    const totalUnits = 12;
+    const nonHoveredSize = (totalUnits - hoverSize) / 2;
     return [0, 1, 2].map((c) => (c === col ? `${hoverSize}fr` : `${nonHoveredSize}fr`)).join(" ");
   };
 
@@ -210,12 +223,12 @@ export function VaelReel() {
   };
 
   return (
-    <section id="reel" className="py-24 md:py-32 bg-background border-y border-border/10">
+    <section id="reel" className="py-24 md:py-32 bg-background border-y border-border/10 overflow-hidden">
       <div className="px-8 md:px-16 mb-16 text-center md:text-left">
         <span className="text-[10px] tracking-[0.5em] uppercase text-primary/60 block">Kinetic Work Reel — 2024</span>
       </div>
       
-      <div className="px-8 md:px-16 h-[600px] md:h-[800px]">
+      <div className="px-4 md:px-16 h-[500px] md:h-[800px]">
         <div
           className="relative w-full h-full bg-black/5"
           style={{
@@ -223,7 +236,7 @@ export function VaelReel() {
             gridTemplateRows: getRowSizes(),
             gridTemplateColumns: getColSizes(),
             gap: `${gapSize}px`,
-            transition: "grid-template-rows 0.4s ease, grid-template-columns 0.4s ease",
+            transition: "grid-template-rows 0.4s cubic-bezier(0.65, 0, 0.35, 1), grid-template-columns 0.4s cubic-bezier(0.65, 0, 0.35, 1)",
           }}
         >
           {frames.map((frame) => {
@@ -243,7 +256,7 @@ export function VaelReel() {
                 onMouseLeave={() => setHovered(null)}
               >
                 <FrameComponent
-                  video={frame.video}
+                  youtubeId={frame.youtubeId}
                   width="100%"
                   height="100%"
                   className="absolute inset-0"
