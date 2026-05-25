@@ -40,7 +40,7 @@
 }
 
 .cinematic-vignette {
-  background: radial-gradient(ellipse 100% 100% at 50% 50%, transparent 40%, rgba(0,0,0,0.03) 100%);
+  background: radial-gradient(ellipse 100% 100% at 50% 50%, transparent 40%, rgba(0,0,0,0.1) 100%);
 }
 
 .grain-overlay {
@@ -49,22 +49,33 @@
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-.clean-video-wrapper {
+/* Nav Strike Effect - Refined for Director Feel */
+.nav-link-strike {
   position: relative;
-  overflow: hidden;
+  display: inline-block;
+  padding: 0 4px;
 }
 
-/* Covers the YouTube logo area (top-right corner) */
-.clean-video-wrapper::after {
+.nav-link-strike::after {
   content: '';
   position: absolute;
-  top: 0;
-  right: 0;
-  width: 100px;
-  height: 60px;
-  background: transparent;
-  z-index: 20;
-  pointer-events: none;
+  left: -2px;
+  top: 50%;
+  width: 0;
+  height: 1px;
+  background: hsl(var(--primary));
+  transform: translateY(-50%);
+  transition: width 0.4s cubic-bezier(0.76, 0, 0.24, 1);
+  opacity: 0.8;
+}
+
+.nav-link-strike:hover::after,
+.nav-link-strike.active::after {
+  width: calc(100% + 4px);
+}
+
+.nav-link-strike.active {
+  @apply text-primary opacity-100;
 }
 
 @keyframes marquee {
@@ -79,33 +90,4 @@
 .text-stroke {
   -webkit-text-stroke: 1px currentColor;
   color: transparent;
-}
-
-/* Nav Strike Effect - Refined */
-.nav-link-strike {
-  position: relative;
-  display: inline-block;
-  padding: 0 4px;
-}
-
-.nav-link-strike::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  width: 0;
-  height: 1px;
-  background: currentColor;
-  transform: translateY(-50%);
-  transition: width 0.5s cubic-bezier(0.76, 0, 0.24, 1);
-  opacity: 0.7;
-}
-
-.nav-link-strike:hover::after,
-.nav-link-strike.active::after {
-  width: 100%;
-}
-
-.nav-link-strike.active {
-  @apply text-primary opacity-100;
 }
