@@ -47,10 +47,11 @@ const CustomSlider = ({
 
 const VideoPlayer = ({ src }: { src: string }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(1);
   const [progress, setProgress] = useState(0);
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true); // Default to muted for autoplay
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const [showControls, setShowControls] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -60,6 +61,37 @@ const VideoPlayer = ({ src }: { src: string }) => {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Intersection Observer for scroll-to-play functionality
+  useEffect(() => {
+    if (!mounted || !containerRef.current || !videoRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            videoRef.current?.play().catch(() => {
+              // Handle potential autoplay blocking by browsers
+              console.log("Autoplay blocked, user interaction required.");
+            });
+            setIsPlaying(true);
+          } else {
+            videoRef.current?.pause();
+            setIsPlaying(false);
+          }
+        });
+      },
+      { threshold: 0.5 } // Play when 50% visible
+    );
+
+    observer.observe(containerRef.current);
+
+    return () => {
+      if (containerRef.current) {
+        observer.unobserve(containerRef.current);
+      }
+    };
+  }, [mounted]);
 
   const togglePlay = () => {
     if (videoRef.current) {
@@ -125,6 +157,7 @@ const VideoPlayer = ({ src }: { src: string }) => {
 
   return (
     <motion.div
+      ref={containerRef}
       className="relative w-full mx-auto rounded-none overflow-hidden bg-black shadow-2xl backdrop-blur-sm"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -140,6 +173,8 @@ const VideoPlayer = ({ src }: { src: string }) => {
         src={src}
         onClick={togglePlay}
         playsInline
+        muted={isMuted}
+        loop
       />
 
       <AnimatePresence>
