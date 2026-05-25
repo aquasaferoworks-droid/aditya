@@ -5,11 +5,9 @@ import {
   useRef,
   useState,
   ReactNode,
-  TouchEvent,
-  WheelEvent,
 } from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface ScrollExpandMediaProps {
   mediaType?: 'video' | 'image';
@@ -37,11 +35,8 @@ const ScrollExpandMedia = ({
   const [scrollProgress, setScrollProgress] = useState<number>(0);
   const [showContent, setShowContent] = useState<boolean>(false);
   const [mediaFullyExpanded, setMediaFullyExpanded] = useState<boolean>(false);
-  const [touchStartY, setTouchStartY] = useState<number>(0);
   const [isMobileState, setIsMobileState] = useState<boolean>(false);
   const [mounted, setMounted] = useState(false);
-
-  const sectionRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -65,52 +60,17 @@ const ScrollExpandMedia = ({
         return;
       }
 
-      if (!mediaFullyExpanded) {
-        e.preventDefault();
-        const scrollDelta = e.deltaY * 0.0015;
-        const newProgress = Math.min(Math.max(scrollProgress + scrollDelta, 0), 1);
-        setScrollProgress(newProgress);
+      e.preventDefault();
+      const scrollDelta = e.deltaY * 0.0015;
+      const newProgress = Math.min(Math.max(scrollProgress + scrollDelta, 0), 1);
+      setScrollProgress(newProgress);
 
-        if (newProgress >= 1) {
-          setMediaFullyExpanded(true);
-          setShowContent(true);
-        } else if (newProgress < 0.8) {
-          setShowContent(false);
-        }
+      if (newProgress >= 1) {
+        setMediaFullyExpanded(true);
+        setShowContent(true);
+      } else if (newProgress < 0.8) {
+        setShowContent(false);
       }
-    };
-
-    const handleTouchStart = (e: TouchEvent) => {
-      setTouchStartY(e.touches[0].clientY);
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      if (!touchStartY) return;
-      const touchY = e.touches[0].clientY;
-      const deltaY = touchStartY - touchY;
-
-      if (mediaFullyExpanded) {
-        if (window.scrollY <= 10 && deltaY < -20) {
-          setMediaFullyExpanded(false);
-          setScrollProgress(0.99);
-        }
-        return;
-      }
-
-      if (!mediaFullyExpanded) {
-        e.preventDefault();
-        const scrollDelta = deltaY * 0.005;
-        const newProgress = Math.min(Math.max(scrollProgress + scrollDelta, 0), 1);
-        setScrollProgress(newProgress);
-
-        if (newProgress >= 1) {
-          setMediaFullyExpanded(true);
-          setShowContent(true);
-        } else if (newProgress < 0.8) {
-          setShowContent(false);
-        }
-      }
-      setTouchStartY(touchY);
     };
 
     const handleScroll = (): void => {
@@ -119,19 +79,14 @@ const ScrollExpandMedia = ({
       }
     };
 
-    window.addEventListener('wheel', handleWheel as unknown as EventListener, { passive: false });
-    window.addEventListener('scroll', handleScroll as EventListener);
-    window.addEventListener('touchstart', handleTouchStart as unknown as EventListener, { passive: false });
-    window.addEventListener('touchmove', handleTouchMove as unknown as EventListener, { passive: false });
-    window.addEventListener('touchend', () => setTouchStartY(0));
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    window.addEventListener('scroll', handleScroll);
 
     return () => {
-      window.removeEventListener('wheel', handleWheel as unknown as EventListener);
-      window.removeEventListener('scroll', handleScroll as EventListener);
-      window.removeEventListener('touchstart', handleTouchStart as unknown as EventListener);
-      window.removeEventListener('touchmove', handleTouchMove as unknown as EventListener);
+      window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('scroll', handleScroll);
     };
-  }, [scrollProgress, mediaFullyExpanded, touchStartY, mounted]);
+  }, [scrollProgress, mediaFullyExpanded, mounted]);
 
   if (!mounted) return null;
 
@@ -148,7 +103,7 @@ const ScrollExpandMedia = ({
   const restOfTitle = title ? title.split(' ').slice(1).join(' ') : '';
 
   return (
-    <div ref={sectionRef} className='transition-colors duration-700 ease-in-out overflow-x-hidden'>
+    <div className='transition-colors duration-700 ease-in-out overflow-x-hidden'>
       <section className='relative flex flex-col items-center justify-start min-h-[100dvh]'>
         <div className='relative w-full flex flex-col items-center min-h-[100dvh]'>
           <motion.div
@@ -170,7 +125,7 @@ const ScrollExpandMedia = ({
             <div className='flex flex-col items-center justify-center w-full h-[100dvh] relative'>
               {/* Media Container - Sharp Corners */}
               <div
-                className='absolute z-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 overflow-hidden shadow-2xl bg-black rounded-none'
+                className='absolute z-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 overflow-hidden shadow-2xl bg-black rounded-none border border-white/5'
                 style={{
                   width: `${mediaWidth}px`,
                   height: `${mediaHeight}px`,

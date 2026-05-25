@@ -27,6 +27,17 @@ export function VaelAbout() {
                 Rooted in the belief that every frame holds a heartbeat, Errol collaborates with ambitious brands, studios, and storytellers to create images that endure beyond the screen.
               </p>
             </div>
+            
+            <div className="grid grid-cols-2 gap-12 pt-12 border-t border-border/50">
+              <div className="space-y-2">
+                <div className="text-4xl md:text-6xl font-headline italic">24</div>
+                <div className="text-[10px] tracking-[0.3em] uppercase text-muted-foreground">Films Directed</div>
+              </div>
+              <div className="space-y-2">
+                <div className="text-4xl md:text-6xl font-headline italic text-primary">12</div>
+                <div className="text-[10px] tracking-[0.3em] uppercase text-muted-foreground">Festival Awards</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

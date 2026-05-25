@@ -9,8 +9,8 @@ import ScrollExpandMedia from '@/components/ScrollExpandMedia';
 
 export default function Home() {
   const heroBg = "https://picsum.photos/seed/vael-hero/1920/1080";
-  // Using a direct MP4 source for the hero as requested (no YouTube)
-  const heroVideo = "https://player.vimeo.com/external/494252666.hd.mp4?s=2f5577346418342774d009fa5d60893325c8991b&profile_id=175";
+  // Direct cinematic video source (non-YouTube) for the hero
+  const heroVideo = "https://player.vimeo.com/external/517047029.hd.mp4?s=018335f6f8905391696e1074a3f5f3e2646c0542&profile_id=175";
   
   return (
     <main className="relative selection:bg-primary/30">
