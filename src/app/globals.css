@@ -81,27 +81,31 @@
   color: transparent;
 }
 
-/* Nav Strike Effect */
+/* Nav Strike Effect - Refined */
 .nav-link-strike {
   position: relative;
   display: inline-block;
+  padding: 0 4px;
 }
 
 .nav-link-strike::after {
   content: '';
   position: absolute;
-  left: -2px;
-  top: 55%;
+  left: 0;
+  top: 50%;
   width: 0;
   height: 1px;
   background: currentColor;
-  transition: width 0.3s cubic-bezier(0.65, 0, 0.35, 1);
+  transform: translateY(-50%);
+  transition: width 0.5s cubic-bezier(0.76, 0, 0.24, 1);
+  opacity: 0.7;
 }
 
-.nav-link-strike:hover::after {
-  width: calc(100% + 4px);
-}
-
+.nav-link-strike:hover::after,
 .nav-link-strike.active::after {
-  width: calc(100% + 4px);
+  width: 100%;
+}
+
+.nav-link-strike.active {
+  @apply text-primary opacity-100;
 }
