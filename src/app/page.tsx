@@ -10,8 +10,8 @@ import ScrollExpandMedia from '@/components/ScrollExpandMedia';
 
 export default function Home() {
   const heroBg = "https://picsum.photos/seed/vael-hero/1920/1080";
-  // Direct cinematic video source (non-YouTube) for the hero
-  const heroVideo = "https://player.vimeo.com/external/517047029.hd.mp4?s=018335f6f8905391696e1074a3f5f3e2646c0542&profile_id=175";
+  // The user provided premium cinematic video source for the middle box
+  const heroVideo = "https://aquasaferoworks.sirv.com/1103193_1080p_Endurance_1280x720.mp4";
   
   return (
     <main className="relative selection:bg-primary/30">
