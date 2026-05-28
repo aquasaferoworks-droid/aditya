@@ -12,6 +12,8 @@ import {
   DialogTitle,
   DialogDescription,
   DialogClose,
+  DialogPortal,
+  DialogOverlay,
 } from '@/components/ui/dialog';
 
 interface SlideItem {
@@ -110,7 +112,7 @@ export function VaelSlider() {
                     opacity: isActive ? 1 : 0.4,
                   }}
                   transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
-                  className="relative aspect-[16/9] md:aspect-[21/9] overflow-hidden shadow-[0_60px_120px_-20px_rgba(0,0,0,0.9)] bg-black group cursor-pointer border border-white/5"
+                  className="relative aspect-[16/9] md:aspect-[21/9] overflow-hidden shadow-[0_60px_120px_-20px_rgba(0,0,0,0.9)] bg-black group cursor-pointer border border-white/5 rounded-2xl"
                 >
                   <div className="absolute inset-0 pointer-events-none transform scale-[1.4]">
                     <iframe
@@ -151,46 +153,54 @@ export function VaelSlider() {
       </div>
 
       <Dialog open={!!selectedVideo} onOpenChange={(open) => !open && setSelectedVideo(null)}>
-        <DialogContent className="max-w-[95vw] md:max-w-[85vw] bg-black/95 backdrop-blur-2xl border-white/5 p-0 overflow-hidden shadow-[0_0_100px_rgba(0,0,0,1)] rounded-none aspect-video">
-          <DialogTitle className="sr-only">
-            {selectedVideo?.title} — {selectedVideo?.category}
-          </DialogTitle>
-          <DialogDescription className="sr-only">
-            Viewing {selectedVideo?.title} directed by Errol Aditya.
-          </DialogDescription>
-          
-          <AnimatePresence>
-            {selectedVideo && (
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.6, ease: [0.76, 0, 0.24, 1] }}
-                className="relative w-full h-full flex items-center justify-center group/modal"
-              >
-                <iframe
-                  className="w-full h-full"
-                  src={getYoutubeEmbed(selectedVideo.youtubeId, true, true)}
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                />
+        <DialogPortal>
+          <DialogOverlay className="z-[190] bg-black/90 backdrop-blur-xl" />
+          <DialogContent className="z-[200] max-w-[95vw] md:max-w-6xl bg-black border border-white/10 p-0 overflow-hidden shadow-[0_0_100px_rgba(0,0,0,1)] rounded-2xl aspect-video focus:outline-none">
+            <DialogTitle className="sr-only">
+              {selectedVideo?.title} — {selectedVideo?.category}
+            </DialogTitle>
+            <DialogDescription className="sr-only">
+              Viewing {selectedVideo?.title} directed by Errol Aditya.
+            </DialogDescription>
+            
+            <AnimatePresence>
+              {selectedVideo && (
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
+                  className="relative w-full h-full flex items-center justify-center group/modal"
+                >
+                  <iframe
+                    className="w-full h-full"
+                    src={getYoutubeEmbed(selectedVideo.youtubeId, true, true)}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  />
 
-                <div className="absolute top-8 right-16 z-[60] pointer-events-none">
-                  <span className="text-[10px] md:text-[12px] tracking-[0.6em] text-white/50 uppercase font-light">
-                    {selectedVideo.role}
-                  </span>
-                </div>
+                  {/* Elegant Metadata Overlay */}
+                  <div className="absolute top-6 left-8 z-[70] pointer-events-none drop-shadow-lg">
+                    <div className="flex flex-col gap-1">
+                      <span className="text-[10px] tracking-[0.4em] text-primary uppercase font-bold">{selectedVideo.role}</span>
+                      <span className="text-2xl md:text-3xl tracking-tight text-white italic font-headline">{selectedVideo.title}</span>
+                    </div>
+                  </div>
 
-                <DialogClose className="absolute top-8 right-6 z-[70] text-white/30 hover:text-white transition-all duration-300 hover:rotate-90">
-                  <X className="w-8 h-8" strokeWidth={1} />
-                  <span className="sr-only">Close Viewer</span>
-                </DialogClose>
+                  {/* Premium Close Button */}
+                  <DialogClose className="absolute top-6 right-6 z-[80] transition-all duration-300 group/close">
+                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center group-hover/close:border-primary/50 group-hover/close:scale-110 transition-all">
+                      <X className="w-5 h-5 md:w-6 md:h-6 text-white group-hover/close:text-primary transition-colors" strokeWidth={1.5} />
+                    </div>
+                    <span className="sr-only">Close Player</span>
+                  </DialogClose>
 
-                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover/modal:opacity-100 transition-opacity duration-700 pointer-events-none" />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </DialogContent>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/40 pointer-events-none" />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </DialogContent>
+        </DialogPortal>
       </Dialog>
     </section>
   );
