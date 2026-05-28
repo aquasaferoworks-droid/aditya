@@ -72,9 +72,9 @@ export function VaelReel() {
     f1: { id: "4UATuJFYKfg", title: "Stillwater", category: "Feature" },
     m1: { id: "sroIT5FQMqs", title: "Echoes", category: "Experimental" },
     m2: { id: "BYhQMzGxHmg", title: "Prism", category: "Brand Story" },
-    v1: { id: "eFhx307ykrk", title: "Solace", category: "Documentary" },
-    v2: { id: "lya8BHX-8SY", title: "Kinetic", category: "Fashion" },
-    v3: { id: "4UATuJFYKfg", title: "Stillwater (Vert)", category: "Feature" },
+    v1: { id: "NWPzwV3le50", title: "Vision Narrative", category: "Director Reel" },
+    v2: { id: "lhdHDEhtMiI", title: "Kinetic Study", category: "Director Reel" },
+    v3: { id: "nHSssoiMRE4", title: "Atmosphere", category: "Director Reel" },
   };
 
   const getFullUrl = (id: string) => {
@@ -108,7 +108,7 @@ export function VaelReel() {
           <VideoCard video={videos.m2} aspectRatio="aspect-[16/10]" onClick={setSelectedVideo} />
         </div>
 
-        {/* Row 5 -> 3 vertical reel-style video cards (Updated from 4) */}
+        {/* Row 5 -> 3 vertical reel-style video cards */}
         <div className="grid grid-cols-3 gap-2 md:gap-8">
           <VideoCard video={videos.v1} aspectRatio="aspect-[9/16]" onClick={setSelectedVideo} />
           <VideoCard video={videos.v2} aspectRatio="aspect-[9/16]" onClick={setSelectedVideo} />
