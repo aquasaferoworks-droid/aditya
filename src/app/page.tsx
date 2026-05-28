@@ -9,14 +9,14 @@ import { VaelSlider } from '@/components/VaelSlider';
 
 export default function Home() {
   return (
-    <main className="relative selection:bg-primary/30 bg-black min-h-screen">
+    <main className="relative selection:bg-primary/30 bg-background min-h-screen">
       <VaelHeader />
       
       {/* New Cinematic Hero Slider */}
       <VaelSlider />
       
       {/* Rest of the content scrolls naturally now */}
-      <div className="bg-white">
+      <div className="bg-background">
         <VaelAbout />
         <VaelFilms />
         <VaelReel />

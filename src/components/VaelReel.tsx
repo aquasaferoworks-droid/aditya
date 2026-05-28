@@ -247,7 +247,6 @@ export function VaelReel() {
   const edgeHSvg = `data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 2H64' stroke='white' stroke-width='1'/%3E%3C/svg%3E`;
   const edgeVSvg = `data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 0V64' stroke='white' stroke-width='1'/%3E%3C/svg%3E`;
 
-  // Reliable Sirv MP4s
   const sirv1 = "https://aquasaferoworks.sirv.com/1103193_1080p_Endurance_1280x720.mp4";
   const sirv2 = "https://aquasaferoworks.sirv.com/6013655_People_Men_1280x720.mp4";
 
@@ -264,7 +263,7 @@ export function VaelReel() {
   ];
 
   return (
-    <section id="reel" className="py-24 md:py-32 bg-white border-y border-border/10 overflow-hidden">
+    <section id="reel" className="py-24 md:py-32 bg-background border-y border-border/10 overflow-hidden">
       <div className="px-8 md:px-16 mb-16 text-center md:text-left">
         <span className="text-[10px] tracking-[0.5em] uppercase text-primary/60 block">Kinetic Work Reel — 2024</span>
       </div>

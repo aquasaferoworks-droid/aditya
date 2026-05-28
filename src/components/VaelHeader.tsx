@@ -52,7 +52,7 @@ export function VaelHeader() {
   const reelVideo = "https://aquasaferoworks.sirv.com/1103193_1080p_Endurance_1280x720.mp4";
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 px-6 py-4 md:px-16 md:py-6 flex items-center justify-between ${isScrolled ? 'bg-white/95 backdrop-blur-xl border-b border-border/40 py-4 shadow-sm' : 'bg-transparent'}`}>
+    <nav className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 px-6 py-4 md:px-16 md:py-6 flex items-center justify-between ${isScrolled ? 'bg-black/95 backdrop-blur-xl border-b border-border/40 py-4 shadow-sm' : 'bg-transparent'}`}>
       <Link href="/" className="font-headline text-xl md:text-2xl tracking-[0.1em] hover:text-primary transition-all duration-700 flex-shrink-0 font-medium italic">
         ERROL <span className="text-primary not-italic font-light">ADITYA</span>
       </Link>
@@ -97,12 +97,12 @@ export function VaelHeader() {
               <Menu className="w-6 h-6 text-foreground" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="right" className="bg-white border-none p-12 w-[85vw] flex flex-col justify-between">
+          <SheetContent side="right" className="bg-black border-none p-12 w-[85vw] flex flex-col justify-between">
             <div className="space-y-16">
-              <div className="font-headline text-xl tracking-[0.1em] italic">
+              <div className="font-headline text-xl tracking-[0.1em] italic text-white">
                 ERROL <span className="text-primary not-italic font-light">ADITYA</span>
               </div>
-              <div className="flex flex-col gap-8 font-body text-[11px] tracking-[0.5em] uppercase">
+              <div className="flex flex-col gap-8 font-body text-[11px] tracking-[0.5em] uppercase text-white/70">
                 {navLinks.map((link) => (
                   <Link 
                     key={link.href}

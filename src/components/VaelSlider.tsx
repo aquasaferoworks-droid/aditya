@@ -86,13 +86,12 @@ export function VaelSlider() {
 
   const getYoutubeEmbed = (id: string, isSelected: boolean, isModal: boolean = false) => {
     const base = `https://www.youtube.com/embed/${id}`;
-    // Strictly removed all controls (controls=0) and branding (modestbranding=1)
     const params = `?autoplay=${isSelected || isModal ? 1 : 0}&mute=${isModal ? 0 : 1}&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&fs=0&loop=1&playlist=${id}&enablejsapi=1`;
     return base + params;
   };
 
   return (
-    <section className="relative w-full bg-white py-16 md:py-24 overflow-hidden select-none">
+    <section className="relative w-full bg-background py-16 md:py-24 overflow-hidden select-none">
       <div className="embla overflow-visible" ref={emblaRef}>
         <div className="embla__container flex">
           {slides.map((slide, index) => {
@@ -111,9 +110,8 @@ export function VaelSlider() {
                     opacity: isActive ? 1 : 0.4,
                   }}
                   transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
-                  className="relative aspect-[16/9] md:aspect-[21/10] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3)] bg-black group cursor-pointer border border-black/5"
+                  className="relative aspect-[16/9] md:aspect-[21/10] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)] bg-black group cursor-pointer border border-white/5"
                 >
-                  {/* Background YouTube Preview */}
                   <div className="absolute inset-0 pointer-events-none transform scale-[1.3]">
                     <iframe
                       className="w-full h-full"
@@ -123,11 +121,9 @@ export function VaelSlider() {
                     />
                   </div>
                   
-                  {/* Premium Grain & Vignette */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent z-10" />
-                  <div className="absolute inset-0 cinematic-vignette opacity-30 z-10" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10" />
+                  <div className="absolute inset-0 cinematic-vignette opacity-50 z-10" />
 
-                  {/* Play UI */}
                   <div className="absolute inset-0 flex items-center justify-center z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
                     <div className="w-16 h-16 md:w-24 md:h-24 rounded-full border border-white/10 bg-black/20 backdrop-blur-md flex items-center justify-center transition-all duration-500 hover:scale-110 hover:bg-primary/20 hover:border-primary/40">
                       <Play className="w-6 h-6 md:w-8 md:h-8 text-white fill-white ml-1" />
@@ -140,7 +136,6 @@ export function VaelSlider() {
         </div>
       </div>
 
-      {/* Progress Indicators */}
       <div className="flex justify-center gap-4 mt-12 md:mt-16">
         {slides.map((_, i) => (
           <button
@@ -155,7 +150,6 @@ export function VaelSlider() {
         ))}
       </div>
 
-      {/* Cinematic Modal Popup */}
       <Dialog open={!!selectedVideo} onOpenChange={(open) => !open && setSelectedVideo(null)}>
         <DialogContent className="max-w-[95vw] md:max-w-[85vw] bg-black/90 backdrop-blur-2xl border-white/5 p-0 overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.8)] rounded-none aspect-video">
           <DialogTitle className="sr-only">
@@ -174,7 +168,6 @@ export function VaelSlider() {
                 transition={{ duration: 0.6, ease: [0.76, 0, 0.24, 1] }}
                 className="relative w-full h-full flex items-center justify-center group/modal"
               >
-                {/* Chromeless Video Player */}
                 <iframe
                   className="w-full h-full"
                   src={getYoutubeEmbed(selectedVideo.youtubeId, true, true)}
@@ -182,20 +175,17 @@ export function VaelSlider() {
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 />
 
-                {/* Director Metadata Overlay */}
                 <div className="absolute top-8 right-16 z-[60] pointer-events-none">
                   <span className="text-[10px] md:text-[12px] tracking-[0.6em] text-white/50 uppercase font-light">
                     {selectedVideo.role}
                   </span>
                 </div>
 
-                {/* Elegant Close Button */}
                 <DialogClose className="absolute top-8 right-6 z-[70] text-white/30 hover:text-white transition-all duration-300 hover:rotate-90">
                   <X className="w-8 h-8" strokeWidth={1} />
                   <span className="sr-only">Close Viewer</span>
                 </DialogClose>
 
-                {/* Custom Hover Shadow Overlay */}
                 <div className="absolute inset-0 bg-black/20 opacity-0 group-hover/modal:opacity-100 transition-opacity duration-700 pointer-events-none" />
               </motion.div>
             )}

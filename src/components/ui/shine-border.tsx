@@ -13,16 +13,6 @@ interface ShineBorderProps {
   children: React.ReactNode;
 }
 
-/**
- * @name Shine Border
- * @description It is an animated background border effect component with easy to use and configurable props.
- * @param borderRadius defines the radius of the border.
- * @param borderWidth defines the width of the border.
- * @param duration defines the animation duration to be applied on the shining border
- * @param color a string or string array to define border color.
- * @param className defines the class name to be applied to the component
- * @param children contains react node elements.
- */
 export function ShineBorder({
   borderRadius = 0,
   borderWidth = 1,
@@ -39,7 +29,7 @@ export function ShineBorder({
         } as React.CSSProperties
       }
       className={cn(
-        "relative min-h-[60px] w-fit min-w-[300px] place-items-center rounded-[--border-radius] bg-white p-3 text-black dark:bg-black dark:text-white",
+        "relative min-h-[60px] w-fit min-w-[300px] place-items-center rounded-[--border-radius] bg-black p-3 text-white",
         className,
       )}
     >
