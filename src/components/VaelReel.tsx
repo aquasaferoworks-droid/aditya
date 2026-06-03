@@ -1,8 +1,12 @@
+
 'use client';
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
+import { useFirestore, useCollection } from '@/firebase';
+import { collection, query, where, orderBy } from 'firebase/firestore';
+import { useMemoFirebase } from '@/firebase/firestore/use-collection';
 import {
   Dialog,
   DialogContent,
@@ -17,6 +21,8 @@ interface VideoItem {
   id: string;
   title: string;
   category: string;
+  youtubeId: string;
+  type: string;
 }
 
 interface VideoCardProps {
@@ -47,7 +53,7 @@ const VideoCard = ({ video, aspectRatio, className = "", onClick }: VideoCardPro
       <div className="absolute inset-0 z-0 pointer-events-none">
         <iframe
           className={`w-full h-full scale-[1.3] transition-transform duration-1000 ease-out ${isHovered ? 'scale-[1.4]' : ''}`}
-          src={getPreviewUrl(video.id)}
+          src={getPreviewUrl(video.youtubeId)}
           frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         />
@@ -65,58 +71,70 @@ const VideoCard = ({ video, aspectRatio, className = "", onClick }: VideoCardPro
 };
 
 export function VaelReel() {
+  const firestore = useFirestore();
   const [selectedVideo, setSelectedVideo] = useState<VideoItem | null>(null);
 
-  const videos: Record<string, VideoItem> = {
-    h1: { id: "gJKxIAmhbvg", title: "Hawthorn", category: "Narrative" },
-    h2: { id: "QdEZtNyJb5g", title: "Vermilion", category: "Short Film" },
-    h3: { id: "O1p-JVaAQV0", title: "Nocturne", category: "Documentary" },
-    h4: { id: "xTrPSfbWa0w", title: "Aureate", category: "Commissioned" },
-    f1: { id: "4UATuJFYKfg", title: "Stillwater", category: "Feature" },
-    m1: { id: "sroIT5FQMqs", title: "Echoes", category: "Experimental" },
-    m2: { id: "BYhQMzGxHmg", title: "Prism", category: "Brand Story" },
-    v1: { id: "NWPzwV3le50", title: "Vision Narrative", category: "Vertical Reel" },
-    v2: { id: "lhdHDEhtMiI", title: "Kinetic Study", category: "Vertical Reel" },
-    v3: { id: "nHSssoiMRE4", title: "Atmosphere", category: "Vertical Reel" },
-  };
+  const reelQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return query(
+      collection(firestore, 'videos'), 
+      where('type', '>=', 'reel-'),
+      orderBy('type'),
+      orderBy('order', 'asc')
+    );
+  }, [firestore]);
+
+  const { data: videos, loading } = useCollection(reelQuery);
 
   const getFullUrl = (id: string) => {
     return `https://www.youtube.com/embed/${id}?autoplay=1&mute=0&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&fs=0&loop=1&playlist=${id}&enablejsapi=1`;
   };
 
+  if (loading || !videos || videos.length === 0) return null;
+
+  // Filter videos by their structural slots
+  const horizontals = videos.filter(v => v.type === 'reel-horizontal');
+  const feature = videos.find(v => v.type === 'reel-feature');
+  const mediums = videos.filter(v => v.type === 'reel-medium');
+  const verticals = videos.filter(v => v.type === 'reel-vertical');
+
   return (
     <section id="reel" className="py-24 md:py-32 bg-background overflow-hidden border-t border-border/10">
       <div className="max-w-[1600px] mx-auto px-4 md:px-16 space-y-4 md:space-y-8">
         
-        {/* Row 1 -> 2 horizontal video cards */}
-        <div className="grid grid-cols-2 gap-4 md:gap-8">
-          <VideoCard video={videos.h1} aspectRatio="aspect-video" onClick={setSelectedVideo} />
-          <VideoCard video={videos.h2} aspectRatio="aspect-video" onClick={setSelectedVideo} />
-        </div>
+        {/* Row 1 & 2 -> horizontal video cards */}
+        {horizontals.length > 0 && (
+          <div className="grid grid-cols-2 gap-4 md:gap-8">
+            {horizontals.map(video => (
+              <VideoCard key={video.id} video={video as VideoItem} aspectRatio="aspect-video" onClick={setSelectedVideo} />
+            ))}
+          </div>
+        )}
 
-        {/* Row 2 -> 2 horizontal video cards */}
-        <div className="grid grid-cols-2 gap-4 md:gap-8">
-          <VideoCard video={videos.h3} aspectRatio="aspect-video" onClick={setSelectedVideo} />
-          <VideoCard video={videos.h4} aspectRatio="aspect-video" onClick={setSelectedVideo} />
-        </div>
+        {/* Featured Wide */}
+        {feature && (
+          <div className="w-full">
+            <VideoCard video={feature as VideoItem} aspectRatio="aspect-[21/9]" onClick={setSelectedVideo} />
+          </div>
+        )}
 
-        {/* Row 3 -> 1 large featured video section */}
-        <div className="w-full">
-          <VideoCard video={videos.f1} aspectRatio="aspect-[21/9]" onClick={setSelectedVideo} />
-        </div>
+        {/* Medium Cards */}
+        {mediums.length > 0 && (
+          <div className="grid grid-cols-2 gap-4 md:gap-8">
+            {mediums.map(video => (
+              <VideoCard key={video.id} video={video as VideoItem} aspectRatio="aspect-[16/10]" onClick={setSelectedVideo} />
+            ))}
+          </div>
+        )}
 
-        {/* Row 4 -> 2 medium video cards */}
-        <div className="grid grid-cols-2 gap-4 md:gap-8">
-          <VideoCard video={videos.m1} aspectRatio="aspect-[16/10]" onClick={setSelectedVideo} />
-          <VideoCard video={videos.m2} aspectRatio="aspect-[16/10]" onClick={setSelectedVideo} />
-        </div>
-
-        {/* Row 5 -> 3 vertical reel-style video cards (Your requested specific vertical projects) */}
-        <div className="grid grid-cols-3 gap-4 md:gap-8">
-          <VideoCard video={videos.v1} aspectRatio="aspect-[9/16]" onClick={setSelectedVideo} />
-          <VideoCard video={videos.v2} aspectRatio="aspect-[9/16]" onClick={setSelectedVideo} />
-          <VideoCard video={videos.v3} aspectRatio="aspect-[9/16]" onClick={setSelectedVideo} />
-        </div>
+        {/* Vertical Reel Section (Locked to 3) */}
+        {verticals.length > 0 && (
+          <div className="grid grid-cols-3 gap-4 md:gap-8">
+            {verticals.slice(0, 3).map(video => (
+              <VideoCard key={video.id} video={video as VideoItem} aspectRatio="aspect-[9/16]" onClick={setSelectedVideo} />
+            ))}
+          </div>
+        )}
         
       </div>
 
@@ -142,7 +160,7 @@ export function VaelReel() {
                 >
                   <iframe
                     className="w-full h-full"
-                    src={getFullUrl(selectedVideo.id)}
+                    src={getFullUrl(selectedVideo.youtubeId)}
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen

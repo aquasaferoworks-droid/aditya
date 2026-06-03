@@ -1,0 +1,33 @@
+
+{
+  "entities": {
+    "Video": {
+      "title": "Video",
+      "description": "A cinematic video project entry.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "category": { "type": "string" },
+        "youtubeId": { "type": "string" },
+        "type": { 
+          "type": "string", 
+          "enum": ["slider", "reel-horizontal", "reel-feature", "reel-medium", "reel-vertical", "film-gallery"] 
+        },
+        "role": { "type": "string" },
+        "meta": { "type": "string" },
+        "award": { "type": "string" },
+        "order": { "type": "number" }
+      },
+      "required": ["title", "youtubeId", "type"]
+    }
+  },
+  "auth": {
+    "providers": ["google.com"]
+  },
+  "firestore": {
+    "/videos/{videoId}": {
+      "schema": "Video",
+      "description": "Collection of all video projects."
+    }
+  }
+}

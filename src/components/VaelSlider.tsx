@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
@@ -6,6 +7,9 @@ import Autoplay from 'embla-carousel-autoplay';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Play } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useFirestore, useCollection } from '@/firebase';
+import { collection, query, where, orderBy } from 'firebase/firestore';
+import { useMemoFirebase } from '@/firebase/firestore/use-collection';
 import {
   Dialog,
   DialogContent,
@@ -16,39 +20,17 @@ import {
   DialogOverlay,
 } from '@/components/ui/dialog';
 
-interface SlideItem {
+interface VideoData {
   id: string;
   title: string;
   category: string;
   youtubeId: string;
   role: string;
+  type: string;
 }
 
-const slides: SlideItem[] = [
-  {
-    id: '1',
-    title: 'HAWTHORN',
-    category: 'directed by errol aditya',
-    role: 'DIRECTOR / VISIONARY',
-    youtubeId: 'gJKxIAmhbvg',
-  },
-  {
-    id: '2',
-    title: 'VERMILION',
-    category: 'visual narrative',
-    role: 'CINEMATOGRAPHER',
-    youtubeId: 'QdEZtNyJb5g',
-  },
-  {
-    id: '3',
-    title: 'NOCTURNE',
-    category: 'cinematography',
-    role: 'DIRECTOR / VISIONARY',
-    youtubeId: 'O1p-JVaAQV0',
-  },
-];
-
 export function VaelSlider() {
+  const firestore = useFirestore();
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { 
       loop: true, 
@@ -60,7 +42,18 @@ export function VaelSlider() {
   );
 
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [selectedVideo, setSelectedVideo] = useState<SlideItem | null>(null);
+  const [selectedVideo, setSelectedVideo] = useState<VideoData | null>(null);
+
+  const heroQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return query(
+      collection(firestore, 'videos'), 
+      where('type', '==', 'slider'),
+      orderBy('order', 'asc')
+    );
+  }, [firestore]);
+
+  const { data: slides, loading } = useCollection(heroQuery);
 
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
@@ -80,6 +73,14 @@ export function VaelSlider() {
     return base + params;
   };
 
+  if (loading || !slides || slides.length === 0) {
+    return (
+      <section className="relative w-full bg-black min-h-[100vh] flex items-center justify-center">
+        <div className="text-[10px] tracking-[0.5em] uppercase text-primary animate-pulse">Initializing Vision...</div>
+      </section>
+    );
+  }
+
   return (
     <section className="relative w-full bg-black pt-32 pb-24 md:pt-48 md:pb-40 min-h-[100vh] flex flex-col justify-center overflow-hidden select-none">
       <div className="embla overflow-visible" ref={emblaRef}>
@@ -91,7 +92,7 @@ export function VaelSlider() {
               <div 
                 key={slide.id} 
                 className="embla__slide flex-[0_0_85%] md:flex-[0_0_65%] min-w-0 px-2 md:px-6 relative"
-                onClick={() => setSelectedVideo(slide)}
+                onClick={() => setSelectedVideo(slide as VideoData)}
               >
                 <motion.div
                   initial={false}
@@ -114,7 +115,6 @@ export function VaelSlider() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10" />
                   <div className="absolute inset-0 cinematic-vignette opacity-70 z-10" />
                   
-                  {/* Play Button Icon - as seen in user reference */}
                   {isActive && (
                     <div className="absolute inset-0 flex items-center justify-center z-30 pointer-events-none">
                       <motion.div 

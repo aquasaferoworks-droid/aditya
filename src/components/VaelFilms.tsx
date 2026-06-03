@@ -1,27 +1,33 @@
+
 'use client';
 
 import Image from 'next/image';
 import { Play } from 'lucide-react';
 import { useState } from 'react';
-
-const films = [
-  { id: 'gJKxIAmhbvg', tag: 'Narrative Feature', title: 'Hawthorn', meta: '2024 — 112 minutes — Dolby Vision', award: 'Cannes Official Selection' },
-  { id: 'QdEZtNyJb5g', tag: 'Short Cinema', title: 'Vermilion', meta: '2023 — 28 minutes — 35mm', award: 'Sundance Grand Jury' },
-  { id: 'O1p-JVaAQV0', tag: 'Documentary', title: 'Nocturne', meta: '2023 — 88 minutes — B&W', award: 'Berlin Silver Bear' },
-  { id: 'xTrPSfbWa0w', tag: 'Commissioned', title: 'Aureate', meta: 'Brand Film — 4 minutes — Anamorphic', award: 'Cannes Lions Gold' },
-  { id: '4UATuJFYKfg', tag: 'Narrative Feature', title: 'Stillwater', meta: '2022 — 97 minutes — 4K Raw', award: 'Venice Golden Lion Nom' },
-  { id: 'sroIT5FQMqs', tag: 'Experimental', title: 'Echoes', meta: '2023 — 15 minutes — 16mm', award: 'TIFF Cinematic Award' },
-  { id: 'BYhQMzGxHmg', tag: 'Brand Story', title: 'Prism', meta: '2023 — 2 minutes — Stylized', award: 'Clio Film Gold' },
-  { id: 'eFhx307ykrk', tag: 'Documentary', title: 'Solace', meta: '2024 — 45 minutes — Verite', award: 'IDFA Special Mention' },
-  { id: 'lya8BHX-8SY', tag: 'Fashion Cinema', title: 'Kinetic', meta: '2023 — 3 minutes — Motion', award: 'Vogue Film Prize' },
-];
+import { useFirestore, useCollection } from '@/firebase';
+import { collection, query, where, orderBy } from 'firebase/firestore';
+import { useMemoFirebase } from '@/firebase/firestore/use-collection';
 
 export function VaelFilms() {
+  const firestore = useFirestore();
   const [hoveredFilm, setHoveredFilm] = useState<string | null>(null);
+
+  const galleryQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return query(
+      collection(firestore, 'videos'), 
+      where('type', '==', 'film-gallery'),
+      orderBy('order', 'asc')
+    );
+  }, [firestore]);
+
+  const { data: films, loading } = useCollection(galleryQuery);
 
   const getCleanYoutubeEmbed = (id: string, isHovered: boolean) => {
     return `https://www.youtube.com/embed/${id}?autoplay=${isHovered ? 1 : 0}&mute=1&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&fs=0&loop=1&playlist=${id}&enablejsapi=1`;
   };
+
+  if (loading || !films || films.length === 0) return null;
 
   return (
     <section id="work" className="py-32 bg-background px-8 md:px-16">
@@ -38,7 +44,7 @@ export function VaelFilms() {
       </div>
 
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-border/20 border border-border/20">
-        {films.map((film, idx) => {
+        {films.map((film) => {
           const isHovered = hoveredFilm === film.id;
 
           return (
@@ -50,7 +56,7 @@ export function VaelFilms() {
             >
               <div className={`absolute inset-0 z-20 transition-opacity duration-1000 ${isHovered ? 'opacity-0' : 'opacity-100'}`}>
                 <Image 
-                  src={`https://img.youtube.com/vi/${film.id}/maxresdefault.jpg`} 
+                  src={`https://img.youtube.com/vi/${film.youtubeId}/maxresdefault.jpg`} 
                   alt={film.title}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-1000"
@@ -62,7 +68,7 @@ export function VaelFilms() {
                 <div className="absolute inset-0 z-30 pointer-events-none scale-[1.2]">
                   <iframe
                     className="w-full h-full"
-                    src={getCleanYoutubeEmbed(film.id, true)}
+                    src={getCleanYoutubeEmbed(film.youtubeId, true)}
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   />
@@ -83,7 +89,7 @@ export function VaelFilms() {
               )}
 
               <div className="absolute bottom-0 left-0 p-10 w-full z-50 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-700 ease-out">
-                <span className="text-[8px] tracking-[0.5em] text-primary uppercase mb-3 block font-medium">{film.tag}</span>
+                <span className="text-[8px] tracking-[0.5em] text-primary uppercase mb-3 block font-medium">{film.category}</span>
                 <h3 className="text-3xl md:text-5xl font-headline text-white mb-3 italic tracking-tighter">{film.title}</h3>
                 <p className="text-[9px] tracking-[0.3em] text-white/50 uppercase font-light">{film.meta}</p>
               </div>
