@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useFirestore, useCollection } from '@/firebase';
 import { collection, addDoc, deleteDoc, doc, serverTimestamp, query, orderBy, writeBatch } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
@@ -31,7 +32,7 @@ export default function AdminPage() {
     category: '',
     youtubeId: '',
     type: 'slider',
-    role: '',
+    role: 'Director',
     meta: '',
     award: '',
     order: 0
@@ -42,7 +43,18 @@ export default function AdminPage() {
     return query(collection(firestore, 'videos'), orderBy('order', 'asc'));
   }, [firestore]);
 
-  const { data: videos, loading: videosLoading } = useCollection(videosQuery);
+  const { data: videos, loading: videosLoading, error: videosError } = useCollection(videosQuery);
+
+  useEffect(() => {
+    if (videosError) {
+      console.error("Firestore access error:", videosError);
+      toast({ 
+        title: "Connection Error", 
+        description: "Failed to connect to the archive. Please check your Firebase configuration.", 
+        variant: "destructive" 
+      });
+    }
+  }, [videosError, toast]);
 
   const extractYoutubeId = (urlOrId: string) => {
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -53,7 +65,7 @@ export default function AdminPage() {
   const handleAddVideo = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!firestore) {
-      toast({ title: "Error", description: "Firebase not initialized. Check your .env file.", variant: "destructive" });
+      toast({ title: "Error", description: "Firebase is not initialized. Please verify your environment variables.", variant: "destructive" });
       return;
     }
     
@@ -61,7 +73,7 @@ export default function AdminPage() {
     const cleanId = extractYoutubeId(formData.youtubeId);
 
     try {
-      console.log('Attempting to publish:', formData.title);
+      console.log('Attempting to publish to Firestore:', formData.title);
       await addDoc(collection(firestore, 'videos'), {
         ...formData,
         youtubeId: cleanId,
@@ -76,41 +88,47 @@ export default function AdminPage() {
         category: '',
         youtubeId: '',
         type: formData.type,
-        role: '',
+        role: 'Director',
         meta: '',
         award: '',
         order: (videos?.length || 0) + 1
       });
     } catch (error: any) {
-      console.error('Error adding video:', error);
-      toast({ title: "Publishing Failed", description: error.message || "Network error", variant: "destructive" });
+      console.error('Detailed Error adding video:', error);
+      toast({ 
+        title: "Publishing Failed", 
+        description: error.message || "Is Firestore enabled in your project?", 
+        variant: "destructive" 
+      });
     } finally {
       setIsAdding(false);
     }
   };
 
   const seedShowcase = async () => {
-    if (!firestore || !confirm('This will populate your archive with your 6 flagship projects. Continue?')) return;
+    if (!firestore || !confirm('This will populate your archive with 6 flagship projects. Continue?')) return;
     setIsSeeding(true);
     
-    const batch = writeBatch(firestore);
-    const defaultProjects = [
-      { title: 'HAWTHORN', youtubeId: 'NWPzwV3le50', type: 'slider', role: 'Director', category: 'Narrative', order: 1 },
-      { title: 'VERMILION', youtubeId: 'lhdHDEhtMiI', type: 'slider', role: 'Director', category: 'Commercial', order: 2 },
-      { title: 'NOCTURNE', youtubeId: 'nHSssoiMRE4', type: 'slider', role: 'Director', category: 'Documentary', order: 3 },
-      { title: 'VERTICAL ONE', youtubeId: 'NWPzwV3le50', type: 'reel-vertical', role: 'Director', category: 'Fashion', order: 4 },
-      { title: 'VERTICAL TWO', youtubeId: 'lhdHDEhtMiI', type: 'reel-vertical', role: 'Director', category: 'Lifestyle', order: 5 },
-      { title: 'VERTICAL THREE', youtubeId: 'nHSssoiMRE4', type: 'reel-vertical', role: 'Director', category: 'Art', order: 6 },
-    ];
-
     try {
+      const batch = writeBatch(firestore);
+      const defaultProjects = [
+        { title: 'HAWTHORN', youtubeId: 'NWPzwV3le50', type: 'slider', role: 'Director', category: 'Narrative', order: 1 },
+        { title: 'VERMILION', youtubeId: 'lhdHDEhtMiI', type: 'slider', role: 'Director', category: 'Commercial', order: 2 },
+        { title: 'NOCTURNE', youtubeId: 'nHSssoiMRE4', type: 'slider', role: 'Director', category: 'Documentary', order: 3 },
+        { title: 'VERTICAL ONE', youtubeId: 'NWPzwV3le50', type: 'reel-vertical', role: 'Director', category: 'Fashion', order: 4 },
+        { title: 'VERTICAL TWO', youtubeId: 'lhdHDEhtMiI', type: 'reel-vertical', role: 'Director', category: 'Lifestyle', order: 5 },
+        { title: 'VERTICAL THREE', youtubeId: 'nHSssoiMRE4', type: 'reel-vertical', role: 'Director', category: 'Art', order: 6 },
+      ];
+
       defaultProjects.forEach(proj => {
         const newDoc = doc(collection(firestore, 'videos'));
         batch.set(newDoc, { ...proj, createdAt: serverTimestamp() });
       });
+      
       await batch.commit();
       toast({ title: "Seeded", description: "Flagship projects added to your archive." });
     } catch (error: any) {
+      console.error("Seeding error:", error);
       toast({ title: "Seed Failed", description: error.message, variant: "destructive" });
     } finally {
       setIsSeeding(false);
