@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState } from 'react';
@@ -24,15 +23,6 @@ interface VideoItem {
   youtubeId: string;
   type: string;
 }
-
-const mockReel: VideoItem[] = [
-  { id: 'm1', title: 'CINEMATIC REEL', category: 'Showcase', youtubeId: 'NWPzwV3le50', type: 'reel-horizontal' },
-  { id: 'm2', title: 'BRAND FILM', category: 'Commercial', youtubeId: 'lhdHDEhtMiI', type: 'reel-horizontal' },
-  { id: 'm3', title: 'FEATURE CUT', category: 'Narrative', youtubeId: 'nHSssoiMRE4', type: 'reel-feature' },
-  { id: 'm4', title: 'STORY V1', category: 'Vertical', youtubeId: 'NWPzwV3le50', type: 'reel-vertical' },
-  { id: 'm5', title: 'STORY V2', category: 'Vertical', youtubeId: 'lhdHDEhtMiI', type: 'reel-vertical' },
-  { id: 'm6', title: 'STORY V3', category: 'Vertical', youtubeId: 'nHSssoiMRE4', type: 'reel-vertical' },
-];
 
 interface VideoCardProps {
   video: VideoItem;
@@ -93,18 +83,18 @@ export function VaelReel() {
     );
   }, [firestore]);
 
-  const { data: dbVideos, loading } = useCollection(reelQuery);
-  const videos = dbVideos && dbVideos.length > 0 ? dbVideos : mockReel;
+  const { data: videos, loading } = useCollection(reelQuery);
 
   const getFullUrl = (id: string) => {
     return `https://www.youtube.com/embed/${id}?autoplay=1&mute=0&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&fs=0&loop=1&playlist=${id}&enablejsapi=1`;
   };
 
-  // Filter videos by their structural slots
-  const horizontals = (videos as VideoItem[]).filter(v => v.type === 'reel-horizontal');
-  const feature = (videos as VideoItem[]).find(v => v.type === 'reel-feature');
-  const mediums = (videos as VideoItem[]).filter(v => v.type === 'reel-medium');
-  const verticals = (videos as VideoItem[]).filter(v => v.type === 'reel-vertical');
+  if (!loading && (!videos || videos.length === 0)) return null;
+
+  const horizontals = (videos as VideoItem[] || []).filter(v => v.type === 'reel-horizontal');
+  const feature = (videos as VideoItem[] || []).find(v => v.type === 'reel-feature');
+  const mediums = (videos as VideoItem[] || []).filter(v => v.type === 'reel-medium');
+  const verticals = (videos as VideoItem[] || []).filter(v => v.type === 'reel-vertical');
 
   return (
     <section id="reel" className="py-24 md:py-32 bg-background overflow-hidden border-t border-border/10">
@@ -135,12 +125,14 @@ export function VaelReel() {
           </div>
         )}
 
-        {/* Vertical Reel Section (Locked to 3) */}
-        <div className="grid grid-cols-3 gap-4 md:gap-8">
-          {(verticals.length >= 3 ? verticals.slice(0, 3) : mockReel.filter(v => v.type === 'reel-vertical').slice(0, 3)).map(video => (
-            <VideoCard key={video.id} video={video as VideoItem} aspectRatio="aspect-[9/16]" onClick={setSelectedVideo} />
-          ))}
-        </div>
+        {/* Vertical Reel Section */}
+        {verticals.length > 0 && (
+          <div className="grid grid-cols-3 gap-4 md:gap-8">
+            {verticals.slice(0, 3).map(video => (
+              <VideoCard key={video.id} video={video as VideoItem} aspectRatio="aspect-[9/16]" onClick={setSelectedVideo} />
+            ))}
+          </div>
+        )}
         
       </div>
 

@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
@@ -29,12 +28,6 @@ interface VideoData {
   type: string;
 }
 
-const mockSlides: VideoData[] = [
-  { id: '1', title: 'HAWTHORN', category: 'Narrative', youtubeId: 'NWPzwV3le50', role: 'Director / Visionary', type: 'slider' },
-  { id: '2', title: 'VERMILION', category: 'Short Film', youtubeId: 'lhdHDEhtMiI', role: 'Creative Director', type: 'slider' },
-  { id: '3', title: 'NOCTURNE', category: 'Documentary', youtubeId: 'nHSssoiMRE4', role: 'Director', type: 'slider' },
-];
-
 export function VaelSlider() {
   const firestore = useFirestore();
   const [emblaRef, emblaApi] = useEmblaCarousel(
@@ -59,8 +52,7 @@ export function VaelSlider() {
     );
   }, [firestore]);
 
-  const { data: dbSlides, loading } = useCollection(heroQuery);
-  const slides = dbSlides && dbSlides.length > 0 ? dbSlides : mockSlides;
+  const { data: slides, loading } = useCollection(heroQuery);
 
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
@@ -80,11 +72,13 @@ export function VaelSlider() {
     return base + params;
   };
 
+  if (!loading && (!slides || slides.length === 0)) return null;
+
   return (
     <section className="relative w-full bg-black pt-32 pb-24 md:pt-48 md:pb-40 min-h-[100vh] flex flex-col justify-center overflow-hidden select-none">
       <div className="embla overflow-visible" ref={emblaRef}>
         <div className="embla__container flex items-center">
-          {slides.map((slide, index) => {
+          {slides?.map((slide, index) => {
             const isActive = selectedIndex === index;
             
             return (
@@ -126,7 +120,7 @@ export function VaelSlider() {
       </div>
 
       <div className="flex justify-center gap-4 mt-16 md:mt-24">
-        {slides.map((_, i) => (
+        {slides?.map((_, i) => (
           <button
             key={i}
             onClick={() => emblaApi?.scrollTo(i)}
