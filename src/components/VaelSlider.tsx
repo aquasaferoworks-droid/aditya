@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Play } from 'lucide-react';
+import { X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useFirestore, useCollection } from '@/firebase';
 import { collection, query, where, orderBy } from 'firebase/firestore';
@@ -114,18 +114,6 @@ export function VaelSlider() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10" />
                   <div className="absolute inset-0 cinematic-vignette opacity-70 z-10" />
                   
-                  {isActive && (
-                    <div className="absolute inset-0 flex items-center justify-center z-30 pointer-events-none">
-                      <motion.div 
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 0.9, scale: 1 }}
-                        className="bg-white/10 backdrop-blur-md rounded-none p-6 border border-white/20"
-                      >
-                        <Play className="w-12 h-12 text-white fill-white" />
-                      </motion.div>
-                    </div>
-                  )}
-
                   <div className="absolute bottom-8 left-8 z-20 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-700">
                      <span className="text-[10px] tracking-[0.4em] text-primary uppercase font-bold block mb-1">{slide.role}</span>
                      <h3 className="text-2xl md:text-4xl font-headline text-white italic tracking-tighter">{slide.title}</h3>

@@ -2,7 +2,6 @@
 'use client';
 
 import Image from 'next/image';
-import { Play } from 'lucide-react';
 import { useState } from 'react';
 import { useFirestore, useCollection } from '@/firebase';
 import { collection, query, where, orderBy } from 'firebase/firestore';
@@ -76,12 +75,6 @@ export function VaelFilms() {
                 </div>
               )}
               
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-50 pointer-events-none">
-                <div className="w-20 h-20 rounded-full border border-primary/40 flex items-center justify-center bg-black/40 backdrop-blur-md group-hover:scale-110 transition-transform">
-                  <Play className="w-6 h-6 text-primary fill-primary" />
-                </div>
-              </div>
-
               {film.award && (
                 <div className="absolute top-8 left-8 border border-white/20 px-4 py-1.5 text-[8px] tracking-[0.3em] text-white uppercase z-50 opacity-100 transition-opacity">
                   {film.award}
