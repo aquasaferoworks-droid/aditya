@@ -8,8 +8,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { VaelHeader } from '@/components/VaelHeader';
-import { Loader2, Plus, Trash2, ExternalLink, LayoutGrid, Film, Smartphone, Maximize, List } from 'lucide-react';
+import { Loader2, Plus, Trash2, ExternalLink, LayoutGrid, Film, Smartphone, Maximize, List, CheckCircle2 } from 'lucide-react';
 import { useMemoFirebase } from '@/firebase/firestore/use-collection';
+import { useToast } from '@/hooks/use-toast';
 
 const CATEGORIES = [
   { value: 'slider', label: 'Scroll Videos (Hero Slider)', icon: Film },
@@ -22,6 +23,7 @@ const CATEGORIES = [
 
 export default function AdminPage() {
   const firestore = useFirestore();
+  const { toast } = useToast();
   const [isAdding, setIsAdding] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
@@ -41,28 +43,45 @@ export default function AdminPage() {
 
   const { data: videos, loading: videosLoading } = useCollection(videosQuery);
 
+  const extractYoutubeId = (urlOrId: string) => {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = urlOrId.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : urlOrId;
+  };
+
   const handleAddVideo = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!firestore) return;
+    if (!firestore) {
+      toast({ title: "Error", description: "Firebase not initialized", variant: "destructive" });
+      return;
+    }
+    
     setIsAdding(true);
+    const cleanId = extractYoutubeId(formData.youtubeId);
+
     try {
       await addDoc(collection(firestore, 'videos'), {
         ...formData,
+        youtubeId: cleanId,
         order: Number(formData.order),
         createdAt: serverTimestamp()
       });
+      
+      toast({ title: "Success", description: `${formData.title} published to archive.` });
+      
       setFormData({
         title: '',
         category: '',
         youtubeId: '',
-        type: 'slider',
+        type: formData.type, // Keep same type for multi-add
         role: '',
         meta: '',
         award: '',
-        order: videos ? videos.length + 1 : 0
+        order: (videos?.length || 0) + 1
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error adding video', error);
+      toast({ title: "Publishing Failed", description: error.message, variant: "destructive" });
     } finally {
       setIsAdding(false);
     }
@@ -72,8 +91,10 @@ export default function AdminPage() {
     if (!firestore || !confirm('Are you sure you want to delete this project?')) return;
     try {
       await deleteDoc(doc(firestore, 'videos', id));
-    } catch (error) {
+      toast({ title: "Deleted", description: "Entry removed from archive." });
+    } catch (error: any) {
       console.error('Error deleting video', error);
+      toast({ title: "Delete Failed", description: error.message, variant: "destructive" });
     }
   };
 
@@ -82,7 +103,6 @@ export default function AdminPage() {
       <VaelHeader />
       
       <div className="flex pt-24 min-h-screen">
-        {/* Admin Sidebar */}
         <aside className="w-80 border-r border-white/5 bg-card/20 hidden lg:flex flex-col sticky top-24 h-[calc(100vh-6rem)] p-8 overflow-y-auto">
           <div className="mb-10">
             <h2 className="text-[10px] tracking-[0.5em] uppercase text-primary font-bold mb-4">Archive Manager</h2>
@@ -124,10 +144,10 @@ export default function AdminPage() {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-[9px] uppercase tracking-widest text-muted-foreground">YouTube ID</Label>
+                <Label className="text-[9px] uppercase tracking-widest text-muted-foreground">YouTube ID or URL</Label>
                 <Input 
                   required
-                  placeholder="e.g., NWPzwV3le50" 
+                  placeholder="Paste URL or ID..." 
                   className="rounded-none bg-background border-white/10 h-11"
                   value={formData.youtubeId}
                   onChange={e => setFormData({...formData, youtubeId: e.target.value})}
@@ -159,20 +179,19 @@ export default function AdminPage() {
             <Button 
               type="submit" 
               disabled={isAdding}
-              className="w-full rounded-none bg-primary text-primary-foreground py-6 h-auto text-[10px] tracking-[0.2em] uppercase font-bold"
+              className="w-full rounded-none bg-primary text-primary-foreground py-6 h-auto text-[10px] tracking-[0.2em] uppercase font-bold hover:bg-white hover:text-black transition-all"
             >
               {isAdding ? <Loader2 className="animate-spin" /> : <Plus className="mr-2 w-4 h-4" />}
-              Publish Film
+              {isAdding ? 'Publishing...' : 'Publish Film'}
             </Button>
           </form>
         </aside>
 
-        {/* Main Content Area */}
         <div className="flex-1 p-8 md:p-16">
           <div className="max-w-6xl mx-auto space-y-12">
             <header className="space-y-4">
-              <h1 className="text-5xl md:text-7xl font-headline italic font-bold tracking-tighter">
-                ACTIVE <span className="text-primary not-italic font-light">ARCHIVE</span>
+              <h1 className="text-5xl md:text-7xl font-headline italic font-bold tracking-tighter uppercase">
+                Active <span className="text-primary not-italic font-light">Archive</span>
               </h1>
               <div className="flex items-center gap-6">
                  <div className="w-12 h-px bg-primary/30" />

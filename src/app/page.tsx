@@ -4,6 +4,7 @@ import { VaelAwards } from '@/components/VaelAwards';
 import { VaelContact } from '@/components/VaelContact';
 import { VaelFooter } from '@/components/VaelFooter';
 import { VaelSlider } from '@/components/VaelSlider';
+import { VaelFilms } from '@/components/VaelFilms';
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
       {/* Rest of the content scrolls naturally now */}
       <div className="bg-background">
         <VaelReel />
+        <VaelFilms />
         <VaelAwards />
         <VaelContact />
         <VaelFooter />
