@@ -3,7 +3,8 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Award, Info } from 'lucide-react';
+import { X, Award, Play } from 'lucide-react';
+import Image from 'next/image';
 import { useFirestore, useCollection } from '@/firebase';
 import { collection } from 'firebase/firestore';
 import { useMemoFirebase } from '@/firebase/firestore/use-collection';
@@ -20,7 +21,7 @@ import {
 interface VideoItem {
   id: string;
   title: string;
-  category: string;
+  category: string | string[];
   youtubeId: string;
   type: string;
   role: string;
@@ -29,47 +30,44 @@ interface VideoItem {
   order?: number;
 }
 
-interface VideoCardProps {
-  video: VideoItem;
-  aspectRatio: string;
-  className?: string;
-  onClick: (video: VideoItem) => void;
-}
-
-const VideoCard = ({ video, aspectRatio, className = "", onClick }: VideoCardProps) => {
+const VideoCard = ({ video, aspectRatio, onClick }: { video: VideoItem, aspectRatio: string, onClick: (v: VideoItem) => void }) => {
   const [isHovered, setIsHovered] = useState(false);
-
-  const getPreviewUrl = (id: string) => {
-    return `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&fs=0&loop=1&playlist=${id}&enablejsapi=1`;
-  };
 
   return (
     <motion.div
-      className={`relative overflow-hidden bg-black border border-white/5 group cursor-pointer ${aspectRatio} ${className} rounded-none`}
+      className={`relative overflow-hidden bg-zinc-900 border border-white/5 group cursor-pointer ${aspectRatio} rounded-none`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={() => onClick(video)}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+      transition={{ duration: 0.8 }}
     >
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <iframe
-          className={`w-full h-full scale-[1.3] transition-transform duration-1000 ease-out ${isHovered ? 'scale-[1.4]' : ''}`}
-          src={getPreviewUrl(video.youtubeId)}
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      <div className="absolute inset-0 z-0">
+        <Image 
+          src={`https://img.youtube.com/vi/${video.youtubeId}/maxresdefault.jpg`}
+          alt={video.title}
+          fill
+          className="object-cover transition-transform duration-1000 group-hover:scale-110"
         />
       </div>
       
       <div className="absolute inset-0 bg-black/50 group-hover:bg-black/10 transition-colors duration-700 z-10" />
       <div className="absolute inset-0 cinematic-vignette opacity-60 z-10" />
+
+      <div className="absolute inset-0 flex items-center justify-center z-20 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="w-12 h-12 rounded-full border border-primary flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <Play className="w-4 h-4 text-primary fill-primary ml-0.5" />
+        </div>
+      </div>
       
-      {/* Enhanced Split Metadata Overlay */}
-      <div className="absolute inset-0 z-20 p-6 flex flex-col justify-between translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none">
+      {/* Split Metadata Overlay */}
+      <div className="absolute inset-0 z-30 p-6 flex flex-col justify-between translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none">
         <div className="flex justify-between items-start">
-           <span className="text-[8px] tracking-[0.4em] text-primary uppercase font-bold bg-black/40 px-2 py-1 border border-primary/20">{video.category}</span>
+           <span className="text-[8px] tracking-[0.4em] text-primary uppercase font-bold bg-black/40 px-2 py-1 border border-primary/20">
+             {Array.isArray(video.category) ? video.category[0] : video.category}
+           </span>
            {video.award && <Award className="w-4 h-4 text-primary drop-shadow-lg" />}
         </div>
         
@@ -100,9 +98,7 @@ export function VaelReel() {
 
   const { data: allVideos, loading } = useCollection(reelQuery);
 
-  const getFullUrl = (id: string) => {
-    return `https://www.youtube.com/embed/${id}?autoplay=1&mute=0&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&fs=0&loop=1&playlist=${id}&enablejsapi=1`;
-  };
+  const getFullUrl = (id: string) => `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&showinfo=0&modestbranding=1`;
 
   const videos = (allVideos as VideoItem[] || []).sort((a, b) => (a.order || 0) - (b.order || 0));
   
@@ -116,83 +112,40 @@ export function VaelReel() {
   return (
     <section id="reel" className="py-24 md:py-32 bg-background overflow-hidden border-t border-border/10">
       <div className="max-w-[1600px] mx-auto px-4 md:px-16 space-y-4 md:space-y-8">
-        
         {horizontals.length > 0 && (
           <div className="grid grid-cols-2 gap-4 md:gap-8">
-            {horizontals.map(video => (
-              <VideoCard key={video.id} video={video} aspectRatio="aspect-video" onClick={setSelectedVideo} />
-            ))}
+            {horizontals.map(video => <VideoCard key={video.id} video={video} aspectRatio="aspect-video" onClick={setSelectedVideo} />)}
           </div>
         )}
-
-        {feature && (
-          <div className="w-full">
-            <VideoCard video={feature} aspectRatio="aspect-[21/9]" onClick={setSelectedVideo} />
-          </div>
-        )}
-
+        {feature && <VideoCard video={feature} aspectRatio="aspect-[21/9]" onClick={setSelectedVideo} />}
         {mediums.length > 0 && (
           <div className="grid grid-cols-2 gap-4 md:gap-8">
-            {mediums.map(video => (
-              <VideoCard key={video.id} video={video} aspectRatio="aspect-[16/10]" onClick={setSelectedVideo} />
-            ))}
+            {mediums.map(video => <VideoCard key={video.id} video={video} aspectRatio="aspect-[16/10]" onClick={setSelectedVideo} />)}
           </div>
         )}
-
         {verticals.length > 0 && (
           <div className="grid grid-cols-3 gap-4 md:gap-8">
-            {verticals.slice(0, 3).map(video => (
-              <VideoCard key={video.id} video={video} aspectRatio="aspect-[9/16]" onClick={setSelectedVideo} />
-            ))}
+            {verticals.slice(0, 3).map(video => <VideoCard key={video.id} video={video} aspectRatio="aspect-[9/16]" onClick={setSelectedVideo} />)}
           </div>
         )}
-        
       </div>
 
       <Dialog open={!!selectedVideo} onOpenChange={(open) => !open && setSelectedVideo(null)}>
         <DialogPortal>
           <DialogOverlay className="z-[190] bg-black/90 backdrop-blur-xl" />
-          <DialogContent className="z-[200] max-w-[95vw] md:max-w-6xl bg-black border border-white/10 p-0 overflow-hidden shadow-[0_0_100px_rgba(0,0,0,1)] rounded-none aspect-video focus:outline-none">
-            <DialogTitle className="sr-only">
-              {selectedVideo?.title} — {selectedVideo?.category}
-            </DialogTitle>
-            <DialogDescription className="sr-only">
-              Viewing {selectedVideo?.title} directed by Errol Aditya.
-            </DialogDescription>
-            
-            <AnimatePresence mode="wait">
-              {selectedVideo && (
-                <motion.div 
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
-                  className="relative w-full h-full flex items-center justify-center group/modal"
-                >
-                  <iframe
-                    className="w-full h-full"
-                    src={getFullUrl(selectedVideo.youtubeId)}
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
-
-                  <div className="absolute top-6 left-8 z-[210] pointer-events-none drop-shadow-lg">
-                    <div className="flex flex-col gap-1">
-                      <span className="text-[10px] tracking-[0.4em] text-primary uppercase font-bold">{selectedVideo.category}</span>
-                      <span className="text-2xl md:text-3xl tracking-tight text-white italic font-headline font-bold uppercase">{selectedVideo.title}</span>
-                    </div>
+          <DialogContent className="z-[200] max-w-[95vw] md:max-w-6xl bg-black border border-white/10 p-0 overflow-hidden rounded-none aspect-video focus:outline-none">
+            <DialogTitle className="sr-only">{selectedVideo?.title}</DialogTitle>
+            <DialogDescription className="sr-only">Viewing project details</DialogDescription>
+            {selectedVideo && (
+              <div className="relative w-full h-full">
+                <iframe className="w-full h-full" src={getFullUrl(selectedVideo.youtubeId)} frameBorder="0" allowFullScreen />
+                <DialogClose className="absolute top-6 right-6 z-[220]">
+                  <div className="w-10 h-10 bg-black/40 border border-white/10 flex items-center justify-center">
+                    <X className="w-5 h-5 text-white" />
                   </div>
-
-                  <DialogClose className="absolute top-6 right-6 z-[220] transition-all duration-300 group/close">
-                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-none bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center group-hover/close:border-primary/50 group-hover/close:scale-110 transition-all">
-                      <X className="w-5 h-5 md:w-6 md:h-6 text-white group-hover/close:text-primary transition-colors" strokeWidth={1.5} />
-                    </div>
-                    <span className="sr-only">Close Player</span>
-                  </DialogClose>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                </DialogClose>
+              </div>
+            )}
           </DialogContent>
         </DialogPortal>
       </Dialog>
