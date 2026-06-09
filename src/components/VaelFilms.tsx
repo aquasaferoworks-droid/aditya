@@ -7,7 +7,7 @@ import { useSearchParams } from 'next/navigation';
 import { useFirestore, useCollection } from '@/firebase';
 import { collection } from 'firebase/firestore';
 import { useMemoFirebase } from '@/firebase/firestore/use-collection';
-import { Play, FilterX } from 'lucide-react';
+import { Play, FilterX, Award, Camera } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export function VaelFilms() {
@@ -82,7 +82,7 @@ export function VaelFilms() {
                         fill
                         className="object-cover group-hover:scale-110 transition-transform duration-1000"
                       />
-                      <div className="absolute inset-0 bg-black/60 group-hover:bg-black/30 transition-colors duration-700" />
+                      <div className="absolute inset-0 bg-black/70 group-hover:bg-black/30 transition-colors duration-700" />
                     </div>
 
                     {isHovered && (
@@ -97,10 +97,28 @@ export function VaelFilms() {
                       </div>
                     )}
                     
-                    <div className="absolute bottom-0 left-0 p-8 w-full z-50 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-700 ease-out">
-                      <span className="text-[8px] tracking-[0.5em] text-primary uppercase mb-2 block font-medium">{film.category}</span>
-                      <h3 className="text-2xl md:text-4xl font-headline text-white mb-2 italic tracking-tighter leading-none uppercase">{film.title}</h3>
-                      <p className="text-[8px] tracking-[0.3em] text-white/50 uppercase font-light">{film.meta || film.role}</p>
+                    {/* Enhanced Split Metadata Overlay */}
+                    <div className="absolute bottom-0 left-0 p-8 w-full z-50 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-700 ease-out flex items-end justify-between gap-8">
+                      <div className="flex-1">
+                        <span className="text-[9px] tracking-[0.4em] text-primary uppercase mb-2 block font-bold">{film.role}</span>
+                        <h3 className="text-2xl md:text-3xl font-headline text-white mb-2 italic tracking-tighter leading-none uppercase">{film.title}</h3>
+                        {film.award && (
+                          <div className="flex items-center gap-2 text-primary">
+                            <Award className="w-3 h-3" />
+                            <span className="text-[7px] tracking-[0.2em] uppercase font-bold">{film.award}</span>
+                          </div>
+                        )}
+                      </div>
+                      
+                      <div className="text-right hidden sm:block">
+                        <span className="text-[8px] tracking-[0.5em] text-white/50 uppercase block mb-1 font-medium">{film.category}</span>
+                        {film.meta && (
+                          <div className="flex items-center justify-end gap-1.5 text-white/30">
+                            <Camera className="w-2.5 h-2.5" />
+                            <span className="text-[7px] tracking-[0.2em] uppercase">{film.meta}</span>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 )

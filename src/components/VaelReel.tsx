@@ -1,8 +1,9 @@
+
 'use client';
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
+import { X, Award, Info } from 'lucide-react';
 import { useFirestore, useCollection } from '@/firebase';
 import { collection } from 'firebase/firestore';
 import { useMemoFirebase } from '@/firebase/firestore/use-collection';
@@ -22,6 +23,9 @@ interface VideoItem {
   category: string;
   youtubeId: string;
   type: string;
+  role: string;
+  meta?: string;
+  award?: string;
   order?: number;
 }
 
@@ -59,12 +63,27 @@ const VideoCard = ({ video, aspectRatio, className = "", onClick }: VideoCardPro
         />
       </div>
       
-      <div className="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors duration-700 z-10" />
-      <div className="absolute inset-0 cinematic-vignette opacity-50 z-10" />
+      <div className="absolute inset-0 bg-black/50 group-hover:bg-black/10 transition-colors duration-700 z-10" />
+      <div className="absolute inset-0 cinematic-vignette opacity-60 z-10" />
       
-      <div className="absolute bottom-6 left-6 z-20 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none">
-        <span className="text-[8px] tracking-[0.4em] text-primary uppercase font-bold block mb-1">{video.category}</span>
-        <h3 className="text-lg md:text-xl font-headline text-white italic tracking-tighter uppercase">{video.title}</h3>
+      {/* Enhanced Split Metadata Overlay */}
+      <div className="absolute inset-0 z-20 p-6 flex flex-col justify-between translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none">
+        <div className="flex justify-between items-start">
+           <span className="text-[8px] tracking-[0.4em] text-primary uppercase font-bold bg-black/40 px-2 py-1 border border-primary/20">{video.category}</span>
+           {video.award && <Award className="w-4 h-4 text-primary drop-shadow-lg" />}
+        </div>
+        
+        <div className="flex justify-between items-end gap-4">
+          <div className="flex-1">
+            <span className="text-[7px] tracking-[0.5em] text-white/50 uppercase font-bold block mb-1">{video.role}</span>
+            <h3 className="text-lg md:text-2xl font-headline text-white italic tracking-tighter uppercase leading-none">{video.title}</h3>
+          </div>
+          {video.meta && (
+            <span className="text-[7px] tracking-[0.3em] text-white/40 uppercase whitespace-nowrap mb-1">
+              {video.meta}
+            </span>
+          )}
+        </div>
       </div>
     </motion.div>
   );
@@ -85,7 +104,6 @@ export function VaelReel() {
     return `https://www.youtube.com/embed/${id}?autoplay=1&mute=0&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&fs=0&loop=1&playlist=${id}&enablejsapi=1`;
   };
 
-  // Local filtering and sorting to avoid index/permission constraints
   const videos = (allVideos as VideoItem[] || []).sort((a, b) => (a.order || 0) - (b.order || 0));
   
   const horizontals = videos.filter(v => v.type === 'reel-horizontal');
@@ -102,21 +120,21 @@ export function VaelReel() {
         {horizontals.length > 0 && (
           <div className="grid grid-cols-2 gap-4 md:gap-8">
             {horizontals.map(video => (
-              <VideoCard key={video.id} video={video as VideoItem} aspectRatio="aspect-video" onClick={setSelectedVideo} />
+              <VideoCard key={video.id} video={video} aspectRatio="aspect-video" onClick={setSelectedVideo} />
             ))}
           </div>
         )}
 
         {feature && (
           <div className="w-full">
-            <VideoCard video={feature as VideoItem} aspectRatio="aspect-[21/9]" onClick={setSelectedVideo} />
+            <VideoCard video={feature} aspectRatio="aspect-[21/9]" onClick={setSelectedVideo} />
           </div>
         )}
 
         {mediums.length > 0 && (
           <div className="grid grid-cols-2 gap-4 md:gap-8">
             {mediums.map(video => (
-              <VideoCard key={video.id} video={video as VideoItem} aspectRatio="aspect-[16/10]" onClick={setSelectedVideo} />
+              <VideoCard key={video.id} video={video} aspectRatio="aspect-[16/10]" onClick={setSelectedVideo} />
             ))}
           </div>
         )}
@@ -124,7 +142,7 @@ export function VaelReel() {
         {verticals.length > 0 && (
           <div className="grid grid-cols-3 gap-4 md:gap-8">
             {verticals.slice(0, 3).map(video => (
-              <VideoCard key={video.id} video={video as VideoItem} aspectRatio="aspect-[9/16]" onClick={setSelectedVideo} />
+              <VideoCard key={video.id} video={video} aspectRatio="aspect-[9/16]" onClick={setSelectedVideo} />
             ))}
           </div>
         )}

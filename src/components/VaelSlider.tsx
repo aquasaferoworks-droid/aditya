@@ -1,10 +1,11 @@
+
 'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Play } from 'lucide-react';
+import { X, Play, Award, Film } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useFirestore, useCollection } from '@/firebase';
 import { collection } from 'firebase/firestore';
@@ -26,6 +27,8 @@ interface VideoData {
   youtubeId: string;
   role: string;
   type: string;
+  meta?: string;
+  award?: string;
   order?: number;
 }
 
@@ -133,9 +136,24 @@ export function VaelSlider() {
                     </div>
                   </div>
 
-                  <div className="absolute bottom-6 left-6 md:bottom-10 md:left-10 z-30 translate-y-4 group-hover:translate-y-0 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-700">
-                     <span className="text-[9px] md:text-[10px] tracking-[0.4em] text-primary uppercase font-bold block mb-1">{slide.role || 'Director'}</span>
-                     <h3 className="text-xl md:text-5xl font-headline text-white italic tracking-tighter uppercase leading-none">{slide.title}</h3>
+                  {/* Enhanced Metadata Overlay - Split Sides */}
+                  <div className="absolute bottom-0 left-0 w-full p-6 md:p-10 z-30 flex items-end justify-between translate-y-4 group-hover:translate-y-0 transition-all duration-700">
+                     <div className="space-y-1">
+                        <span className="text-[9px] md:text-[10px] tracking-[0.4em] text-primary uppercase font-bold block mb-1">{slide.role || 'Director'}</span>
+                        <h3 className="text-xl md:text-5xl font-headline text-white italic tracking-tighter uppercase leading-none">{slide.title}</h3>
+                     </div>
+                     <div className="text-right space-y-2 hidden md:block">
+                        {slide.award && (
+                          <div className="flex items-center justify-end gap-2 text-primary">
+                            <Award className="w-3.5 h-3.5" />
+                            <span className="text-[9px] tracking-[0.2em] uppercase font-bold">{slide.award}</span>
+                          </div>
+                        )}
+                        <div className="flex items-center justify-end gap-2 text-white/40">
+                          <Film className="w-3 h-3" />
+                          <span className="text-[8px] tracking-[0.3em] uppercase">{slide.category} • {slide.meta || 'Cinematic'}</span>
+                        </div>
+                     </div>
                   </div>
                 </motion.div>
               </div>
@@ -143,22 +161,6 @@ export function VaelSlider() {
           })}
         </div>
       </div>
-
-      {slides.length > 1 && (
-        <div className="flex justify-center gap-3 mt-12 md:mt-16">
-          {slides.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => emblaApi?.scrollTo(i)}
-              className={cn(
-                "h-0.5 transition-all duration-1000 rounded-none",
-                selectedIndex === i ? "w-16 md:w-24 bg-primary" : "w-8 md:w-12 bg-white/10 hover:bg-white/30"
-              )}
-              aria-label={`Go to slide ${i + 1}`}
-            />
-          ))}
-        </div>
-      )}
 
       <Dialog open={!!selectedVideo} onOpenChange={(open) => !open && setSelectedVideo(null)}>
         <DialogPortal>
@@ -187,13 +189,6 @@ export function VaelSlider() {
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                   />
-
-                  <div className="absolute top-6 left-6 md:top-8 md:left-10 z-[70] pointer-events-none drop-shadow-lg">
-                    <div className="flex flex-col gap-1">
-                      <span className="text-[10px] tracking-[0.4em] text-primary uppercase font-bold">{selectedVideo.role}</span>
-                      <span className="text-xl md:text-3xl tracking-tight text-white italic font-headline font-bold uppercase">{selectedVideo.title}</span>
-                    </div>
-                  </div>
 
                   <DialogClose className="absolute top-6 right-6 md:top-8 md:right-8 z-[201] transition-all duration-300">
                     <div className="w-10 h-10 md:w-12 md:h-12 rounded-none bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center hover:border-primary/50 hover:scale-110 transition-all">
