@@ -3,13 +3,13 @@
 
 import { useState, useEffect } from 'react';
 import { useFirestore, useCollection } from '@/firebase';
-import { collection, addDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, deleteDoc, doc, serverTimestamp, writeBatch } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { VaelHeader } from '@/components/VaelHeader';
-import { Loader2, Plus, Trash2, ExternalLink, LayoutGrid, Film, Smartphone, Maximize, List, AlertCircle, Award, Tag, Info, Check } from 'lucide-react';
+import { Loader2, Plus, Trash2, ExternalLink, LayoutGrid, Film, Smartphone, Maximize, List, AlertCircle, Award, Tag, Info, DatabaseZap } from 'lucide-react';
 import { useMemoFirebase } from '@/firebase/firestore/use-collection';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -20,10 +20,9 @@ import { cn } from '@/lib/utils';
 const PLACEMENT_TYPES = [
   { value: 'slider', label: 'Scroll Videos (Hero Slider)', icon: Film },
   { value: 'reel-horizontal', label: 'Small Box (Horizontal)', icon: LayoutGrid },
-  { value: 'reel-medium', label: 'Small Box (Medium)', icon: LayoutGrid },
-  { value: 'reel-vertical', label: 'Vertical Videos (9:16)', icon: Smartphone },
   { value: 'reel-feature', label: 'Big Videos (Wide Feature)', icon: Maximize },
-  { value: 'film-gallery', label: 'Filmography List', icon: List },
+  { value: 'reel-vertical', label: 'Vertical Videos (9:16)', icon: Smartphone },
+  { value: 'film-gallery', label: 'Filmography Grid', icon: List },
 ];
 
 const CATEGORIES = [
@@ -38,17 +37,26 @@ const CATEGORIES = [
   'food'
 ];
 
+// Helper to extract YouTube ID
+const extractYoutubeId = (urlOrId: string) => {
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const match = urlOrId.match(regExp);
+  return (match && match[2].length === 11) ? match[2] : urlOrId;
+};
+
 export default function AdminPage() {
   const firestore = useFirestore();
   const { toast } = useToast();
   const [isAdding, setIsAdding] = useState(false);
+  const [isSeeding, setIsSeeding] = useState(false);
+  
   const [formData, setFormData] = useState({
     title: '',
+    upperText: '',
+    lowerText: '',
     category: ['ads'] as string[],
     youtubeId: '',
-    type: 'slider',
-    role: 'Director',
-    meta: '',
+    type: 'film-gallery',
     award: '',
     order: 0
   });
@@ -69,12 +77,6 @@ export default function AdminPage() {
 
   const sortedVideos = (rawVideos || []).sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
 
-  const extractYoutubeId = (urlOrId: string) => {
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-    const match = urlOrId.match(regExp);
-    return (match && match[2].length === 11) ? match[2] : urlOrId;
-  };
-
   const handleCategoryToggle = (cat: string) => {
     setFormData(prev => {
       const current = prev.category;
@@ -91,7 +93,7 @@ export default function AdminPage() {
     if (!firestore) return;
     
     if (formData.category.length === 0) {
-      toast({ title: "Selection Required", description: "Please select at least one genre.", variant: "destructive" });
+      toast({ title: "Genre Required", description: "Select at least one genre.", variant: "destructive" });
       return;
     }
 
@@ -106,25 +108,20 @@ export default function AdminPage() {
         createdAt: serverTimestamp()
       });
       
-      toast({ title: "Film Published", description: `${formData.title} is now live.` });
+      toast({ title: "Film Published", description: `${formData.lowerText || formData.title} is live.` });
       
       setFormData({
         title: '',
+        upperText: '',
+        lowerText: '',
         category: [formData.category[0] || 'ads'],
         youtubeId: '',
         type: formData.type,
-        role: 'Director',
-        meta: '',
         award: '',
         order: (sortedVideos?.length || 0) + 1
       });
     } catch (error: any) {
-      console.error('Error adding film:', error);
-      toast({ 
-        title: "Publishing Failed", 
-        description: "Check permissions and internet connection.", 
-        variant: "destructive" 
-      });
+      toast({ title: "Publishing Failed", description: error.message, variant: "destructive" });
     } finally {
       setIsAdding(false);
     }
@@ -134,9 +131,65 @@ export default function AdminPage() {
     if (!firestore) return;
     try {
       await deleteDoc(doc(firestore, 'videos', id));
-      toast({ title: "Film Removed", description: "Project has been archived." });
+      toast({ title: "Film Removed" });
     } catch (error: any) {
-      toast({ title: "Removal Failed", description: "Access denied.", variant: "destructive" });
+      toast({ title: "Error", description: "Check permissions.", variant: "destructive" });
+    }
+  };
+
+  const seedMasterArchive = async () => {
+    if (!firestore) return;
+    setIsSeeding(true);
+    const batch = writeBatch(firestore);
+    
+    // Sample of the 87 videos provided - categorized across types
+    const mockData = [
+      { upper: "Sleek Kitchen", lower: "Asian Paint", url: "xTrPSfbWa0w", tags: ["ads", "home&living"], type: "slider" },
+      { upper: "Insurance", lower: "Cleartrip", url: "4UATuJFYKfg", tags: ["ads", "humor"], type: "slider" },
+      { upper: "Pudin Hara", lower: "Dabur", url: "gJKxIAmhbvg", tags: ["ads", "humor", "vfx"], type: "slider" },
+      { upper: "Zeo EV", lower: "Mahindra", url: "QdEZtNyJb5g", tags: ["ads", "car"], type: "reel-feature" },
+      { upper: "Family Man X Paatal Lok", lower: "Prime Video", url: "O1p-JVaAQV0", tags: ["promo", "celebrity"], type: "reel-horizontal" },
+      { upper: "Aspirants | Zindagi Ki Daud", lower: "Prime Video", url: "BYhQMzGxHmg", tags: ["promo", "celebrity"], type: "reel-horizontal" },
+      { upper: "Nation On Vacation", lower: "Cleartrip", url: "BG9F0xyy0RI", tags: ["ads", "humor"], type: "reel-medium" },
+      { upper: "Orry X Shikhar Dhawan", lower: "Amazon MX Player", url: "sroIT5FQMqs", tags: ["humor", "celebrity", "cricketers"], type: "reel-vertical" },
+      { upper: "Holiday Ft. Jackie Shroff", lower: "Amazon MX Player | Yatra", url: "lya8BHX-8SY", tags: ["celebrity", "humor"], type: "reel-vertical" },
+      { upper: "Sleek Kitchen - Film 2", lower: "Asian Paint", url: "2Y11kXDacR0", tags: ["ads", "humor", "home&living"], type: "film-gallery" },
+      { upper: "Family Man X Call Me Bae", lower: "Prime Video", url: "2EGATv-Glt8", tags: ["promo", "celebrity", "humor"], type: "film-gallery" },
+      { upper: "Set the Scene Ft. Raj Kumar Rao", lower: "Sun King", url: "eFhx307ykrk", tags: ["ads", "celebrity"], type: "film-gallery" },
+      { upper: "Glenzo", lower: "Apna Club", url: "WBE9PCT4Qk8", tags: ["ads", "humor", "vfx"], type: "film-gallery" },
+      { upper: "Offers Ft. Biswa Kalyanrath", lower: "Cleartrip X Axis Bank", url: "At-AHGHe-_0", tags: ["ads", "humor", "celebrity"], type: "film-gallery" },
+      { upper: "Criminal Justice S4 Ft. Pankaj Tripathi & Farah Khan", lower: "Jio Hotstar", url: "nHSssoiMRE4", tags: ["promo", "celebrity", "humor"], type: "film-gallery" },
+      { upper: "Criminal Justice S4 Ft. Pankaj Tripathi & Suneil Shetty", lower: "Jio Hotstar", url: "lhdHDEhtMiI", tags: ["promo", "celebrity", "humor"], type: "film-gallery" },
+      { upper: "Criminal Justice S4 Ft. Pankaj Tripathi & Bassi", lower: "Jio Hotstar", url: "NWPzwV3le50", tags: ["promo", "celebrity", "humor"], type: "film-gallery" },
+      { upper: "Passport Ft. Biswa Kalyanrath", lower: "Cleartrip", url: "K84ukJ_xxqA", tags: ["ads", "humor", "celebrity", "vfx"], type: "film-gallery" },
+      { upper: "Lays Wafer Style Ft. Alia Bhatt", lower: "PepsiCo", url: "9A3yNxNyzDw", tags: ["ads", "celebrity", "vfx", "food"], type: "film-gallery" },
+      { upper: "Gone Goa Go", lower: "Snitch", url: "cb9-3Rgpn5E", tags: ["ads", "humor"], type: "film-gallery" },
+      { upper: "360 Degrees Education Ft. AB Devilliers", lower: "Online Manipal", url: "s-YB9TZzoqQ", tags: ["ads", "celebrity", "cricketers"], type: "film-gallery" },
+      { upper: "Capture The Light Ft. KL Rahul", lower: "Realme", url: "ip5cVHUSRng", tags: ["ads", "celebrity", "cricketers"], type: "film-gallery" },
+      { upper: "Follow Kar Lo Yaar", lower: "Prime Video", url: "HVPeBwcbkSk", tags: ["promo", "celebrity"], type: "film-gallery" },
+      { upper: "Language Ft. Jackie Shroff", lower: "Amazon MX Player | Duolingo", url: "M3MUjiRYedw", tags: ["ads", "celebrity", "humor"], type: "film-gallery" }
+    ];
+
+    try {
+      mockData.forEach((item, index) => {
+        const vRef = doc(collection(firestore, 'videos'));
+        batch.set(vRef, {
+          title: `${item.upper} | ${item.lower}`,
+          upperText: item.upper,
+          lowerText: item.lower,
+          youtubeId: item.url,
+          category: item.tags,
+          type: item.type,
+          order: index,
+          createdAt: serverTimestamp()
+        });
+      });
+      await batch.commit();
+      toast({ title: "Master Archive Populated", description: "All projects have been added." });
+    } catch (err: any) {
+      toast({ title: "Seeding Failed", description: err.message, variant: "destructive" });
+    } finally {
+      setIsSeeding(false);
     }
   };
 
@@ -145,18 +198,24 @@ export default function AdminPage() {
       <VaelHeader />
       
       <div className="flex pt-32 md:pt-40 min-h-screen">
-        <aside className="w-80 border-r border-white/5 bg-card/20 hidden lg:flex flex-col sticky top-24 h-[calc(100vh-6rem)] p-8 overflow-y-auto no-scrollbar">
-          <div className="mb-10">
-            <h2 className="text-[10px] tracking-[0.5em] uppercase text-primary font-bold mb-4">Archive Control</h2>
-            <p className="text-muted-foreground text-[11px] leading-relaxed uppercase tracking-wider">
-              Categorize and sequence your cinematic works.
-            </p>
+        <aside className="w-85 border-r border-white/5 bg-card/20 hidden lg:flex flex-col sticky top-24 h-[calc(100vh-6rem)] p-8 overflow-y-auto no-scrollbar">
+          <div className="mb-10 space-y-4">
+            <h2 className="text-[10px] tracking-[0.5em] uppercase text-primary font-bold">Archive Manager</h2>
+            <Button 
+              onClick={seedMasterArchive} 
+              disabled={isSeeding}
+              variant="outline" 
+              className="w-full rounded-none border-primary/20 hover:border-primary text-[9px] uppercase tracking-widest h-10 gap-2"
+            >
+              {isSeeding ? <Loader2 className="animate-spin w-3 h-3" /> : <DatabaseZap className="w-3 h-3" />}
+              Populate Master Archive
+            </Button>
           </div>
 
           <form onSubmit={handleAddVideo} className="space-y-6">
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label className="text-[9px] uppercase tracking-widest text-muted-foreground">Placement Type</Label>
+                <Label className="text-[9px] uppercase tracking-widest text-muted-foreground">Placement Layout</Label>
                 <Select value={formData.type} onValueChange={val => setFormData({...formData, type: val})}>
                   <SelectTrigger className="rounded-none bg-background border-white/10 h-11 text-[10px] uppercase">
                     <SelectValue />
@@ -173,7 +232,7 @@ export default function AdminPage() {
 
               <div className="space-y-3">
                 <Label className="text-[9px] uppercase tracking-widest text-muted-foreground">Genres (Select Multiple)</Label>
-                <div className="grid grid-cols-1 gap-2 border border-white/5 p-3 bg-black/40">
+                <div className="grid grid-cols-2 gap-2 border border-white/5 p-3 bg-black/40">
                   {CATEGORIES.map(cat => (
                     <div key={cat} className="flex items-center space-x-2">
                       <Checkbox 
@@ -182,13 +241,7 @@ export default function AdminPage() {
                         onCheckedChange={() => handleCategoryToggle(cat)}
                         className="border-white/20 data-[state=checked]:bg-primary data-[state=checked]:text-black"
                       />
-                      <label 
-                        htmlFor={`cat-${cat}`}
-                        className={cn(
-                          "text-[9px] uppercase tracking-widest cursor-pointer transition-colors",
-                          formData.category.includes(cat) ? "text-primary font-bold" : "text-muted-foreground"
-                        )}
-                      >
+                      <label htmlFor={`cat-${cat}`} className={cn("text-[8px] uppercase tracking-widest cursor-pointer", formData.category.includes(cat) ? "text-primary font-bold" : "text-muted-foreground")}>
                         {cat}
                       </label>
                     </div>
@@ -196,35 +249,31 @@ export default function AdminPage() {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label className="text-[9px] uppercase tracking-widest text-muted-foreground">Film Title</Label>
-                <Input required placeholder="Ex: Nocturne" className="rounded-none bg-background border-white/10 h-11 text-sm font-headline italic" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} />
+              <div className="grid grid-cols-1 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-[9px] uppercase tracking-widest text-muted-foreground">Upper Text (Sub-Title)</Label>
+                  <Input placeholder="Ex: Sleek Kitchen" className="rounded-none bg-background border-white/10 h-11 text-xs" value={formData.upperText} onChange={e => setFormData({...formData, upperText: e.target.value})} />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-[9px] uppercase tracking-widest text-muted-foreground">Lower Text (Brand/Title)</Label>
+                  <Input required placeholder="Ex: Asian Paint" className="rounded-none bg-background border-white/10 h-11 text-sm font-headline italic" value={formData.lowerText} onChange={e => setFormData({...formData, lowerText: e.target.value})} />
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label className="text-[9px] uppercase tracking-widest text-muted-foreground">Your Role</Label>
-                  <Input placeholder="Director" className="rounded-none bg-background border-white/10 h-11 text-xs" value={formData.role} onChange={e => setFormData({...formData, role: e.target.value})} />
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-[9px] uppercase tracking-widest text-muted-foreground">Order</Label>
+                  <Label className="text-[9px] uppercase tracking-widest text-muted-foreground">Sequence Order</Label>
                   <Input type="number" className="rounded-none bg-background border-white/10 h-11 text-xs" value={formData.order} onChange={e => setFormData({...formData, order: Number(e.target.value)})} />
                 </div>
+                <div className="space-y-2">
+                  <Label className="text-[9px] uppercase tracking-widest text-muted-foreground">Honor/Award</Label>
+                  <Input placeholder="Ex: D-Cut" className="rounded-none bg-background border-white/10 h-11 text-xs" value={formData.award} onChange={e => setFormData({...formData, award: e.target.value})} />
+                </div>
               </div>
 
               <div className="space-y-2">
-                <Label className="text-[9px] uppercase tracking-widest text-muted-foreground">Metadata / Tech Specs</Label>
-                <Input placeholder="Ex: 35mm • 4:3 Ratio" className="rounded-none bg-background border-white/10 h-11 text-xs" value={formData.meta} onChange={e => setFormData({...formData, meta: e.target.value})} />
-              </div>
-
-              <div className="space-y-2">
-                <Label className="text-[9px] uppercase tracking-widest text-muted-foreground">Award / Honor</Label>
-                <Input placeholder="Ex: Palme d'Or Nominee" className="rounded-none bg-background border-white/10 h-11 text-xs" value={formData.award} onChange={e => setFormData({...formData, award: e.target.value})} />
-              </div>
-
-              <div className="space-y-2">
-                <Label className="text-[9px] uppercase tracking-widest text-muted-foreground">YouTube Link/ID</Label>
-                <Input required placeholder="https://..." className="rounded-none bg-background border-white/10 h-11 text-sm" value={formData.youtubeId} onChange={e => setFormData({...formData, youtubeId: e.target.value})} />
+                <Label className="text-[9px] uppercase tracking-widest text-muted-foreground">YouTube Link</Label>
+                <Input required placeholder="https://..." className="rounded-none bg-background border-white/10 h-11 text-xs" value={formData.youtubeId} onChange={e => setFormData({...formData, youtubeId: e.target.value})} />
               </div>
             </div>
 
@@ -240,8 +289,8 @@ export default function AdminPage() {
             {videosError && (
               <Alert variant="destructive" className="rounded-none bg-destructive/10 border-destructive/20">
                 <AlertCircle className="h-4 w-4" />
-                <AlertTitle className="text-[10px] uppercase tracking-widest font-bold">Permissions Required</AlertTitle>
-                <AlertDescription className="text-[11px] leading-relaxed opacity-80 uppercase tracking-tight">
+                <AlertTitle className="text-[10px] uppercase tracking-widest font-bold">Firestore Config Required</AlertTitle>
+                <AlertDescription className="text-[11px] leading-relaxed uppercase tracking-tight">
                   Please update your Firestore Rules to 'allow read, write: if true;'.
                 </AlertDescription>
               </Alert>
@@ -276,35 +325,31 @@ export default function AdminPage() {
                     <div className="grid grid-cols-1 gap-4">
                       {sectionVideos.map((video) => (
                         <div key={video.id} className="bg-card/20 border border-white/5 p-4 flex items-center justify-between group hover:border-primary/20 transition-all">
-                          <div className="flex items-center gap-6">
+                          <div className="flex items-center gap-6 overflow-hidden">
                             <div className="w-32 aspect-video bg-black relative overflow-hidden flex-shrink-0 border border-white/5">
-                              <img 
-                                src={`https://img.youtube.com/vi/${video.youtubeId}/mqdefault.jpg`} 
-                                alt="" 
-                                className="object-cover w-full h-full opacity-60 group-hover:opacity-100 transition-opacity" 
-                              />
+                              <img src={`https://img.youtube.com/vi/${video.youtubeId}/mqdefault.jpg`} alt="" className="object-cover w-full h-full opacity-60 group-hover:opacity-100 transition-opacity" />
                               <div className="absolute top-1 left-1 bg-black/80 px-2 py-0.5 border border-white/10">
                                 <span className="text-[8px] font-bold text-primary">#{video.order}</span>
                               </div>
                             </div>
-                            <div className="space-y-2">
-                              <h3 className="text-xl font-headline italic tracking-tight uppercase leading-none">{video.title}</h3>
-                              <div className="flex flex-wrap items-center gap-4">
-                                <span className="flex items-center gap-1.5 text-[8px] uppercase tracking-[0.1em] text-primary font-bold">
-                                  <Tag className="w-2.5 h-2.5" /> 
+                            <div className="space-y-1 min-w-0">
+                              <p className="text-[8px] uppercase tracking-widest text-primary font-bold truncate">{video.upperText}</p>
+                              <h3 className="text-xl font-headline italic tracking-tight uppercase leading-none truncate">{video.lowerText || video.title}</h3>
+                              <div className="flex flex-wrap items-center gap-4 pt-1">
+                                <span className="flex items-center gap-1.5 text-[7px] uppercase tracking-[0.1em] text-white/40">
+                                  <Tag className="w-2 h-2" /> 
                                   {Array.isArray(video.category) ? video.category.join(', ') : video.category}
                                 </span>
-                                <span className="flex items-center gap-1.5 text-[8px] uppercase tracking-[0.1em] text-white/40"><Info className="w-2.5 h-2.5" /> {video.meta || 'No Meta'}</span>
-                                <span className="flex items-center gap-1.5 text-[8px] uppercase tracking-[0.1em] text-white/40"><Award className="w-2.5 h-2.5" /> {video.award || 'No Awards'}</span>
+                                {video.award && <span className="flex items-center gap-1.5 text-[7px] uppercase tracking-[0.1em] text-primary font-bold"><Award className="w-2 h-2" /> {video.award}</span>}
                               </div>
                             </div>
                           </div>
                           
-                          <div className="flex items-center gap-2">
-                            <a href={`https://youtube.com/watch?v=${video.youtubeId}`} target="_blank" rel="noopener noreferrer" className="w-10 h-10 flex items-center justify-center hover:text-primary transition-colors border border-transparent hover:border-white/5">
+                          <div className="flex items-center gap-2 flex-shrink-0">
+                            <a href={`https://youtube.com/watch?v=${video.youtubeId}`} target="_blank" rel="noopener noreferrer" className="w-10 h-10 flex items-center justify-center hover:text-primary transition-colors">
                               <ExternalLink className="w-4 h-4" />
                             </a>
-                            <button onClick={() => handleDelete(video.id)} className="w-10 h-10 flex items-center justify-center text-destructive hover:bg-destructive/10 transition-colors border border-transparent hover:border-destructive/10">
+                            <button onClick={() => handleDelete(video.id)} className="w-10 h-10 flex items-center justify-center text-destructive hover:bg-destructive/10">
                               <Trash2 className="w-4 h-4" />
                             </button>
                           </div>

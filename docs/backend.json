@@ -7,18 +7,19 @@
       "type": "object",
       "properties": {
         "title": { "type": "string" },
-        "category": { "type": "string" },
+        "category": { "type": "array", "items": { "type": "string" } },
         "youtubeId": { "type": "string" },
         "type": { 
           "type": "string", 
           "enum": ["slider", "reel-horizontal", "reel-feature", "reel-medium", "reel-vertical", "film-gallery"] 
         },
-        "role": { "type": "string" },
+        "upperText": { "type": "string" },
+        "lowerText": { "type": "string" },
         "meta": { "type": "string" },
         "award": { "type": "string" },
         "order": { "type": "number" }
       },
-      "required": ["title", "youtubeId", "type"]
+      "required": ["youtubeId", "type"]
     }
   },
   "auth": {
