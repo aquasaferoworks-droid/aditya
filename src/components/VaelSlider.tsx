@@ -77,7 +77,7 @@ export function VaelSlider() {
   if (loading || slides.length === 0) return null;
 
   return (
-    <section className="relative w-full bg-black pt-40 pb-12 md:pt-52 md:pb-24 min-h-[70vh] flex flex-col justify-center overflow-hidden select-none">
+    <section className="relative w-full bg-black pt-32 pb-12 md:pt-40 md:pb-24 min-h-[70vh] flex flex-col justify-center overflow-hidden select-none">
       <div className="container mx-auto px-6 mb-8 md:mb-12">
         <div className="flex items-center gap-4">
           <div className="w-8 h-px bg-primary" />

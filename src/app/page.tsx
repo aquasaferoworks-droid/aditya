@@ -31,7 +31,7 @@ export default async function Home(props: {
         </>
       ) : (
         /* Filtered Archive Mode */
-        <div className="pt-40 md:pt-52 bg-background min-h-screen">
+        <div className="pt-32 md:pt-40 bg-background min-h-screen">
           <VaelFilms />
           <VaelFooter />
         </div>
