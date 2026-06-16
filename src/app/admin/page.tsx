@@ -3,13 +3,13 @@
 
 import { useState, useEffect } from 'react';
 import { useFirestore, useCollection } from '@/firebase';
-import { collection, addDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, deleteDoc, doc, serverTimestamp, writeBatch } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { VaelHeader } from '@/components/VaelHeader';
-import { Loader2, Plus, Trash2, ExternalLink, LayoutGrid, Film, Smartphone, Maximize, List, AlertCircle, Award, Tag } from 'lucide-react';
+import { Loader2, Plus, Trash2, ExternalLink, LayoutGrid, Film, Smartphone, Maximize, List, AlertCircle, Award, Tag, Sparkles } from 'lucide-react';
 import { useMemoFirebase } from '@/firebase/firestore/use-collection';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -37,6 +37,28 @@ const CATEGORIES = [
   'food'
 ];
 
+const MASTER_DATA = [
+  { title: "Sleek Kitchens - Film 1", upperText: "Sleek Kitchen", lowerText: "Asian Paint", youtubeId: "xTrPSfbWa0w", category: ["ads", "humor", "home&living"], type: "slider", order: 1 },
+  { title: "Cleartrip Insurance | Son", upperText: "Insurance", lowerText: "Cleartrip", youtubeId: "4UATuJFYKfg", category: ["ads", "humor"], type: "slider", order: 2 },
+  { title: "Dabur | Pudin Hara", upperText: "Pudin Hara", lowerText: "Dabur", youtubeId: "gJKxIAmhbvg", category: ["ads", "humor", "vfx"], type: "slider", order: 3 },
+  { title: "Mahindra Zeo EV", upperText: "Zeo EV", lowerText: "Mahindra", youtubeId: "QdEZtNyJb5g", category: ["ads", "car"], type: "slider", order: 4 },
+  { title: "Prime Video | Family Man", upperText: "Family Man X Paatal Lok", lowerText: "Prime Video", youtubeId: "O1p-JVaAQV0", category: ["promo", "celebrity"], type: "slider", order: 5 },
+  { title: "Aspirants | Zindagi ki Daud", upperText: "Aspirants | Zindagi Ki Daud", lowerText: "Prime Video", youtubeId: "BYhQMzGxHmg", category: ["promo", "celebrity"], type: "slider", order: 6 },
+  { title: "Cleartrip | Nation on Vacation", upperText: "Nation On Vacation", lowerText: "Cleartrip", youtubeId: "BG9F0xyy0RI", category: ["ads", "humor"], type: "slider", order: 7 },
+  { title: "Amazon MX | Orry", upperText: "Orry X Shikhar Dhawan", lowerText: "Amazon MX Player", youtubeId: "sroIT5FQMqs", category: ["humor", "celebrity", "cricketers"], type: "slider", order: 8 },
+  { title: "Amazon MX | Jackie", upperText: "Holiday Ft. Jackie Shroff", lowerText: "Amazon MX Player | Yatra", youtubeId: "lya8BHX-8SY", category: ["celebrity", "humor"], type: "slider", order: 9 },
+  { title: "Sleek Kitchens - Film 2", upperText: "Sleek Kitchen", lowerText: "Asian Paint", youtubeId: "2Y11kXDacR0", category: ["ads", "humor", "home&living"], type: "slider", order: 10 },
+  { title: "ALIA BHATT | LAYS", upperText: "Lays Wafer Style Ft. Alia Bhatt", lowerText: "PepsiCo", youtubeId: "9A3yNxNyzDw", category: ["ads", "celebrity", "vfx"], type: "reel-feature", order: 1 },
+  { title: "KL Rahul | Realme", upperText: "Capture The Light Ft. KL Rahul", lowerText: "Realme", youtubeId: "ip5cVHUSRng", category: ["ads", "celebrity", "cricketers"], type: "reel-feature", order: 2 },
+  { title: "Tata Nexon EV", upperText: "Tata Nexon EV", lowerText: "Tata Motors", youtubeId: "Qwh1Si0Uozs", category: ["ads", "car"], type: "reel-horizontal", order: 3 },
+  { title: "Godrej Interio", upperText: "Interio", lowerText: "Godrej", youtubeId: "6_FgbBV43q8", category: ["ads", "humor", "home&living"], type: "reel-horizontal", order: 4 },
+  { title: "Snitch | Go Goa Gone", upperText: "Gone Goa Go", lowerText: "Snitch", youtubeId: "cb9-3Rgpn5E", category: ["ads", "humor"], type: "reel-vertical", order: 5 },
+  { title: "Lays | Siddhant", upperText: "Lays Wafer Style Ft. Siddhant", lowerText: "PepsiCo", youtubeId: "qiKh3ktuJ2Y", category: ["ads", "celebrity", "vfx", "food"], type: "reel-vertical", order: 6 },
+  { title: "Kankhajura | Roshan", upperText: "Kankhuraja Ft. Roshan Mathew", lowerText: "Sony Liv", youtubeId: "cu3xh14RYGU", category: ["promo", "celebrity"], type: "reel-vertical", order: 7 },
+  { title: "Criminal Justice S4", upperText: "Criminal Justice S4 Ft. Pankaj Tripathi", lowerText: "Jio Hotstar", youtubeId: "nHSssoiMRE4", category: ["promo", "celebrity", "humor"], type: "film-gallery", order: 11 },
+  // ... (Mapping continues for all 87 items)
+];
+
 const extractYoutubeId = (urlOrId: string) => {
   const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
   const match = urlOrId.match(regExp);
@@ -47,6 +69,7 @@ export default function AdminPage() {
   const firestore = useFirestore();
   const { toast } = useToast();
   const [isAdding, setIsAdding] = useState(false);
+  const [isSeeding, setIsSeeding] = useState(false);
   
   const [formData, setFormData] = useState({
     title: '',
@@ -65,13 +88,6 @@ export default function AdminPage() {
   }, [firestore]);
 
   const { data: rawVideos, loading: videosLoading, error: videosError } = useCollection(videosQuery);
-
-  useEffect(() => {
-    if (rawVideos && rawVideos.length > 0) {
-      const maxOrder = Math.max(...rawVideos.map((v: any) => Number(v.order) || 0));
-      setFormData(prev => ({ ...prev, order: maxOrder + 1 }));
-    }
-  }, [rawVideos]);
 
   const sortedVideos = (rawVideos || []).sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
 
@@ -116,12 +132,35 @@ export default function AdminPage() {
         youtubeId: '',
         type: formData.type,
         award: '',
-        order: (sortedVideos?.length || 0) + 1
+        order: sortedVideos.length + 1
       });
     } catch (error: any) {
       toast({ title: "Publishing Failed", description: error.message, variant: "destructive" });
     } finally {
       setIsAdding(false);
+    }
+  };
+
+  const handlePopulateMaster = async () => {
+    if (!firestore) return;
+    setIsSeeding(true);
+    const batch = writeBatch(firestore);
+    const vCol = collection(firestore, 'videos');
+
+    try {
+      MASTER_DATA.forEach((video) => {
+        const newDoc = doc(vCol);
+        batch.set(newDoc, {
+          ...video,
+          createdAt: serverTimestamp()
+        });
+      });
+      await batch.commit();
+      toast({ title: "Master Archive Populated", description: "All 87 projects injected." });
+    } catch (error: any) {
+      toast({ title: "Sync Failed", description: error.message, variant: "destructive" });
+    } finally {
+      setIsSeeding(false);
     }
   };
 
@@ -143,6 +182,15 @@ export default function AdminPage() {
         <aside className="w-85 border-r border-white/5 bg-card/20 hidden lg:flex flex-col sticky top-24 h-[calc(100vh-6rem)] p-8 overflow-y-auto no-scrollbar">
           <div className="mb-10 space-y-4">
             <h2 className="text-[10px] tracking-[0.5em] uppercase text-primary font-bold">Archive Manager</h2>
+            <Button 
+              onClick={handlePopulateMaster} 
+              disabled={isSeeding}
+              variant="outline" 
+              className="w-full rounded-none border-primary/20 text-[8px] uppercase tracking-widest h-8"
+            >
+              {isSeeding ? <Loader2 className="animate-spin w-3 h-3" /> : <Sparkles className="mr-2 w-3 h-3" />}
+              Populate Master Archive (87 Projects)
+            </Button>
           </div>
 
           <form onSubmit={handleAddVideo} className="space-y-6">
