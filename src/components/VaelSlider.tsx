@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Award, Film } from 'lucide-react';
+import { X } from 'lucide-react';
 import Image from 'next/image';
 import { useFirestore, useCollection } from '@/firebase';
 import { collection } from 'firebase/firestore';
@@ -78,15 +78,15 @@ export function VaelSlider() {
   if (loading || slides.length === 0) return null;
 
   return (
-    <section className="relative w-full bg-black pt-32 pb-12 md:pt-40 md:pb-24 flex flex-col justify-center overflow-hidden select-none">
-      <div className="container mx-auto px-6 mb-8">
-        <div className="flex items-center gap-4">
-          <div className="w-8 h-px bg-primary" />
-          <span className="text-[10px] tracking-[0.4em] uppercase text-primary font-bold">Featured Projects</span>
+    <section className="relative w-full bg-black pt-24 pb-8 md:pt-32 md:pb-16 flex flex-col justify-center overflow-hidden select-none">
+      <div className="container mx-auto px-6 mb-6">
+        <div className="flex items-center gap-3">
+          <div className="w-6 h-px bg-primary" />
+          <span className="text-[9px] tracking-[0.3em] uppercase text-primary font-bold">Featured Projects</span>
         </div>
       </div>
 
-      <div className="relative group">
+      <div className="relative">
         <div className="embla overflow-visible" ref={emblaRef}>
           <div className="embla__container flex items-center">
             {slides.map((slide, index) => {
@@ -95,16 +95,16 @@ export function VaelSlider() {
               return (
                 <div 
                   key={slide.id} 
-                  className="embla__slide flex-[0_0_80%] md:flex-[0_0_85%] min-w-0 px-2 md:px-4 relative"
+                  className="embla__slide flex-[0_0_75%] md:flex-[0_0_80%] min-w-0 px-1 md:px-2 relative"
                   onClick={() => isActive && setSelectedVideo(slide)}
                 >
                   <motion.div
                     initial={false}
                     animate={{ 
-                      scale: isActive ? 1.05 : 0.85,
-                      opacity: isActive ? 1 : 0.25,
+                      scale: isActive ? 1 : 0.92,
+                      opacity: isActive ? 1 : 0.4,
                     }}
-                    transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
+                    transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
                     className="relative aspect-video overflow-hidden bg-zinc-900 shadow-2xl group cursor-pointer border border-white/5 rounded-none"
                   >
                     <div className="absolute inset-0 z-0">
@@ -119,21 +119,19 @@ export function VaelSlider() {
                     
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10" />
                     
-                    <div className="absolute bottom-0 left-0 w-full p-6 md:p-10 z-30 flex items-end justify-between">
-                       <div className="space-y-1">
-                          <span className="text-[9px] md:text-[10px] tracking-[0.4em] text-primary uppercase font-bold block mb-1">{slide.upperText}</span>
-                          <h3 className="text-2xl md:text-5xl font-headline text-white italic tracking-tighter uppercase leading-none">{slide.lowerText || slide.title}</h3>
+                    <div className="absolute bottom-0 left-0 w-full p-4 md:p-8 z-30 flex items-end justify-between">
+                       <div className="space-y-0.5">
+                          <span className="text-[8px] md:text-[9px] tracking-[0.3em] text-primary uppercase font-bold block">{slide.upperText}</span>
+                          <h3 className="text-xl md:text-3xl font-headline text-white italic tracking-tighter uppercase leading-none">{slide.lowerText || slide.title}</h3>
                        </div>
-                       <div className="text-right space-y-2 hidden lg:block opacity-60">
+                       <div className="text-right space-y-1 hidden lg:block opacity-60">
                           {slide.award && (
-                            <div className="flex items-center justify-end gap-2 text-primary">
-                              <Award className="w-3.5 h-3.5" />
-                              <span className="text-[9px] tracking-[0.2em] uppercase font-bold">{slide.award}</span>
+                            <div className="flex items-center justify-end gap-1.5 text-primary">
+                              <span className="text-[8px] tracking-[0.15em] uppercase font-bold">{slide.award}</span>
                             </div>
                           )}
-                          <div className="flex items-center justify-end gap-2 text-white">
-                            <Film className="w-3 h-3" />
-                            <span className="text-[8px] tracking-[0.3em] uppercase">
+                          <div className="flex items-center justify-end gap-1.5 text-white">
+                            <span className="text-[7px] tracking-[0.2em] uppercase">
                               {Array.isArray(slide.category) ? slide.category.join(', ') : slide.category}
                             </span>
                           </div>
@@ -146,18 +144,18 @@ export function VaelSlider() {
           </div>
         </div>
 
-        <div className="absolute bottom-0 left-0 right-0 flex justify-between items-center px-[5%] pointer-events-none md:px-[10%] mb-4">
+        <div className="absolute bottom-4 left-0 right-0 flex justify-between items-center px-[6%] pointer-events-none md:px-[12%]">
           <button 
             onClick={scrollPrev}
             className="pointer-events-auto flex items-center gap-2 group/btn"
           >
-            <span className="text-[10px] tracking-[0.5em] uppercase text-white/40 group-hover/btn:text-primary transition-colors font-bold">PREV</span>
+            <span className="text-[9px] tracking-[0.4em] uppercase text-white/30 group-hover/btn:text-primary transition-colors font-bold">PREV</span>
           </button>
           <button 
             onClick={scrollNext}
             className="pointer-events-auto flex items-center gap-2 group/btn"
           >
-            <span className="text-[10px] tracking-[0.5em] uppercase text-white/40 group-hover/btn:text-primary transition-colors font-bold">NEXT</span>
+            <span className="text-[9px] tracking-[0.4em] uppercase text-white/30 group-hover/btn:text-primary transition-colors font-bold">NEXT</span>
           </button>
         </div>
       </div>

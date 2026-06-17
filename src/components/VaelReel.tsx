@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { X, Award } from 'lucide-react';
+import { X } from 'lucide-react';
 import Image from 'next/image';
 import { useFirestore, useCollection } from '@/firebase';
 import { collection } from 'firebase/firestore';
@@ -53,25 +53,24 @@ const VideoCard = ({ video, aspectRatio, className, onClick }: { video: VideoIte
       <div className="absolute inset-0 bg-black/40 group-hover:bg-black/10 transition-colors duration-700 z-10" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent z-15" />
 
-      <div className="absolute bottom-0 left-0 right-0 z-30 p-6 md:p-8 flex flex-col justify-end translate-y-2 group-hover:translate-y-0 transition-all duration-700 pointer-events-none">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div className="space-y-1 min-w-0">
-            <span className="text-[8px] md:text-[9px] tracking-[0.4em] text-primary uppercase font-bold block mb-1">
+      <div className="absolute bottom-0 left-0 right-0 z-30 p-4 md:p-6 flex flex-col justify-end translate-y-2 group-hover:translate-y-0 transition-all duration-700 pointer-events-none">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-3">
+          <div className="space-y-0.5 min-w-0">
+            <span className="text-[8px] md:text-[9px] tracking-[0.3em] text-primary uppercase font-bold block">
               {Array.isArray(video.category) ? video.category[0] : video.category}
             </span>
-            <span className="text-[7px] md:text-[8px] tracking-[0.5em] text-white/50 uppercase font-bold block truncate">{video.upperText}</span>
-            <h3 className="text-xl md:text-2xl font-headline text-white italic tracking-tighter uppercase leading-none truncate">{video.lowerText || video.title}</h3>
+            <span className="text-[7px] md:text-[8px] tracking-[0.4em] text-white/50 uppercase font-bold block truncate">{video.upperText}</span>
+            <h3 className="text-lg md:text-xl font-headline text-white italic tracking-tighter uppercase leading-none truncate">{video.lowerText || video.title}</h3>
           </div>
           
-          <div className="flex items-center gap-4 flex-shrink-0">
+          <div className="flex items-center gap-3 flex-shrink-0">
             {video.award && (
-              <div className="flex items-center gap-2 text-primary">
-                <Award className="w-4 h-4" />
-                <span className="text-[8px] tracking-[0.2em] uppercase font-bold hidden md:inline">{video.award}</span>
+              <div className="flex items-center gap-1.5 text-primary">
+                <span className="text-[8px] tracking-[0.15em] uppercase font-bold">{video.award}</span>
               </div>
             )}
             {video.meta && (
-              <span className="text-[7px] tracking-[0.3em] text-white/40 uppercase whitespace-nowrap">
+              <span className="text-[7px] tracking-[0.2em] text-white/40 uppercase whitespace-nowrap">
                 {video.meta}
               </span>
             )}
