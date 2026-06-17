@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Play, Award, Film, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X, Award, Film } from 'lucide-react';
 import Image from 'next/image';
 import { useFirestore, useCollection } from '@/firebase';
 import { collection } from 'firebase/firestore';
@@ -95,7 +95,7 @@ export function VaelSlider() {
               return (
                 <div 
                   key={slide.id} 
-                  className="embla__slide flex-[0_0_80%] md:flex-[0_0_65%] min-w-0 px-2 md:px-4 relative"
+                  className="embla__slide flex-[0_0_80%] md:flex-[0_0_85%] min-w-0 px-2 md:px-4 relative"
                   onClick={() => isActive && setSelectedVideo(slide)}
                 >
                   <motion.div
@@ -119,18 +119,6 @@ export function VaelSlider() {
                     
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10" />
                     
-                    {isActive && (
-                      <div className="absolute inset-0 flex items-center justify-center z-20">
-                        <motion.div 
-                          initial={{ scale: 0.8, opacity: 0 }}
-                          animate={{ scale: 1, opacity: 1 }}
-                          className="w-16 h-16 md:w-20 md:h-20 rounded-none border border-primary flex items-center justify-center bg-black/40 backdrop-blur-sm"
-                        >
-                          <Play className="w-6 h-6 md:w-8 md:h-8 text-primary fill-primary ml-1" />
-                        </motion.div>
-                      </div>
-                    )}
-
                     <div className="absolute bottom-0 left-0 w-full p-6 md:p-10 z-30 flex items-end justify-between">
                        <div className="space-y-1">
                           <span className="text-[9px] md:text-[10px] tracking-[0.4em] text-primary uppercase font-bold block mb-1">{slide.upperText}</span>
@@ -158,7 +146,6 @@ export function VaelSlider() {
           </div>
         </div>
 
-        {/* Minimalist Navigation Labels */}
         <div className="absolute bottom-0 left-0 right-0 flex justify-between items-center px-[5%] pointer-events-none md:px-[10%] mb-4">
           <button 
             onClick={scrollPrev}

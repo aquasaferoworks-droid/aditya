@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { X, Award, Play } from 'lucide-react';
+import { X, Award } from 'lucide-react';
 import Image from 'next/image';
 import { useFirestore, useCollection } from '@/firebase';
 import { collection } from 'firebase/firestore';
@@ -53,12 +53,6 @@ const VideoCard = ({ video, aspectRatio, className, onClick }: { video: VideoIte
       <div className="absolute inset-0 bg-black/40 group-hover:bg-black/10 transition-colors duration-700 z-10" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent z-15" />
 
-      <div className="absolute inset-0 flex items-center justify-center z-20 opacity-0 group-hover:opacity-100 transition-opacity">
-        <div className="w-16 h-16 rounded-none border border-primary flex items-center justify-center bg-black/40 backdrop-blur-sm">
-          <Play className="w-6 h-6 text-primary fill-primary ml-1" />
-        </div>
-      </div>
-      
       <div className="absolute bottom-0 left-0 right-0 z-30 p-6 md:p-8 flex flex-col justify-end translate-y-2 group-hover:translate-y-0 transition-all duration-700 pointer-events-none">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="space-y-1 min-w-0">
@@ -114,21 +108,18 @@ export function VaelReel() {
     <section id="reel" className="py-24 md:py-32 bg-background overflow-hidden border-t border-border/10">
       <div className="max-w-[1600px] mx-auto px-6 md:px-16 space-y-12 md:space-y-16">
         
-        {/* Row 1: 2 Horizontal Video Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
           {horizontals.slice(0, 2).map((v) => (
             <VideoCard key={v.id} video={v} aspectRatio="aspect-video" onClick={setSelectedVideo} />
           ))}
         </div>
 
-        {/* Row 2: 2 Horizontal Video Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
           {horizontals.slice(2, 4).map((v) => (
             <VideoCard key={v.id} video={v} aspectRatio="aspect-video" onClick={setSelectedVideo} />
           ))}
         </div>
 
-        {/* Row 3: 1 Large Featured Video Section */}
         <div className="w-full">
           {features.length > 0 && (
             <VideoCard 
@@ -140,14 +131,12 @@ export function VaelReel() {
           )}
         </div>
 
-        {/* Row 4: 2 Medium Video Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
           {mediums.slice(0, 2).map((v) => (
             <VideoCard key={v.id} video={v} aspectRatio="aspect-video" onClick={setSelectedVideo} />
           ))}
         </div>
 
-        {/* Row 5: 4 Vertical Reel-Style Video Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
           {verticals.slice(0, 4).map((v) => (
             <VideoCard key={v.id} video={v} aspectRatio="aspect-[9/16]" onClick={setSelectedVideo} />

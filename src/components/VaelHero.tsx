@@ -1,11 +1,9 @@
-import { Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
 export function VaelHero() {
   return (
     <section id="hero" className="relative h-screen min-h-[700px] flex items-end overflow-hidden pb-20 px-8 md:px-16 bg-black">
-      {/* Cinematic Video Background - Restored to normal scale */}
       <div className="absolute inset-0 z-0">
         <video
           autoPlay
@@ -46,7 +44,6 @@ export function VaelHero() {
         <div className="flex flex-wrap gap-6">
           <Button className="rounded-none bg-primary text-primary-foreground hover:bg-accent hover:text-accent-foreground px-8 py-6 h-auto text-[11px] tracking-[0.2em] uppercase font-bold group" asChild>
             <Link href="#reel">
-              <Play className="mr-2 w-4 h-4 fill-current" />
               Play Reel
             </Link>
           </Button>
