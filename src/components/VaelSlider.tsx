@@ -78,7 +78,7 @@ export function VaelSlider() {
   if (loading || slides.length === 0) return null;
 
   return (
-    <section className="relative w-full bg-black pt-12 md:pt-16 pb-8 md:pb-12 flex flex-col justify-center overflow-hidden select-none">
+    <section className="relative w-full bg-black pt-4 md:pt-6 pb-2 md:pb-4 flex flex-col justify-center overflow-hidden select-none">
       <div className="relative">
         <div className="embla overflow-visible" ref={emblaRef}>
           <div className="embla__container flex items-center">
@@ -98,7 +98,7 @@ export function VaelSlider() {
                       opacity: isActive ? 1 : 0.3,
                     }}
                     transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
-                    className="relative aspect-video overflow-hidden bg-zinc-900 shadow-2xl group cursor-pointer border border-white/5 rounded-none"
+                    className="relative aspect-[21/9] overflow-hidden bg-zinc-900 shadow-2xl group cursor-pointer border border-white/5 rounded-none"
                   >
                     <div className="absolute inset-0 z-0">
                       <Image 
