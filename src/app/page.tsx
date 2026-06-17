@@ -1,4 +1,3 @@
-
 import { VaelHeader } from '@/components/VaelHeader';
 import { VaelReel } from '@/components/VaelReel';
 import { VaelAwards } from '@/components/VaelAwards';
@@ -20,8 +19,9 @@ export default async function Home(props: {
       
       {!isFiltered ? (
         <>
-          {/* Main Cinematic Experience */}
-          <VaelSlider />
+          <div className="pt-24 md:pt-32">
+            <VaelSlider />
+          </div>
           <div className="bg-background">
             <VaelReel />
             <VaelAwards />
@@ -30,14 +30,12 @@ export default async function Home(props: {
           </div>
         </>
       ) : (
-        /* Filtered Archive Mode */
-        <div className="pt-32 md:pt-40 bg-background min-h-screen">
+        <div className="pt-24 md:pt-32 bg-background min-h-screen">
           <VaelFilms />
           <VaelFooter />
         </div>
       )}
       
-      {/* Background grain consistent through the site */}
       <div className="fixed inset-0 pointer-events-none grain-overlay z-[200] opacity-5" />
     </main>
   );
