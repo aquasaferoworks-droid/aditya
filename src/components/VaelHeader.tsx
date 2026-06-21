@@ -29,7 +29,7 @@ export function VaelHeader() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 30);
+      setIsScrolled(window.scrollY > 10);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -49,10 +49,10 @@ export function VaelHeader() {
   };
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-[100] transition-all duration-500">
+    <div className="fixed top-0 left-0 right-0 z-[300] transition-all duration-300">
       <nav className={cn(
-        "transition-all duration-500 px-6 md:px-16 flex items-center justify-between",
-        isScrolled ? 'bg-black/95 backdrop-blur-xl border-b border-white/5 py-2' : 'bg-transparent py-4'
+        "transition-all duration-300 px-6 md:px-16 flex items-center justify-between",
+        isScrolled ? 'bg-black border-b border-white/5 py-3' : 'bg-black/40 backdrop-blur-sm py-5'
       )}>
         {/* Left Side: Spacer for symmetry */}
         <div className="flex-1 hidden md:block" />
@@ -71,14 +71,14 @@ export function VaelHeader() {
             className="rounded-none border-white/20 text-white hover:bg-primary hover:text-black hover:border-primary px-5 h-8 text-[9px] tracking-[0.2em] uppercase transition-all font-bold"
             asChild
           >
-            <Link href="#contact">Contact Us</Link>
+            <Link href="#contact">CONTACT US</Link>
           </Button>
         </div>
       </nav>
 
-      {/* Sleek, Professional Category Bar - Tighter & Closer */}
+      {/* Sleek Category Bar */}
       <div className={cn(
-        "bg-black/90 backdrop-blur-md border-b border-white/5 transition-all duration-500 overflow-hidden",
+        "bg-black border-b border-white/5 transition-all duration-300 overflow-hidden",
         isScrolled ? "h-9" : "h-9 md:h-10"
       )}>
         <div className="max-w-7xl mx-auto px-6 md:px-16 h-full flex items-center overflow-x-auto no-scrollbar gap-4 md:gap-5 justify-center">
