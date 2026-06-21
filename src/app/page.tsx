@@ -1,4 +1,3 @@
-
 import { VaelHeader } from '@/components/VaelHeader';
 import { VaelReel } from '@/components/VaelReel';
 import { VaelFooter } from '@/components/VaelFooter';
@@ -15,7 +14,7 @@ export default async function Home(props: {
     <main className="relative bg-background min-h-screen selection:bg-primary/30">
       <VaelHeader />
       
-      <div className="pt-24 md:pt-32">
+      <div className="pt-20 md:pt-24">
         <VaelSlider activeCategory={activeCategory} />
       </div>
 
