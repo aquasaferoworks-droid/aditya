@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useDoc } from '@/firebase';
+import { useDoc, useMemoFirebase } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { useFirestore } from '@/firebase';
 import { Button } from '@/components/ui/button';
@@ -11,7 +11,13 @@ import Image from 'next/image';
 
 export function VaelContact() {
   const firestore = useFirestore();
-  const { data: settings, loading } = useDoc(firestore ? doc(firestore, 'settings', 'contact') : null);
+  
+  const settingsRef = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return doc(firestore, 'settings', 'contact');
+  }, [firestore]);
+
+  const { data: settings, loading } = useDoc(settingsRef);
 
   if (loading) return null;
 

@@ -1,14 +1,20 @@
 
 'use client';
 
-import { useDoc } from '@/firebase';
+import { useDoc, useMemoFirebase } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { useFirestore } from '@/firebase';
 import { Instagram, Youtube, Facebook, Twitter, Phone } from 'lucide-react';
 
 export function VaelFooter() {
   const firestore = useFirestore();
-  const { data: settings } = useDoc(firestore ? doc(firestore, 'settings', 'contact') : null);
+  
+  const settingsRef = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return doc(firestore, 'settings', 'contact');
+  }, [firestore]);
+
+  const { data: settings } = useDoc(settingsRef);
 
   return (
     <footer className="py-12 md:py-16 px-8 md:px-16 border-t border-border/10 flex flex-col md:flex-row justify-between items-center gap-8 bg-background">

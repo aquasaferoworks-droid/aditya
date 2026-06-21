@@ -72,8 +72,13 @@ export default function AdminPage() {
     return collection(firestore, 'videos');
   }, [firestore]);
 
+  const settingsRef = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return doc(firestore, 'settings', 'contact');
+  }, [firestore]);
+
   const { data: rawVideos, loading: videosLoading } = useCollection(videosQuery);
-  const { data: settingsDoc, loading: settingsLoading } = useDoc(firestore ? doc(firestore, 'settings', 'contact') : null);
+  const { data: settingsDoc, loading: settingsLoading } = useDoc(settingsRef);
 
   useEffect(() => {
     if (settingsDoc) {
