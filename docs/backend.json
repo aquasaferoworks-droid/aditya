@@ -11,7 +11,7 @@
         "youtubeId": { "type": "string" },
         "type": { 
           "type": "string", 
-          "enum": ["slider", "reel-horizontal", "reel-feature", "reel-medium", "reel-vertical", "film-gallery"] 
+          "enum": ["slider", "reel-horizontal", "reel-feature", "reel-medium", "reel-vertical", "sidebar"] 
         },
         "upperText": { "type": "string" },
         "lowerText": { "type": "string" },
@@ -20,6 +20,18 @@
         "order": { "type": "number" }
       },
       "required": ["youtubeId", "type"]
+    },
+    "ContactSettings": {
+      "title": "Contact Settings",
+      "description": "Global settings for contact information and site details.",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" },
+        "representation": { "type": "string" },
+        "locations": { "type": "string" },
+        "formHeading": { "type": "string" },
+        "formDescription": { "type": "string" }
+      }
     }
   },
   "auth": {
@@ -29,6 +41,10 @@
     "/videos/{videoId}": {
       "schema": "Video",
       "description": "Collection of all video projects."
+    },
+    "/settings/contact": {
+      "schema": "ContactSettings",
+      "description": "Single document for global contact settings."
     }
   }
 }

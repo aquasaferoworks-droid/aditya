@@ -1,0 +1,8 @@
+init.defaultbranch=main
+core.editor=code --wait
+user.name=Aquasafe
+user.email=aquasaferoworks@gmail.com
+credential.https://github.com.helper=
+credential.https://github.com.helper=!/nix/store/2xjx1hgqy5rgjinsfjay8is8sy2nrpx4-gh-2.63.0/bin/gh auth git-credential
+credential.https://gist.github.com.helper=
+credential.https://gist.github.com.helper=!/nix/store/2xjx1hgqy5rgjinsfjay8is8sy2nrpx4-gh-2.63.0/bin/gh auth git-credential

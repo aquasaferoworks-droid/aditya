@@ -1,7 +1,9 @@
+
 import { VaelHeader } from '@/components/VaelHeader';
 import { VaelReel } from '@/components/VaelReel';
 import { VaelFooter } from '@/components/VaelFooter';
 import { VaelSlider } from '@/components/VaelSlider';
+import { VaelContact } from '@/components/VaelContact';
 
 export default async function Home(props: {
   searchParams: Promise<{ category?: string }>;
@@ -19,6 +21,7 @@ export default async function Home(props: {
 
       <div className="bg-background">
         <VaelReel activeCategory={activeCategory} />
+        <VaelContact />
         <VaelFooter />
       </div>
       
