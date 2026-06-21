@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useDoc, useMemoFirebase } from '@/firebase';
@@ -6,7 +5,7 @@ import { doc } from 'firebase/firestore';
 import { useFirestore } from '@/firebase';
 import { Button } from '@/components/ui/button';
 import { ContactCard } from '@/components/ContactCard';
-import { Mail, Briefcase, MapPin } from 'lucide-react';
+import { Mail, MapPin } from 'lucide-react';
 import Image from 'next/image';
 
 export function VaelContact() {
@@ -26,11 +25,6 @@ export function VaelContact() {
       icon: Mail, 
       label: 'Studio Email', 
       value: settings?.email || 'studio@erroladitya.com' 
-    },
-    { 
-      icon: Briefcase, 
-      label: 'Representation', 
-      value: settings?.representation || 'WME — Creative Artists' 
     },
     { 
       icon: MapPin, 

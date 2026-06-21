@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -56,7 +55,6 @@ export default function AdminPage() {
 
   const [contactSettings, setContactSettings] = useState({
     email: '',
-    representation: '',
     locations: '',
     formHeading: '',
     formDescription: '',
@@ -84,7 +82,6 @@ export default function AdminPage() {
     if (settingsDoc) {
       setContactSettings({
         email: settingsDoc.email || '',
-        representation: settingsDoc.representation || '',
         locations: settingsDoc.locations || '',
         formHeading: settingsDoc.formHeading || '',
         formDescription: settingsDoc.formDescription || '',
@@ -238,7 +235,6 @@ export default function AdminPage() {
                 <div className="space-y-4">
                   <Label className="text-[9px] uppercase tracking-widest text-muted-foreground font-bold">Studio Details</Label>
                   <Input placeholder="OFFICE EMAIL" className="rounded-none bg-background border-white/10 h-10 text-xs" value={contactSettings.email} onChange={e => setContactSettings({...contactSettings, email: e.target.value})} />
-                  <Input placeholder="REPRESENTATION" className="rounded-none bg-background border-white/10 h-10 text-xs" value={contactSettings.representation} onChange={e => setContactSettings({...contactSettings, representation: e.target.value})} />
                   <Input placeholder="GLOBAL LOCATIONS" className="rounded-none bg-background border-white/10 h-10 text-xs" value={contactSettings.locations} onChange={e => setContactSettings({...contactSettings, locations: e.target.value})} />
                 </div>
 
