@@ -14,7 +14,7 @@ export default async function Home(props: {
     <main className="relative bg-background min-h-screen selection:bg-primary/30">
       <VaelHeader />
       
-      <div className="pt-20 md:pt-24">
+      <div className="pt-16 md:pt-20">
         <VaelSlider activeCategory={activeCategory} />
       </div>
 

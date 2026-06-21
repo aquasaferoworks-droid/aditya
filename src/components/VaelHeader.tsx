@@ -52,7 +52,7 @@ export function VaelHeader() {
     <div className="fixed top-0 left-0 right-0 z-[300] transition-all duration-300">
       <nav className={cn(
         "transition-all duration-300 px-6 md:px-16 flex items-center justify-between",
-        isScrolled ? 'bg-black border-b border-white/5 py-3' : 'bg-black/40 backdrop-blur-sm py-5'
+        isScrolled ? 'bg-black py-2' : 'bg-black/60 backdrop-blur-md py-3'
       )}>
         {/* Left Side: Spacer for symmetry */}
         <div className="flex-1 hidden md:block" />
@@ -67,8 +67,7 @@ export function VaelHeader() {
         {/* Right Side: Contact Us Button */}
         <div className="flex-1 flex justify-end">
           <Button 
-            variant="outline" 
-            className="rounded-none border-white/20 text-white hover:bg-primary hover:text-black hover:border-primary px-5 h-8 text-[9px] tracking-[0.2em] uppercase transition-all font-bold"
+            className="rounded-none bg-primary text-black hover:bg-white hover:text-black px-5 h-8 text-[9px] tracking-[0.2em] uppercase transition-all font-bold"
             asChild
           >
             <Link href="#contact">CONTACT US</Link>
@@ -76,12 +75,12 @@ export function VaelHeader() {
         </div>
       </nav>
 
-      {/* Sleek Category Bar */}
+      {/* Sleek Category Bar - Tighter spacing and closer to logo */}
       <div className={cn(
-        "bg-black border-b border-white/5 transition-all duration-300 overflow-hidden",
-        isScrolled ? "h-9" : "h-9 md:h-10"
+        "bg-black transition-all duration-300 overflow-hidden",
+        isScrolled ? "h-8" : "h-9"
       )}>
-        <div className="max-w-7xl mx-auto px-6 md:px-16 h-full flex items-center overflow-x-auto no-scrollbar gap-4 md:gap-5 justify-center">
+        <div className="max-w-7xl mx-auto px-6 md:px-16 h-full flex items-center overflow-x-auto no-scrollbar gap-8 md:gap-12 justify-center">
           {categories.map((cat) => (
             <button
               key={cat}
