@@ -1,4 +1,3 @@
-
 'use client';
 
 import Link from 'next/link';
@@ -55,17 +54,17 @@ export function VaelHeader() {
         "transition-all duration-500 px-6 py-4 md:px-16 flex items-center justify-between",
         isScrolled ? 'bg-black/95 backdrop-blur-xl border-b border-white/5 py-4' : 'bg-transparent py-8'
       )}>
-        {/* Left Placeholder for Symmetrical Balance */}
+        {/* Left Side: Empty for symmetry */}
         <div className="flex-1 hidden md:block" />
 
-        {/* Center: Logo */}
+        {/* Center: Centered Logo */}
         <div className="flex-none text-center">
           <Link href="/" className="font-headline text-2xl md:text-3xl tracking-tighter hover:text-primary transition-all duration-700 italic font-bold uppercase">
             ERROL <span className="text-primary not-italic font-light">ADITYA</span>
           </Link>
         </div>
 
-        {/* Right: Contact Button */}
+        {/* Right Side: Contact Us Button */}
         <div className="flex-1 flex justify-end">
           <Button 
             variant="outline" 
@@ -77,18 +76,18 @@ export function VaelHeader() {
         </div>
       </nav>
 
-      {/* Category Navigation Bar - Compact & Modern */}
+      {/* Sleek, Professional Category Bar */}
       <div className={cn(
         "bg-black/90 backdrop-blur-md border-b border-white/5 transition-all duration-500 overflow-hidden",
         isScrolled ? "h-11" : "h-0 md:h-11"
       )}>
-        <div className="max-w-7xl mx-auto px-6 md:px-16 h-full flex items-center overflow-x-auto no-scrollbar gap-5 md:gap-8 justify-center">
+        <div className="max-w-7xl mx-auto px-6 md:px-16 h-full flex items-center overflow-x-auto no-scrollbar gap-4 md:gap-6 justify-center">
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setCategory(cat)}
               className={cn(
-                "relative text-[9px] tracking-[0.2em] uppercase whitespace-nowrap transition-all duration-300 font-body py-1 opacity-60 hover:opacity-100",
+                "relative text-[9px] tracking-[0.15em] uppercase whitespace-nowrap transition-all duration-300 font-body py-1 opacity-60 hover:opacity-100",
                 activeCategory === cat ? "text-primary opacity-100 font-bold" : "text-white"
               )}
             >

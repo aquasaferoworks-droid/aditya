@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState } from 'react';
@@ -105,9 +104,9 @@ export function VaelReel({ activeCategory }: VaelReelProps) {
     <section id="reel" className="py-24 md:py-32 bg-background overflow-hidden border-t border-white/5">
       <div className="max-w-[1600px] mx-auto px-6 md:px-16 space-y-4 md:space-y-12">
         
-        {/* Genre Marker - Top */}
+        {/* Category Section Header - Above Video Area */}
         <div className="flex items-center gap-6 mb-8">
-          <span className="text-[10px] tracking-[0.8em] uppercase text-primary font-bold whitespace-nowrap">{activeCategory} / Series Start</span>
+          <span className="text-[10px] tracking-[0.8em] uppercase text-primary font-bold whitespace-nowrap">{activeCategory} / Selected Series</span>
           <div className="h-px flex-1 bg-white/5" />
         </div>
 
@@ -145,7 +144,7 @@ export function VaelReel({ activeCategory }: VaelReelProps) {
         {moreVideos.length > 0 && (
           <div className="pt-24 md:pt-48 space-y-12">
             <div className="flex items-center gap-8">
-              <h2 className="text-[10px] tracking-[0.8em] uppercase text-primary/60 font-bold whitespace-nowrap">Supplementary / {activeCategory}</h2>
+              <h2 className="text-[10px] tracking-[0.8em] uppercase text-primary/60 font-bold whitespace-nowrap">Archive / {activeCategory}</h2>
               <div className="h-px flex-1 bg-white/5" />
             </div>
             
@@ -157,10 +156,10 @@ export function VaelReel({ activeCategory }: VaelReelProps) {
           </div>
         )}
 
-        {/* Genre Marker - Bottom */}
+        {/* Category Section Header - Below Video Area */}
         <div className="flex items-center gap-6 mt-24">
           <div className="h-px flex-1 bg-white/5" />
-          <span className="text-[10px] tracking-[0.8em] uppercase text-primary/40 font-bold whitespace-nowrap">Series End / {activeCategory}</span>
+          <span className="text-[10px] tracking-[0.8em] uppercase text-primary/40 font-bold whitespace-nowrap">End Archive / {activeCategory}</span>
         </div>
       </div>
 

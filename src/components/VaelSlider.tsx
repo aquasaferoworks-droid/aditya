@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
@@ -94,13 +93,8 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
   if (loading || slides.length === 0) return null;
 
   return (
-    <section className="relative w-full bg-black py-4 md:py-12 flex flex-col justify-center overflow-hidden select-none">
+    <section className="relative w-full bg-black py-6 md:py-16 flex flex-col justify-center overflow-hidden select-none">
       <div className="relative">
-        {/* Mobile-only "NEW IN" Header */}
-        <div className="md:hidden text-center mb-6">
-          <h2 className="text-3xl font-headline font-bold text-white tracking-[0.2em] uppercase leading-none">NEW IN</h2>
-        </div>
-
         <div className="embla overflow-visible" ref={emblaRef}>
           <div className="embla__container flex items-center">
             {slides.map((slide, index) => {
@@ -109,7 +103,7 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
               return (
                 <div 
                   key={slide.id} 
-                  className="embla__slide flex-[0_0_82%] md:flex-[0_0_75%] min-w-0 px-2 md:px-5 relative"
+                  className="embla__slide flex-[0_0_80%] md:flex-[0_0_75%] min-w-0 px-2 md:px-5 relative"
                   onClick={() => isActive && setSelectedVideo(slide)}
                 >
                   <motion.div
@@ -119,7 +113,7 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
                       opacity: isActive ? 1 : 0.3,
                     }}
                     transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
-                    className="relative aspect-[4/5] md:aspect-[21/9] overflow-hidden bg-zinc-900 shadow-2xl group cursor-pointer border border-white/5 rounded-none"
+                    className="relative aspect-[21/9] overflow-hidden bg-zinc-900 shadow-2xl group cursor-pointer border border-white/5 rounded-none"
                   >
                     <div className="absolute inset-0 z-0">
                       <Image 
@@ -131,23 +125,20 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
                       />
                     </div>
 
-                    <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none z-10" />
+                    <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 to-transparent pointer-events-none z-10" />
 
                     {isActive && (
-                      <div className="absolute inset-0 z-20 p-8 md:p-14 flex flex-col justify-between pointer-events-none">
-                        <div className="flex justify-start">
-                          <span className="text-[10px] tracking-[0.5em] text-white/50 uppercase font-bold hidden md:block">
+                      <div className="absolute inset-0 z-20 p-6 md:p-12 flex flex-col justify-between pointer-events-none">
+                        <div className="flex justify-between items-start">
+                          <span className="text-[10px] tracking-[0.5em] text-white/50 uppercase font-bold">
                             {slide.upperText}
                           </span>
                         </div>
                         <div className="flex justify-between items-end">
-                          <div className="space-y-2">
-                            <h2 className="text-3xl md:text-5xl font-headline text-white italic tracking-tighter uppercase leading-none">
+                          <div className="space-y-1">
+                            <h2 className="text-xl md:text-4xl font-headline text-white italic tracking-tighter uppercase leading-none">
                               {slide.lowerText || slide.title}
                             </h2>
-                            <p className="text-[10px] tracking-[0.3em] text-primary/80 uppercase font-body">
-                              Series / {Array.isArray(slide.category) ? slide.category[0] : slide.category}
-                            </p>
                           </div>
                         </div>
                       </div>
@@ -159,19 +150,19 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
           </div>
         </div>
 
-        {/* Sleek Arrow Controls - Desktop Only */}
-        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 hidden md:flex justify-between px-[6%] pointer-events-none">
+        {/* Small, Sleek Grouped Arrow Controls */}
+        <div className="absolute bottom-8 right-[12%] z-50 flex items-center gap-2 pointer-events-none">
           <button 
             onClick={scrollPrev}
-            className="pointer-events-auto h-16 w-16 flex items-center justify-center bg-black/40 hover:bg-primary transition-all group/btn border border-white/10"
+            className="pointer-events-auto h-10 w-10 flex items-center justify-center bg-black/40 hover:bg-primary transition-all group/btn border border-white/10"
           >
-            <ChevronLeft className="w-6 h-6 text-white group-hover/btn:text-black transition-colors" />
+            <ChevronLeft className="w-4 h-4 text-white group-hover/btn:text-black transition-colors" />
           </button>
           <button 
             onClick={scrollNext}
-            className="pointer-events-auto h-16 w-16 flex items-center justify-center bg-black/40 hover:bg-primary transition-all group/btn border border-white/10"
+            className="pointer-events-auto h-10 w-10 flex items-center justify-center bg-black/40 hover:bg-primary transition-all group/btn border border-white/10"
           >
-            <ChevronRight className="w-6 h-6 text-white group-hover/btn:text-black transition-colors" />
+            <ChevronRight className="w-4 h-4 text-white group-hover/btn:text-black transition-colors" />
           </button>
         </div>
       </div>
