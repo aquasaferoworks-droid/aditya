@@ -1,3 +1,4 @@
+
 import type {Config} from 'tailwindcss';
 
 export default {
@@ -10,8 +11,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['Comfortaa', 'sans-serif'],
-        headline: ['Comfortaa', 'sans-serif'],
+        body: ['"Google Sans"', 'sans-serif'],
+        headline: ['"Google Sans"', 'sans-serif'],
         code: ['monospace'],
       },
       colors: {
