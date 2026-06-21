@@ -46,7 +46,7 @@ export function VaelContact() {
 
       <div className="max-w-7xl mx-auto relative z-10">
         <ContactCard
-          title={settings?.formHeading || "Inquiry Portal"}
+          title={settings?.formHeading || "Contact Us"}
           description={settings?.formDescription || "Translating vision into atmospheric reality. Connect with the studio for representation and high-end cinematic inquiries."}
           contactInfo={contactInfo}
         >

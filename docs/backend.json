@@ -23,14 +23,19 @@
     },
     "ContactSettings": {
       "title": "Contact Settings",
-      "description": "Global settings for contact information and site details.",
+      "description": "Global settings for contact information and social links.",
       "type": "object",
       "properties": {
         "email": { "type": "string" },
         "representation": { "type": "string" },
         "locations": { "type": "string" },
         "formHeading": { "type": "string" },
-        "formDescription": { "type": "string" }
+        "formDescription": { "type": "string" },
+        "instagram": { "type": "string" },
+        "youtube": { "type": "string" },
+        "whatsapp": { "type": "string" },
+        "facebook": { "type": "string" },
+        "twitter": { "type": "string" }
       }
     }
   },

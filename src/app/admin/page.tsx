@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -8,10 +9,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { VaelHeader } from '@/components/VaelHeader';
-import { Loader2, Plus, Trash2, LayoutGrid, Film, Smartphone, Maximize, Box, List, Save, Settings } from 'lucide-react';
+import { Loader2, Trash2, LayoutGrid, Film, Smartphone, Maximize, Box, List, Instagram, Youtube, Facebook, Twitter, Phone } from 'lucide-react';
 import { useMemoFirebase } from '@/firebase/firestore/use-collection';
 import { useToast } from '@/hooks/use-toast';
-import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
@@ -59,7 +59,12 @@ export default function AdminPage() {
     representation: '',
     locations: '',
     formHeading: '',
-    formDescription: ''
+    formDescription: '',
+    instagram: '',
+    youtube: '',
+    whatsapp: '',
+    facebook: '',
+    twitter: ''
   });
 
   const videosQuery = useMemoFirebase(() => {
@@ -77,7 +82,12 @@ export default function AdminPage() {
         representation: settingsDoc.representation || '',
         locations: settingsDoc.locations || '',
         formHeading: settingsDoc.formHeading || '',
-        formDescription: settingsDoc.formDescription || ''
+        formDescription: settingsDoc.formDescription || '',
+        instagram: settingsDoc.instagram || '',
+        youtube: settingsDoc.youtube || '',
+        whatsapp: settingsDoc.whatsapp || '',
+        facebook: settingsDoc.facebook || '',
+        twitter: settingsDoc.twitter || ''
       });
     }
   }, [settingsDoc]);
@@ -130,7 +140,7 @@ export default function AdminPage() {
 
   const handleDelete = async (id: string) => {
     if (!firestore) return;
-    if (!confirm("Remove this project from the series?")) return;
+    if (!confirm("Remove this project?")) return;
     try {
       await deleteDoc(doc(firestore, 'videos', id));
       toast({ title: "Project Removed" });
@@ -145,7 +155,7 @@ export default function AdminPage() {
     setIsSavingSettings(true);
     try {
       await setDoc(doc(firestore, 'settings', 'contact'), contactSettings);
-      toast({ title: "Settings Saved" });
+      toast({ title: "Settings Updated" });
     } catch (error: any) {
       toast({ title: "Save Failed", variant: "destructive" });
     } finally {
@@ -156,33 +166,33 @@ export default function AdminPage() {
   return (
     <main className="min-h-screen bg-background text-foreground">
       <VaelHeader />
-      <div className="flex pt-40 min-h-screen">
-        <aside className="w-96 border-r border-white/5 bg-black/40 flex flex-col sticky top-40 h-[calc(100vh-10rem)] p-8 overflow-y-auto no-scrollbar">
+      <div className="flex pt-32 min-h-screen">
+        <aside className="w-96 border-r border-white/5 bg-black/40 flex flex-col sticky top-32 h-[calc(100vh-8rem)] p-8 overflow-y-auto no-scrollbar">
           <Tabs defaultValue="videos" className="w-full">
             <TabsList className="bg-white/5 rounded-none p-1 w-full grid grid-cols-2 mb-8">
-              <TabsTrigger value="videos" className="rounded-none text-[10px] uppercase tracking-widest py-3">Series</TabsTrigger>
-              <TabsTrigger value="settings" className="rounded-none text-[10px] uppercase tracking-widest py-3">Settings</TabsTrigger>
+              <TabsTrigger value="videos" className="rounded-none text-[10px] uppercase tracking-widest py-3 font-bold">Series</TabsTrigger>
+              <TabsTrigger value="settings" className="rounded-none text-[10px] uppercase tracking-widest py-3 font-bold">Contact Us</TabsTrigger>
             </TabsList>
 
             <TabsContent value="videos" className="space-y-6">
               <form onSubmit={handleAddVideo} className="space-y-6">
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <Label className="text-[9px] uppercase tracking-widest text-muted-foreground">Placement</Label>
+                    <Label className="text-[9px] uppercase tracking-widest text-muted-foreground font-bold">Placement</Label>
                     <Select value={formData.type} onValueChange={val => setFormData({...formData, type: val})}>
-                      <SelectTrigger className="rounded-none bg-background border-white/10 h-10 text-[10px] uppercase">
+                      <SelectTrigger className="rounded-none bg-background border-white/10 h-10 text-[10px] uppercase font-bold">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="rounded-none bg-black border-white/10">
                         {PLACEMENT_TYPES.map(pt => (
-                          <SelectItem key={pt.value} value={pt.value} className="text-[10px] uppercase">{pt.label}</SelectItem>
+                          <SelectItem key={pt.value} value={pt.value} className="text-[10px] uppercase font-bold">{pt.label}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
                   </div>
 
                   <div className="space-y-2">
-                    <Label className="text-[9px] uppercase tracking-widest text-muted-foreground">Genres</Label>
+                    <Label className="text-[9px] uppercase tracking-widest text-muted-foreground font-bold">Genres</Label>
                     <div className="grid grid-cols-2 gap-2 border border-white/5 p-3 bg-black/20">
                       {CATEGORIES.map(cat => (
                         <div key={cat} className="flex items-center space-x-2">
@@ -192,32 +202,69 @@ export default function AdminPage() {
                             onCheckedChange={() => handleCategoryToggle(cat)} 
                             className="rounded-none border-white/20" 
                           />
-                          <label htmlFor={`cat-${cat}`} className="text-[8px] uppercase tracking-widest cursor-pointer">{cat}</label>
+                          <label htmlFor={`cat-${cat}`} className="text-[8px] uppercase tracking-widest cursor-pointer font-bold">{cat}</label>
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  <Input placeholder="DIRECTOR / ROLE" className="rounded-none bg-background border-white/10 h-10 text-xs" value={formData.upperText} onChange={e => setFormData({...formData, upperText: e.target.value})} />
-                  <Input required placeholder="BRAND / TITLE" className="rounded-none bg-background border-white/10 h-10 text-xs" value={formData.lowerText} onChange={e => setFormData({...formData, lowerText: e.target.value})} />
-                  <Input required placeholder="YOUTUBE ID" className="rounded-none bg-background border-white/10 h-10 text-xs" value={formData.youtubeId} onChange={e => setFormData({...formData, youtubeId: e.target.value})} />
-                  <Input type="number" placeholder="ORDER" className="rounded-none bg-background border-white/10 h-10 text-xs" value={formData.order} onChange={e => setFormData({...formData, order: Number(e.target.value)})} />
+                  <div className="space-y-4">
+                    <Label className="text-[9px] uppercase tracking-widest text-muted-foreground font-bold">Information</Label>
+                    <Input placeholder="DIRECTOR / ROLE" className="rounded-none bg-background border-white/10 h-10 text-xs" value={formData.upperText} onChange={e => setFormData({...formData, upperText: e.target.value})} />
+                    <Input required placeholder="BRAND / TITLE" className="rounded-none bg-background border-white/10 h-10 text-xs" value={formData.lowerText} onChange={e => setFormData({...formData, lowerText: e.target.value})} />
+                    <Input required placeholder="YOUTUBE ID" className="rounded-none bg-background border-white/10 h-10 text-xs" value={formData.youtubeId} onChange={e => setFormData({...formData, youtubeId: e.target.value})} />
+                    <Input type="number" placeholder="SERIES ORDER" className="rounded-none bg-background border-white/10 h-10 text-xs" value={formData.order} onChange={e => setFormData({...formData, order: Number(e.target.value)})} />
+                  </div>
                 </div>
                 <Button type="submit" disabled={isAdding} className="w-full rounded-none bg-primary text-black text-[10px] tracking-widest uppercase font-bold py-6">
-                  {isAdding ? <Loader2 className="animate-spin" /> : 'Publish Project'}
+                  {isAdding ? <Loader2 className="animate-spin" /> : 'Publish Entry'}
                 </Button>
               </form>
             </TabsContent>
 
             <TabsContent value="settings" className="space-y-6">
-              <form onSubmit={handleSaveSettings} className="space-y-4">
-                <Input placeholder="STUDIO EMAIL" className="rounded-none bg-background border-white/10 h-10 text-xs" value={contactSettings.email} onChange={e => setContactSettings({...contactSettings, email: e.target.value})} />
-                <Input placeholder="REPRESENTATION" className="rounded-none bg-background border-white/10 h-10 text-xs" value={contactSettings.representation} onChange={e => setContactSettings({...contactSettings, representation: e.target.value})} />
-                <Input placeholder="LOCATIONS" className="rounded-none bg-background border-white/10 h-10 text-xs" value={contactSettings.locations} onChange={e => setContactSettings({...contactSettings, locations: e.target.value})} />
-                <Input placeholder="FORM HEADING" className="rounded-none bg-background border-white/10 h-10 text-xs" value={contactSettings.formHeading} onChange={e => setContactSettings({...contactSettings, formHeading: e.target.value})} />
-                <Textarea placeholder="FORM DESCRIPTION" className="rounded-none bg-background border-white/10 min-h-[100px] text-xs" value={contactSettings.formDescription} onChange={e => setContactSettings({...contactSettings, formDescription: e.target.value})} />
+              <form onSubmit={handleSaveSettings} className="space-y-6">
+                <div className="space-y-4">
+                  <Label className="text-[9px] uppercase tracking-widest text-muted-foreground font-bold">Page Content</Label>
+                  <Input placeholder="HEADING (e.g. Contact Us)" className="rounded-none bg-background border-white/10 h-10 text-xs" value={contactSettings.formHeading} onChange={e => setContactSettings({...contactSettings, formHeading: e.target.value})} />
+                  <Textarea placeholder="SHORT WELCOME MESSAGE" className="rounded-none bg-background border-white/10 min-h-[100px] text-xs" value={contactSettings.formDescription} onChange={e => setContactSettings({...contactSettings, formDescription: e.target.value})} />
+                </div>
+
+                <div className="space-y-4">
+                  <Label className="text-[9px] uppercase tracking-widest text-muted-foreground font-bold">Studio Details</Label>
+                  <Input placeholder="OFFICE EMAIL" className="rounded-none bg-background border-white/10 h-10 text-xs" value={contactSettings.email} onChange={e => setContactSettings({...contactSettings, email: e.target.value})} />
+                  <Input placeholder="REPRESENTATION" className="rounded-none bg-background border-white/10 h-10 text-xs" value={contactSettings.representation} onChange={e => setContactSettings({...contactSettings, representation: e.target.value})} />
+                  <Input placeholder="GLOBAL LOCATIONS" className="rounded-none bg-background border-white/10 h-10 text-xs" value={contactSettings.locations} onChange={e => setContactSettings({...contactSettings, locations: e.target.value})} />
+                </div>
+
+                <div className="space-y-4">
+                  <Label className="text-[9px] uppercase tracking-widest text-muted-foreground font-bold">Social Links</Label>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-3">
+                      <Instagram className="w-4 h-4 text-primary" />
+                      <Input placeholder="INSTAGRAM URL" className="rounded-none bg-background border-white/10 h-8 text-[10px]" value={contactSettings.instagram} onChange={e => setContactSettings({...contactSettings, instagram: e.target.value})} />
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Youtube className="w-4 h-4 text-primary" />
+                      <Input placeholder="YOUTUBE URL" className="rounded-none bg-background border-white/10 h-8 text-[10px]" value={contactSettings.youtube} onChange={e => setContactSettings({...contactSettings, youtube: e.target.value})} />
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Phone className="w-4 h-4 text-primary" />
+                      <Input placeholder="WHATSAPP NUMBER" className="rounded-none bg-background border-white/10 h-8 text-[10px]" value={contactSettings.whatsapp} onChange={e => setContactSettings({...contactSettings, whatsapp: e.target.value})} />
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Facebook className="w-4 h-4 text-primary" />
+                      <Input placeholder="FACEBOOK URL" className="rounded-none bg-background border-white/10 h-8 text-[10px]" value={contactSettings.facebook} onChange={e => setContactSettings({...contactSettings, facebook: e.target.value})} />
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Twitter className="w-4 h-4 text-primary" />
+                      <Input placeholder="TWITTER URL" className="rounded-none bg-background border-white/10 h-8 text-[10px]" value={contactSettings.twitter} onChange={e => setContactSettings({...contactSettings, twitter: e.target.value})} />
+                    </div>
+                  </div>
+                </div>
+
                 <Button type="submit" disabled={isSavingSettings} className="w-full rounded-none bg-primary text-black text-[10px] tracking-widest uppercase font-bold py-6">
-                  {isSavingSettings ? <Loader2 className="animate-spin" /> : 'Save Settings'}
+                  {isSavingSettings ? <Loader2 className="animate-spin" /> : 'Update All Settings'}
                 </Button>
               </form>
             </TabsContent>
@@ -225,7 +272,7 @@ export default function AdminPage() {
         </aside>
 
         <div className="flex-1 p-16 overflow-y-auto no-scrollbar">
-          <h1 className="text-4xl font-headline italic uppercase tracking-tighter mb-12">Archive <span className="text-primary not-italic">Management</span></h1>
+          <h1 className="text-4xl font-headline italic uppercase tracking-tighter mb-12">Series <span className="text-primary not-italic">Archive</span></h1>
           
           <div className="space-y-16">
             {PLACEMENT_TYPES.map(section => {
