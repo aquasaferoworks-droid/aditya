@@ -150,19 +150,19 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
           </div>
         </div>
 
-        {/* Small, Sleek Grouped Arrow Controls */}
-        <div className="absolute bottom-8 right-[12%] z-50 flex items-center gap-2 pointer-events-none">
+        {/* Minimalist, Sleek Arrow Controls (No Box/Border) */}
+        <div className="absolute bottom-10 right-[15%] z-50 flex items-center gap-6 pointer-events-none">
           <button 
             onClick={scrollPrev}
-            className="pointer-events-auto h-10 w-10 flex items-center justify-center bg-black/40 hover:bg-primary transition-all group/btn border border-white/10"
+            className="pointer-events-auto flex items-center justify-center transition-all group/btn"
           >
-            <ChevronLeft className="w-4 h-4 text-white group-hover/btn:text-black transition-colors" />
+            <ChevronLeft className="w-5 h-5 text-white/40 group-hover/btn:text-primary transition-colors" />
           </button>
           <button 
             onClick={scrollNext}
-            className="pointer-events-auto h-10 w-10 flex items-center justify-center bg-black/40 hover:bg-primary transition-all group/btn border border-white/10"
+            className="pointer-events-auto flex items-center justify-center transition-all group/btn"
           >
-            <ChevronRight className="w-4 h-4 text-white group-hover/btn:text-black transition-colors" />
+            <ChevronRight className="w-5 h-5 text-white/40 group-hover/btn:text-primary transition-colors" />
           </button>
         </div>
       </div>
