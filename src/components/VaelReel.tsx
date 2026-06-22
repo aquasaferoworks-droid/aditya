@@ -6,6 +6,9 @@ import Image from 'next/image';
 import { useFirestore, useCollection } from '@/firebase';
 import { collection } from 'firebase/firestore';
 import { useMemoFirebase } from '@/firebase/firestore/use-collection';
+import { getVideoType, getYoutubeThumbnail } from '@/lib/video-utils';
+import { UnifiedVideoPlayer } from './UnifiedVideoPlayer';
+import { Video } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -31,6 +34,9 @@ interface VaelReelProps {
 }
 
 const VideoCard = ({ video, aspectRatio, onClick }: { video: VideoItem, aspectRatio: string, onClick: (v: VideoItem) => void }) => {
+  const vType = getVideoType(video.youtubeId);
+  const thumbUrl = vType === 'youtube' ? getYoutubeThumbnail(video.youtubeId, 'hq') : null;
+
   return (
     <motion.div
       className={`relative overflow-hidden bg-black border border-white/5 group cursor-pointer ${aspectRatio} rounded-none`}
@@ -40,14 +46,21 @@ const VideoCard = ({ video, aspectRatio, onClick }: { video: VideoItem, aspectRa
       viewport={{ once: true }}
       transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
     >
-      <div className="absolute inset-0 z-0">
-        <Image 
-          src={`https://img.youtube.com/vi/${video.youtubeId}/hqdefault.jpg`}
-          alt={video.title || "Video Entry"}
-          fill
-          className="object-cover transition-transform duration-1000 group-hover:scale-105 opacity-50 group-hover:opacity-100"
-          unoptimized
-        />
+      <div className="absolute inset-0 z-0 bg-black flex items-center justify-center">
+        {thumbUrl ? (
+          <Image 
+            src={thumbUrl}
+            alt={video.title || "Video Entry"}
+            fill
+            className="object-cover transition-transform duration-1000 group-hover:scale-105 opacity-50 group-hover:opacity-100"
+            unoptimized
+          />
+        ) : (
+          <div className="flex flex-col items-center gap-2 text-white/5">
+            <Video className="w-8 h-8" />
+            <span className="text-[8px] uppercase tracking-widest font-bold">Direct Source</span>
+          </div>
+        )}
       </div>
       
       <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-700 z-10" />
@@ -71,8 +84,6 @@ export function VaelReel({ activeCategory }: VaelReelProps) {
   }, [firestore]);
 
   const { data: allVideos, loading } = useCollection(reelQuery);
-
-  const getFullUrl = (id: string) => `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&showinfo=0&modestbranding=1`;
 
   const filteredVideos = (allVideos as VideoItem[] || []).filter(v => {
     if (activeCategory === 'all') return true;
@@ -150,15 +161,7 @@ export function VaelReel({ activeCategory }: VaelReelProps) {
             <DialogTitle className="sr-only">{selectedVideo?.title}</DialogTitle>
             <DialogDescription className="sr-only">Viewing project: {selectedVideo?.title}</DialogDescription>
             {selectedVideo && (
-              <div className="relative w-full h-full">
-                <iframe 
-                  className="w-full h-full" 
-                  src={getFullUrl(selectedVideo.youtubeId)} 
-                  frameBorder="0" 
-                  allow="autoplay; encrypted-media"
-                  allowFullScreen 
-                />
-              </div>
+              <UnifiedVideoPlayer url={selectedVideo.youtubeId} />
             )}
           </DialogContent>
         </DialogPortal>

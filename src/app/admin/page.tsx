@@ -8,12 +8,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { VaelHeader } from '@/components/VaelHeader';
-import { Loader2, Trash2, LayoutGrid, Film, Smartphone, Maximize, Box, MoreVertical, Pencil, X } from 'lucide-react';
+import { Loader2, Trash2, LayoutGrid, Film, Smartphone, Maximize, Box, MoreVertical, Pencil, X, Video } from 'lucide-react';
 import { useMemoFirebase } from '@/firebase/firestore/use-collection';
 import { useToast } from '@/hooks/use-toast';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
+import { getVideoType, extractYoutubeId } from '@/lib/video-utils';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -109,14 +110,6 @@ export default function AdminPage() {
 
   const sortedVideos = (rawVideos || []).sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
 
-  const extractYoutubeId = (urlOrId: string) => {
-    if (!urlOrId) return '';
-    // Robust regex to handle almost all YouTube URL formats
-    const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
-    const match = urlOrId.match(regex);
-    return match ? match[1] : urlOrId.trim();
-  };
-
   const handleCategoryToggle = (cat: string) => {
     setFormData(prev => {
       const current = prev.category;
@@ -133,23 +126,32 @@ export default function AdminPage() {
     if (!firestore) return;
     setIsSubmitting(true);
 
-    const cleanId = extractYoutubeId(formData.youtubeId);
+    // Validate type
+    const videoType = getVideoType(formData.youtubeId);
+    if (videoType === 'unknown') {
+      toast({ 
+        title: "Unrecognized Source", 
+        description: "Please provide a valid YouTube URL or direct video link (.mp4, etc.)", 
+        variant: "destructive" 
+      });
+      setIsSubmitting(false);
+      return;
+    }
 
     try {
+      const videoData = {
+        ...formData,
+        order: Number(formData.order) || (editingId ? formData.order : sortedVideos.length + 1),
+        updatedAt: serverTimestamp()
+      };
+
       if (editingId) {
         const docRef = doc(firestore, 'videos', editingId);
-        await updateDoc(docRef, {
-          ...formData,
-          youtubeId: cleanId,
-          order: Number(formData.order) || 0,
-          updatedAt: serverTimestamp()
-        });
+        await updateDoc(docRef, videoData);
         toast({ title: "Project Updated" });
       } else {
         await addDoc(collection(firestore, 'videos'), {
-          ...formData,
-          youtubeId: cleanId,
-          order: Number(formData.order) || (sortedVideos.length + 1),
+          ...videoData,
           createdAt: serverTimestamp()
         });
         toast({ title: "Project Published" });
@@ -288,7 +290,7 @@ export default function AdminPage() {
                     <Label className="text-[9px] uppercase tracking-widest text-muted-foreground font-bold">Project Details</Label>
                     <Input placeholder="DIRECTOR / ROLE" className="rounded-none bg-background border-white/10 h-10 text-xs" value={formData.upperText} onChange={e => setFormData({...formData, upperText: e.target.value})} />
                     <Input required placeholder="BRAND / TITLE" className="rounded-none bg-background border-white/10 h-10 text-xs" value={formData.lowerText} onChange={e => setFormData({...formData, lowerText: e.target.value})} />
-                    <Input required placeholder="YOUTUBE URL OR VIDEO ID" className="rounded-none bg-background border-white/10 h-10 text-xs" value={formData.youtubeId} onChange={e => setFormData({...formData, youtubeId: e.target.value})} />
+                    <Input required placeholder="VIDEO URL (YOUTUBE OR .MP4)" className="rounded-none bg-background border-white/10 h-10 text-xs" value={formData.youtubeId} onChange={e => setFormData({...formData, youtubeId: e.target.value})} />
                     <Input type="number" placeholder="SERIES SEQUENCE" className="rounded-none bg-background border-white/10 h-10 text-xs" value={formData.order} onChange={e => setFormData({...formData, order: Number(e.target.value)})} />
                   </div>
                 </div>
@@ -345,54 +347,63 @@ export default function AdminPage() {
                     <div className="h-px flex-1 bg-white/5" />
                   </div>
                   <div className="grid grid-cols-1 gap-2">
-                    {videos.map(v => (
-                      <div key={v.id} className={`bg-white/[0.02] border transition-all duration-300 p-4 flex items-center justify-between group ${editingId === v.id ? 'border-primary' : 'border-white/5'}`}>
-                        <div className="flex items-center gap-6">
-                          <div className="w-20 aspect-video relative bg-black border border-white/5">
-                            <img src={`https://img.youtube.com/vi/${v.youtubeId}/mqdefault.jpg`} className="object-cover w-full h-full opacity-60" alt="" />
-                          </div>
-                          <div>
-                            <p className="text-[8px] uppercase tracking-widest text-primary font-bold">{v.upperText}</p>
-                            <h3 className="text-sm font-headline italic uppercase">{v.lowerText || v.title}</h3>
-                            <div className="flex gap-1 mt-1">
-                              {Array.isArray(v.category) ? v.category.slice(0, 3).map((c: string) => (
-                                <span key={c} className="text-[6px] tracking-widest text-white/30 uppercase font-bold border border-white/10 px-1">{c}</span>
-                              )) : null}
+                    {videos.map(v => {
+                      const vType = getVideoType(v.youtubeId);
+                      const ytId = extractYoutubeId(v.youtubeId);
+                      
+                      return (
+                        <div key={v.id} className={`bg-white/[0.02] border transition-all duration-300 p-4 flex items-center justify-between group ${editingId === v.id ? 'border-primary' : 'border-white/5'}`}>
+                          <div className="flex items-center gap-6">
+                            <div className="w-20 aspect-video relative bg-black border border-white/5 flex items-center justify-center">
+                              {vType === 'youtube' && ytId ? (
+                                <img src={`https://img.youtube.com/vi/${ytId}/mqdefault.jpg`} className="object-cover w-full h-full opacity-60" alt="" />
+                              ) : (
+                                <Video className="w-6 h-6 text-white/20" />
+                              )}
+                            </div>
+                            <div>
+                              <p className="text-[8px] uppercase tracking-widest text-primary font-bold">{v.upperText}</p>
+                              <h3 className="text-sm font-headline italic uppercase">{v.lowerText || v.title}</h3>
+                              <div className="flex gap-1 mt-1">
+                                {Array.isArray(v.category) ? v.category.slice(0, 3).map((c: string) => (
+                                  <span key={c} className="text-[6px] tracking-widest text-white/30 uppercase font-bold border border-white/10 px-1">{c}</span>
+                                )) : null}
+                              </div>
                             </div>
                           </div>
+                          <div className="flex items-center gap-4">
+                            <Input 
+                              type="number" 
+                              className="w-16 h-8 rounded-none bg-black border-white/10 text-[10px] text-center"
+                              defaultValue={v.order}
+                              onBlur={(e) => handleUpdateOrder(v.id, Number(e.target.value))}
+                            />
+                            
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <button className="text-white/20 hover:text-white transition-colors">
+                                  <MoreVertical className="w-4 h-4" />
+                                </button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent className="rounded-none bg-black border-white/10 min-w-[120px]">
+                                <DropdownMenuItem 
+                                  onClick={() => handleEditClick(v)}
+                                  className="text-[10px] uppercase tracking-widest cursor-pointer focus:bg-white/10 focus:text-primary font-bold"
+                                >
+                                  <Pencil className="w-3 h-3 mr-2" /> Edit Entry
+                                </DropdownMenuItem>
+                                <DropdownMenuItem 
+                                  onClick={() => handleDelete(v.id)}
+                                  className="text-[10px] uppercase tracking-widest cursor-pointer text-destructive focus:bg-destructive/10 focus:text-destructive font-bold"
+                                >
+                                  <Trash2 className="w-3 h-3 mr-2" /> Delete
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-4">
-                          <Input 
-                            type="number" 
-                            className="w-16 h-8 rounded-none bg-black border-white/10 text-[10px] text-center"
-                            defaultValue={v.order}
-                            onBlur={(e) => handleUpdateOrder(v.id, Number(e.target.value))}
-                          />
-                          
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <button className="text-white/20 hover:text-white transition-colors">
-                                <MoreVertical className="w-4 h-4" />
-                              </button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent className="rounded-none bg-black border-white/10 min-w-[120px]">
-                              <DropdownMenuItem 
-                                onClick={() => handleEditClick(v)}
-                                className="text-[10px] uppercase tracking-widest cursor-pointer focus:bg-white/10 focus:text-primary font-bold"
-                              >
-                                <Pencil className="w-3 h-3 mr-2" /> Edit Entry
-                              </DropdownMenuItem>
-                              <DropdownMenuItem 
-                                onClick={() => handleDelete(v.id)}
-                                className="text-[10px] uppercase tracking-widest cursor-pointer text-destructive focus:bg-destructive/10 focus:text-destructive font-bold"
-                              >
-                                <Trash2 className="w-3 h-3 mr-2" /> Delete
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                     {videos.length === 0 && (
                       <p className="text-[9px] uppercase tracking-widest text-white/10 italic py-4">No projects assigned to this placement</p>
                     )}

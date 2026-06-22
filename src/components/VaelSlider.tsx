@@ -8,7 +8,9 @@ import Image from 'next/image';
 import { useFirestore, useCollection } from '@/firebase';
 import { collection } from 'firebase/firestore';
 import { useMemoFirebase } from '@/firebase/firestore/use-collection';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Video } from 'lucide-react';
+import { getVideoType, getYoutubeThumbnail } from '@/lib/video-utils';
+import { UnifiedVideoPlayer } from './UnifiedVideoPlayer';
 import {
   Dialog,
   DialogContent,
@@ -87,9 +89,6 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
     emblaApi.on('reInit', onSelect);
   }, [emblaApi, onSelect]);
 
-  const getYoutubeThumb = (id: string) => `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
-  const getFullUrl = (id: string) => `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&showinfo=0&modestbranding=1&enablejsapi=1`;
-
   if (loading || slides.length === 0) return null;
 
   return (
@@ -99,6 +98,8 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
           <div className="embla__container flex items-center">
             {slides.map((slide, index) => {
               const isActive = selectedIndex === index;
+              const vType = getVideoType(slide.youtubeId);
+              const thumbUrl = vType === 'youtube' ? getYoutubeThumbnail(slide.youtubeId, 'max') : null;
               
               return (
                 <div 
@@ -115,15 +116,22 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
                     transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
                     className="relative aspect-[21/9] overflow-hidden bg-zinc-900 shadow-2xl group cursor-pointer border border-white/5 rounded-none"
                   >
-                    <div className="absolute inset-0 z-0">
-                      <Image 
-                        src={getYoutubeThumb(slide.youtubeId)}
-                        alt={slide.title}
-                        fill
-                        className="object-cover"
-                        priority={isActive}
-                        unoptimized
-                      />
+                    <div className="absolute inset-0 z-0 bg-black flex items-center justify-center">
+                      {thumbUrl ? (
+                        <Image 
+                          src={thumbUrl}
+                          alt={slide.title}
+                          fill
+                          className="object-cover"
+                          priority={isActive}
+                          unoptimized
+                        />
+                      ) : (
+                        <div className="flex flex-col items-center gap-4 text-white/10">
+                          <Video className="w-16 h-16" />
+                          <span className="text-[10px] tracking-[0.4em] uppercase font-bold">Direct Video Link</span>
+                        </div>
+                      )}
                     </div>
 
                     <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 to-transparent pointer-events-none z-10" />
@@ -174,15 +182,7 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
             <DialogTitle className="sr-only">{selectedVideo?.title}</DialogTitle>
             <DialogDescription className="sr-only">Cinematic entry by Errol Aditya</DialogDescription>
             {selectedVideo && (
-              <div className="relative w-full h-full">
-                <iframe 
-                  className="w-full h-full" 
-                  src={getFullUrl(selectedVideo.youtubeId)} 
-                  frameBorder="0" 
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                  allowFullScreen 
-                />
-              </div>
+              <UnifiedVideoPlayer url={selectedVideo.youtubeId} />
             )}
           </DialogContent>
         </DialogPortal>

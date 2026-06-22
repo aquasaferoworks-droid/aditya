@@ -6,8 +6,10 @@ import { useSearchParams } from 'next/navigation';
 import { useFirestore, useCollection } from '@/firebase';
 import { collection } from 'firebase/firestore';
 import { useMemoFirebase } from '@/firebase/firestore/use-collection';
-import { FilterX, X } from 'lucide-react';
+import { FilterX, X, Video } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getVideoType, getYoutubeThumbnail } from '@/lib/video-utils';
+import { UnifiedVideoPlayer } from './UnifiedVideoPlayer';
 import {
   Dialog,
   DialogContent,
@@ -43,8 +45,6 @@ export function VaelFilms() {
         return categories?.toLowerCase() === activeCategory.toLowerCase();
       });
 
-  const getFullUrl = (id: string) => `https://www.youtube.com/embed/${id}?autoplay=1&modestbranding=1&rel=0`;
-
   if (loading) return null;
 
   return (
@@ -73,34 +73,47 @@ export function VaelFilms() {
               exit={{ opacity: 0, y: -20 }}
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
             >
-              {films.map((film: any) => (
-                <div 
-                  key={film.id} 
-                  onClick={() => setSelectedFilm(film)}
-                  className="group relative overflow-hidden bg-black aspect-video cursor-pointer border border-white/5 rounded-none"
-                >
-                  <Image 
-                    src={`https://img.youtube.com/vi/${film.youtubeId}/maxresdefault.jpg`} 
-                    alt={film.title}
-                    fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-1000 opacity-60 group-hover:opacity-100"
-                  />
-                  <div className="absolute inset-0 bg-black/40 group-hover:bg-black/0 transition-colors duration-700" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent z-10" />
-                  
-                  <div className="absolute inset-x-0 bottom-0 z-30 p-6 md:p-8 flex flex-col justify-end translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-700">
-                    <div className="flex justify-between items-end gap-4">
-                      <div className="flex-1 min-w-0">
-                        <span className="text-[7px] tracking-[0.5em] text-white/50 uppercase font-bold block mb-1 truncate">{film.upperText}</span>
-                        <h3 className="text-xl font-headline text-white italic tracking-tighter uppercase leading-none truncate">{film.lowerText || film.title}</h3>
+              {films.map((film: any) => {
+                const vType = getVideoType(film.youtubeId);
+                const thumbUrl = vType === 'youtube' ? getYoutubeThumbnail(film.youtubeId, 'max') : null;
+
+                return (
+                  <div 
+                    key={film.id} 
+                    onClick={() => setSelectedFilm(film)}
+                    className="group relative overflow-hidden bg-black aspect-video cursor-pointer border border-white/5 rounded-none"
+                  >
+                    {thumbUrl ? (
+                      <Image 
+                        src={thumbUrl} 
+                        alt={film.title}
+                        fill
+                        className="object-cover group-hover:scale-110 transition-transform duration-1000 opacity-60 group-hover:opacity-100"
+                        unoptimized
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 text-white/5 bg-white/[0.02]">
+                        <Video className="w-12 h-12" />
+                        <span className="text-[8px] tracking-[0.4em] uppercase font-bold">Direct Source</span>
                       </div>
-                       <span className="text-[8px] tracking-[0.4em] text-primary uppercase font-bold whitespace-nowrap">
-                         {Array.isArray(film.category) ? film.category[0] : film.category}
-                       </span>
+                    )}
+                    <div className="absolute inset-0 bg-black/40 group-hover:bg-black/0 transition-colors duration-700" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent z-10" />
+                    
+                    <div className="absolute inset-x-0 bottom-0 z-30 p-6 md:p-8 flex flex-col justify-end translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-700">
+                      <div className="flex justify-between items-end gap-4">
+                        <div className="flex-1 min-w-0">
+                          <span className="text-[7px] tracking-[0.5em] text-white/50 uppercase font-bold block mb-1 truncate">{film.upperText}</span>
+                          <h3 className="text-xl font-headline text-white italic tracking-tighter uppercase leading-none truncate">{film.lowerText || film.title}</h3>
+                        </div>
+                         <span className="text-[8px] tracking-[0.4em] text-primary uppercase font-bold whitespace-nowrap">
+                           {Array.isArray(film.category) ? film.category[0] : film.category}
+                         </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </motion.div>
           ) : (
             <motion.div 
@@ -124,7 +137,7 @@ export function VaelFilms() {
             <DialogDescription className="sr-only">Viewing: {selectedFilm?.title}</DialogDescription>
             {selectedFilm && (
               <div className="relative w-full h-full">
-                <iframe className="w-full h-full" src={getFullUrl(selectedFilm.youtubeId)} frameBorder="0" allowFullScreen />
+                <UnifiedVideoPlayer url={selectedFilm.youtubeId} />
                 <DialogClose className="absolute top-6 right-6 z-[201]">
                   <div className="w-10 h-10 bg-black/40 border border-white/10 flex items-center justify-center">
                     <X className="w-5 h-5 text-white" />
