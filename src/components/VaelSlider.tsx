@@ -93,7 +93,7 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
   if (loading || slides.length === 0) return null;
 
   return (
-    <section className="relative w-full bg-black py-4 md:py-12 flex flex-col justify-center overflow-hidden select-none">
+    <section className="relative w-full bg-black flex flex-col justify-center overflow-hidden select-none py-2 md:py-6">
       <div className="relative max-w-[1800px] mx-auto w-full px-4 md:px-12">
         <div className="embla overflow-visible" ref={emblaRef}>
           <div className="embla__container flex items-center">
@@ -111,8 +111,8 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
                   <motion.div
                     initial={false}
                     animate={{ 
-                      scale: isActive ? 1 : 0.94,
-                      opacity: isActive ? 1 : 0.4,
+                      scale: isActive ? 1 : 0.96,
+                      opacity: isActive ? 1 : 0.3,
                     }}
                     transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
                     className="relative aspect-video md:aspect-[21/9] overflow-hidden bg-zinc-900 shadow-2xl group cursor-pointer border border-white/5 rounded-none"
@@ -138,12 +138,12 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
                     <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 to-transparent pointer-events-none z-10" />
 
                     {isActive && (
-                      <div className="absolute inset-0 z-20 p-8 md:p-16 flex flex-col justify-end pointer-events-none">
+                      <div className="absolute inset-0 z-20 p-6 md:p-12 flex flex-col justify-end pointer-events-none">
                         <div className="space-y-1">
-                          <h2 className="text-2xl md:text-6xl font-headline text-white italic tracking-tighter uppercase leading-none">
+                          <h2 className="text-xl md:text-4xl font-headline text-white italic tracking-tighter uppercase leading-none">
                             {slide.upperText}
                           </h2>
-                          <span className="text-[9px] md:text-[12px] tracking-[0.5em] text-primary uppercase font-bold block pt-2">
+                          <span className="text-[7px] md:text-[10px] tracking-[0.5em] text-primary uppercase font-bold block pt-1">
                             {slide.lowerText || slide.title}
                           </span>
                         </div>
@@ -156,18 +156,18 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
           </div>
         </div>
 
-        {/* Repositioned Centered Arrows */}
+        {/* Repositioned Minimalist Arrows - Closer to the video edge */}
         <button 
           onClick={scrollPrev}
-          className="absolute left-6 md:left-20 top-1/2 -translate-y-1/2 z-40 p-4 transition-all group hover:scale-125 focus:outline-none"
+          className="absolute left-[8%] md:left-[12%] top-1/2 -translate-y-1/2 z-40 p-2 transition-all group hover:scale-110 focus:outline-none"
         >
-          <ChevronLeft className="w-6 h-6 md:w-8 md:h-8 text-white/30 group-hover:text-primary transition-colors" />
+          <ChevronLeft className="w-4 h-4 md:w-6 md:h-6 text-white/20 group-hover:text-primary transition-colors" />
         </button>
         <button 
           onClick={scrollNext}
-          className="absolute right-6 md:right-20 top-1/2 -translate-y-1/2 z-40 p-4 transition-all group hover:scale-125 focus:outline-none"
+          className="absolute right-[8%] md:right-[12%] top-1/2 -translate-y-1/2 z-40 p-2 transition-all group hover:scale-110 focus:outline-none"
         >
-          <ChevronRight className="w-6 h-6 md:w-8 md:h-8 text-white/30 group-hover:text-primary transition-colors" />
+          <ChevronRight className="w-4 h-4 md:w-6 md:h-6 text-white/20 group-hover:text-primary transition-colors" />
         </button>
       </div>
 
