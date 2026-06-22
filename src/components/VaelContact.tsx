@@ -20,34 +20,20 @@ export function VaelContact() {
 
   if (loading) return null;
 
-  const contactInfo = [
-    { 
-      icon: Mail, 
-      label: 'Studio Email', 
-      value: settings?.email || 'studio@erroladitya.com' 
-    },
-    { 
-      icon: MapPin, 
-      label: 'Locations', 
-      value: settings?.locations || 'Mumbai / London / New York' 
-    },
-  ];
+  const contactInfo = [];
+  if (settings?.email) {
+    contactInfo.push({ icon: Mail, label: 'Studio Email', value: settings.email });
+  }
+  if (settings?.locations) {
+    contactInfo.push({ icon: MapPin, label: 'Locations', value: settings.locations });
+  }
 
   return (
     <section id="contact" className="relative py-32 md:py-48 px-6 md:px-16 bg-background border-t border-white/5 overflow-hidden">
-      <div className="absolute inset-0 opacity-[0.02] pointer-events-none">
-        <Image 
-          src="https://picsum.photos/seed/studio-contact/1920/1080" 
-          alt="Studio Background" 
-          fill 
-          className="object-cover"
-        />
-      </div>
-
       <div className="max-w-7xl mx-auto relative z-10">
         <ContactCard
           title={settings?.formHeading || "Contact Us"}
-          description={settings?.formDescription || "Translating vision into atmospheric reality. Connect with the studio for representation and high-end cinematic inquiries."}
+          description={settings?.formDescription || ""}
           contactInfo={contactInfo}
         >
           <div className="space-y-6">

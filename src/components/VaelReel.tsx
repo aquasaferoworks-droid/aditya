@@ -43,7 +43,7 @@ const VideoCard = ({ video, aspectRatio, onClick }: { video: VideoItem, aspectRa
       <div className="absolute inset-0 z-0">
         <Image 
           src={`https://img.youtube.com/vi/${video.youtubeId}/maxresdefault.jpg`}
-          alt={video.title}
+          alt={video.title || "Video Entry"}
           fill
           className="object-cover transition-transform duration-1000 group-hover:scale-105 opacity-50 group-hover:opacity-100"
         />
@@ -84,82 +84,61 @@ export function VaelReel({ activeCategory }: VaelReelProps) {
   const mediums = filteredVideos.filter(v => v.type === 'reel-medium');
   const verticals = filteredVideos.filter(v => v.type === 'reel-vertical');
 
-  const usedH = horizontals.slice(0, 4);
-  const usedF = features.slice(0, 1);
-  const usedM = mediums.slice(0, 2);
-  const usedV = verticals.slice(0, 4);
-
-  const usedIds = new Set([
-    ...usedH.map(v => v.id),
-    ...usedF.map(v => v.id),
-    ...usedM.map(v => v.id),
-    ...usedV.map(v => v.id)
-  ]);
-
-  const moreVideos = filteredVideos.filter(v => !usedIds.has(v.id) && v.type !== 'slider');
-
   if (loading) return null;
+  if (filteredVideos.length === 0) return null;
 
   return (
     <section id="reel" className="py-24 md:py-32 bg-background overflow-hidden border-t border-white/5">
       <div className="max-w-[1600px] mx-auto px-6 md:px-16 space-y-4 md:space-y-12">
         
-        {/* Category Section Header - Above Video Area */}
         <div className="flex items-center gap-6 mb-8">
-          <span className="text-[10px] tracking-[0.8em] uppercase text-primary font-bold whitespace-nowrap">{activeCategory} / Selected Series</span>
+          <span className="text-[10px] tracking-[0.8em] uppercase text-primary font-bold whitespace-nowrap">{activeCategory}</span>
           <div className="h-px flex-1 bg-white/5" />
         </div>
 
-        <div className="grid grid-cols-2 gap-4 md:gap-12">
-          {usedH.slice(0, 2).map((v) => (
-            <VideoCard key={v.id} video={v} aspectRatio="aspect-video" onClick={setSelectedVideo} />
-          ))}
-        </div>
-
-        <div className="grid grid-cols-2 gap-4 md:gap-12">
-          {usedH.slice(2, 4).map((v) => (
-            <VideoCard key={v.id} video={v} aspectRatio="aspect-video" onClick={setSelectedVideo} />
-          ))}
-        </div>
-
-        <div className="w-full">
-          {usedF.map((v) => (
-            <VideoCard key={v.id} video={v} aspectRatio="aspect-video md:aspect-[21/9]" onClick={setSelectedVideo} />
-          ))}
-        </div>
-
-        <div className="grid grid-cols-2 gap-4 md:gap-12">
-          {usedM.map((v) => (
-            <VideoCard key={v.id} video={v} aspectRatio="aspect-video" onClick={setSelectedVideo} />
-          ))}
-        </div>
-
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-12">
-          {usedV.map((v) => (
-            <VideoCard key={v.id} video={v} aspectRatio="aspect-[9/16]" onClick={setSelectedVideo} />
-          ))}
-        </div>
-
-        {/* Supplementary Section: More Projects */}
-        {moreVideos.length > 0 && (
-          <div className="pt-24 md:pt-48 space-y-12">
-            <div className="flex items-center gap-8">
-              <h2 className="text-[10px] tracking-[0.8em] uppercase text-primary/60 font-bold whitespace-nowrap">Archive / {activeCategory}</h2>
-              <div className="h-px flex-1 bg-white/5" />
-            </div>
-            
-            <div className="grid grid-cols-2 gap-4 md:gap-12">
-              {moreVideos.map((v) => (
-                <VideoCard key={v.id} video={v} aspectRatio="aspect-video" onClick={setSelectedVideo} />
-              ))}
-            </div>
+        {horizontals.slice(0, 2).length > 0 && (
+          <div className="grid grid-cols-2 gap-4 md:gap-12">
+            {horizontals.slice(0, 2).map((v) => (
+              <VideoCard key={v.id} video={v} aspectRatio="aspect-video" onClick={setSelectedVideo} />
+            ))}
           </div>
         )}
 
-        {/* Category Section Header - Below Video Area */}
+        {horizontals.slice(2, 4).length > 0 && (
+          <div className="grid grid-cols-2 gap-4 md:gap-12">
+            {horizontals.slice(2, 4).map((v) => (
+              <VideoCard key={v.id} video={v} aspectRatio="aspect-video" onClick={setSelectedVideo} />
+            ))}
+          </div>
+        )}
+
+        {features.slice(0, 1).length > 0 && (
+          <div className="w-full">
+            {features.slice(0, 1).map((v) => (
+              <VideoCard key={v.id} video={v} aspectRatio="aspect-video md:aspect-[21/9]" onClick={setSelectedVideo} />
+            ))}
+          </div>
+        )}
+
+        {mediums.slice(0, 2).length > 0 && (
+          <div className="grid grid-cols-2 gap-4 md:gap-12">
+            {mediums.slice(0, 2).map((v) => (
+              <VideoCard key={v.id} video={v} aspectRatio="aspect-video" onClick={setSelectedVideo} />
+            ))}
+          </div>
+        )}
+
+        {verticals.slice(0, 4).length > 0 && (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-12">
+            {verticals.slice(0, 4).map((v) => (
+              <VideoCard key={v.id} video={v} aspectRatio="aspect-[9/16]" onClick={setSelectedVideo} />
+            ))}
+          </div>
+        )}
+
         <div className="flex items-center gap-6 mt-24">
           <div className="h-px flex-1 bg-white/5" />
-          <span className="text-[10px] tracking-[0.8em] uppercase text-primary/40 font-bold whitespace-nowrap">End Archive / {activeCategory}</span>
+          <span className="text-[10px] tracking-[0.8em] uppercase text-primary/40 font-bold whitespace-nowrap">{activeCategory}</span>
         </div>
       </div>
 

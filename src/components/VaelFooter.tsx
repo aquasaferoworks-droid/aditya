@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useDoc, useMemoFirebase } from '@/firebase';
@@ -21,7 +20,7 @@ export function VaelFooter() {
       <div className="font-headline text-xl tracking-[0.15em] uppercase font-bold italic">ERROL <span className="text-primary not-italic font-light">ADITYA</span></div>
       
       <p className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase text-center md:text-left font-bold">
-        © 2026 erroladitya.com. Architecting Light & Narrative.
+        © 2026 erroladitya.com
       </p>
 
       <div className="flex gap-6 text-muted-foreground">
