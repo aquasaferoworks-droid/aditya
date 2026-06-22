@@ -137,18 +137,14 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
                     <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 to-transparent pointer-events-none z-10" />
 
                     {isActive && (
-                      <div className="absolute inset-0 z-20 p-6 md:p-12 flex flex-col justify-between pointer-events-none">
-                        <div className="flex justify-between items-start">
-                          <span className="text-[10px] tracking-[0.5em] text-white/50 uppercase font-bold">
+                      <div className="absolute inset-0 z-20 p-6 md:p-12 flex flex-col justify-end pointer-events-none">
+                        <div className="space-y-1">
+                          <h2 className="text-xl md:text-5xl font-headline text-white italic tracking-tighter uppercase leading-none">
                             {slide.upperText}
+                          </h2>
+                          <span className="text-[8px] md:text-[11px] tracking-[0.5em] text-primary uppercase font-bold block pt-1">
+                            {slide.lowerText || slide.title}
                           </span>
-                        </div>
-                        <div className="flex justify-between items-end">
-                          <div className="space-y-1">
-                            <h2 className="text-xl md:text-4xl font-headline text-white italic tracking-tighter uppercase leading-none">
-                              {slide.lowerText || slide.title}
-                            </h2>
-                          </div>
                         </div>
                       </div>
                     )}

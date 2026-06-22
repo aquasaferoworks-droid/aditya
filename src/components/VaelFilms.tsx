@@ -101,12 +101,14 @@ export function VaelFilms() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent z-10" />
                     
                     <div className="absolute inset-x-0 bottom-0 z-30 p-6 md:p-8 flex flex-col justify-end translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-700">
+                      <h3 className="text-xl font-headline text-white italic tracking-tighter uppercase leading-none truncate mb-1">
+                        {film.upperText}
+                      </h3>
                       <div className="flex justify-between items-end gap-4">
-                        <div className="flex-1 min-w-0">
-                          <span className="text-[7px] tracking-[0.5em] text-white/50 uppercase font-bold block mb-1 truncate">{film.upperText}</span>
-                          <h3 className="text-xl font-headline text-white italic tracking-tighter uppercase leading-none truncate">{film.lowerText || film.title}</h3>
-                        </div>
-                         <span className="text-[8px] tracking-[0.4em] text-primary uppercase font-bold whitespace-nowrap">
+                        <span className="text-[8px] tracking-[0.4em] text-primary uppercase font-bold truncate">
+                          {film.lowerText || film.title}
+                        </span>
+                         <span className="text-[7px] tracking-[0.2em] text-white/30 uppercase font-bold whitespace-nowrap">
                            {Array.isArray(film.category) ? film.category[0] : film.category}
                          </span>
                       </div>

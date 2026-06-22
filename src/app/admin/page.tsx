@@ -126,7 +126,6 @@ export default function AdminPage() {
     if (!firestore) return;
     setIsSubmitting(true);
 
-    // Validate type
     const videoType = getVideoType(formData.youtubeId);
     if (videoType === 'unknown') {
       toast({ 
@@ -288,8 +287,8 @@ export default function AdminPage() {
 
                   <div className="space-y-4">
                     <Label className="text-[9px] uppercase tracking-widest text-muted-foreground font-bold">Project Details</Label>
-                    <Input placeholder="DIRECTOR / ROLE" className="rounded-none bg-background border-white/10 h-10 text-xs" value={formData.upperText} onChange={e => setFormData({...formData, upperText: e.target.value})} />
-                    <Input required placeholder="BRAND / TITLE" className="rounded-none bg-background border-white/10 h-10 text-xs" value={formData.lowerText} onChange={e => setFormData({...formData, lowerText: e.target.value})} />
+                    <Input placeholder="HEADING (e.g. SLEEK KITCHEN)" className="rounded-none bg-background border-white/10 h-10 text-xs" value={formData.upperText} onChange={e => setFormData({...formData, upperText: e.target.value})} />
+                    <Input required placeholder="SUBTEXT (e.g. ASIAN PAINT)" className="rounded-none bg-background border-white/10 h-10 text-xs" value={formData.lowerText} onChange={e => setFormData({...formData, lowerText: e.target.value})} />
                     <Input required placeholder="VIDEO URL (YOUTUBE OR .MP4)" className="rounded-none bg-background border-white/10 h-10 text-xs" value={formData.youtubeId} onChange={e => setFormData({...formData, youtubeId: e.target.value})} />
                     <Input type="number" placeholder="SERIES SEQUENCE" className="rounded-none bg-background border-white/10 h-10 text-xs" value={formData.order} onChange={e => setFormData({...formData, order: Number(e.target.value)})} />
                   </div>
@@ -362,8 +361,8 @@ export default function AdminPage() {
                               )}
                             </div>
                             <div>
-                              <p className="text-[8px] uppercase tracking-widest text-primary font-bold">{v.upperText}</p>
-                              <h3 className="text-sm font-headline italic uppercase">{v.lowerText || v.title}</h3>
+                              <h3 className="text-sm font-headline italic uppercase text-white">{v.upperText}</h3>
+                              <p className="text-[8px] uppercase tracking-widest text-primary font-bold">{v.lowerText || v.title}</p>
                               <div className="flex gap-1 mt-1">
                                 {Array.isArray(v.category) ? v.category.slice(0, 3).map((c: string) => (
                                   <span key={c} className="text-[6px] tracking-widest text-white/30 uppercase font-bold border border-white/10 px-1">{c}</span>
