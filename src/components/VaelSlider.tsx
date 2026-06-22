@@ -87,13 +87,14 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
     emblaApi.on('reInit', onSelect);
   }, [emblaApi, onSelect]);
 
-  const getYoutubeThumb = (id: string) => `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
+  // Using hqdefault as it's much more reliable than maxresdefault
+  const getYoutubeThumb = (id: string) => `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
   const getFullUrl = (id: string) => `https://www.youtube.com/embed/${id}?autoplay=1&modestbranding=1&rel=0`;
 
   if (loading || slides.length === 0) return null;
 
   return (
-    <section className="relative w-full bg-black py-4 md:py-8 flex flex-col justify-center overflow-hidden select-none">
+    <section className="relative w-full bg-black py-4 flex flex-col justify-center overflow-hidden select-none">
       <div className="relative">
         <div className="embla overflow-visible" ref={emblaRef}>
           <div className="embla__container flex items-center">
@@ -122,6 +123,7 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
                         fill
                         className="object-cover"
                         priority={isActive}
+                        unoptimized // Bypassing Next.js optimization for external YouTube thumbs
                       />
                     </div>
 
@@ -150,32 +152,38 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
           </div>
         </div>
 
-        {/* Sleek Minimalist Arrow Controls - Grouped Closely */}
-        <div className="absolute bottom-6 md:bottom-12 right-[15%] z-50 flex items-center gap-4 pointer-events-none">
+        {/* Minimalist Arrow Controls grouped closely in the cinematic area */}
+        <div className="absolute bottom-6 md:bottom-12 right-[12%] z-50 flex items-center gap-6 pointer-events-none">
           <button 
             onClick={scrollPrev}
             className="pointer-events-auto flex items-center justify-center transition-all group/btn"
           >
-            <ChevronLeft className="w-5 h-5 text-white/30 group-hover/btn:text-primary transition-colors" />
+            <ChevronLeft className="w-5 h-5 text-white/40 group-hover/btn:text-primary transition-colors" />
           </button>
           <button 
             onClick={scrollNext}
             className="pointer-events-auto flex items-center justify-center transition-all group/btn"
           >
-            <ChevronRight className="w-5 h-5 text-white/30 group-hover/btn:text-primary transition-colors" />
+            <ChevronRight className="w-5 h-5 text-white/40 group-hover/btn:text-primary transition-colors" />
           </button>
         </div>
       </div>
 
       <Dialog open={!!selectedVideo} onOpenChange={(open) => !open && setSelectedVideo(null)}>
         <DialogPortal>
-          <DialogOverlay className="z-[250] bg-black/95 backdrop-blur-sm" />
-          <DialogContent className="z-[300] max-w-[95vw] md:max-w-7xl bg-black border border-white/10 p-0 overflow-hidden shadow-2xl rounded-none aspect-video focus:outline-none">
+          <DialogOverlay className="z-[400] bg-black/95 backdrop-blur-sm" />
+          <DialogContent className="z-[500] max-w-[95vw] md:max-w-7xl bg-black border border-white/10 p-0 overflow-hidden shadow-2xl rounded-none aspect-video focus:outline-none">
             <DialogTitle className="sr-only">{selectedVideo?.title}</DialogTitle>
             <DialogDescription className="sr-only">Cinematic entry by Errol Aditya</DialogDescription>
             {selectedVideo && (
               <div className="relative w-full h-full">
-                <iframe className="w-full h-full" src={getFullUrl(selectedVideo.youtubeId)} frameBorder="0" allowFullScreen />
+                <iframe 
+                  className="w-full h-full" 
+                  src={getFullUrl(selectedVideo.youtubeId)} 
+                  frameBorder="0" 
+                  allow="autoplay; encrypted-media" 
+                  allowFullScreen 
+                />
               </div>
             )}
           </DialogContent>

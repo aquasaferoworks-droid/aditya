@@ -110,9 +110,21 @@ export default function AdminPage() {
   const sortedVideos = (rawVideos || []).sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
 
   const extractYoutubeId = (urlOrId: string) => {
+    if (!urlOrId) return '';
+    // Handle full URLs (Standard, Share, Shorts, Embed)
     const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
     const match = urlOrId.match(regExp);
-    return (match && match[7].length === 11) ? match[7] : urlOrId;
+    if (match && match[7] && match[7].length === 11) {
+      return match[7];
+    }
+    // Handle short links
+    const shortRegExp = /youtu\.be\/([a-zA-Z0-9_-]{11})/;
+    const shortMatch = urlOrId.match(shortRegExp);
+    if (shortMatch && shortMatch[1]) {
+      return shortMatch[1];
+    }
+    // Return original if it looks like an ID
+    return urlOrId.trim();
   };
 
   const handleCategoryToggle = (cat: string) => {
@@ -230,8 +242,8 @@ export default function AdminPage() {
   return (
     <main className="min-h-screen bg-background text-foreground font-body">
       <VaelHeader />
-      <div className="flex pt-24 min-h-screen">
-        <aside className="w-96 border-r border-white/5 bg-black/40 flex flex-col sticky top-24 h-[calc(100vh-6rem)] p-8 overflow-y-auto no-scrollbar">
+      <div className="flex pt-16 min-h-screen">
+        <aside className="w-96 border-r border-white/5 bg-black/40 flex flex-col sticky top-16 h-[calc(100vh-4rem)] p-8 overflow-y-auto no-scrollbar">
           <Tabs defaultValue="videos" className="w-full">
             <TabsList className="bg-white/5 rounded-none p-1 w-full grid grid-cols-2 mb-8">
               <TabsTrigger value="videos" className="rounded-none text-[10px] uppercase tracking-widest py-3 font-bold">Manage Series</TabsTrigger>

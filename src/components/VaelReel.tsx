@@ -42,10 +42,11 @@ const VideoCard = ({ video, aspectRatio, onClick }: { video: VideoItem, aspectRa
     >
       <div className="absolute inset-0 z-0">
         <Image 
-          src={`https://img.youtube.com/vi/${video.youtubeId}/maxresdefault.jpg`}
+          src={`https://img.youtube.com/vi/${video.youtubeId}/hqdefault.jpg`}
           alt={video.title || "Video Entry"}
           fill
           className="object-cover transition-transform duration-1000 group-hover:scale-105 opacity-50 group-hover:opacity-100"
+          unoptimized
         />
       </div>
       
@@ -144,13 +145,19 @@ export function VaelReel({ activeCategory }: VaelReelProps) {
 
       <Dialog open={!!selectedVideo} onOpenChange={(open) => !open && setSelectedVideo(null)}>
         <DialogPortal>
-          <DialogOverlay className="z-[250] bg-black/95 backdrop-blur-sm" />
-          <DialogContent className="z-[300] max-w-[95vw] md:max-w-7xl bg-black border border-white/10 p-0 overflow-hidden shadow-2xl rounded-none aspect-video focus:outline-none">
+          <DialogOverlay className="z-[400] bg-black/95 backdrop-blur-sm" />
+          <DialogContent className="z-[500] max-w-[95vw] md:max-w-7xl bg-black border border-white/10 p-0 overflow-hidden shadow-2xl rounded-none aspect-video focus:outline-none">
             <DialogTitle className="sr-only">{selectedVideo?.title}</DialogTitle>
             <DialogDescription className="sr-only">Viewing project: {selectedVideo?.title}</DialogDescription>
             {selectedVideo && (
               <div className="relative w-full h-full">
-                <iframe className="w-full h-full" src={getFullUrl(selectedVideo.youtubeId)} frameBorder="0" allowFullScreen />
+                <iframe 
+                  className="w-full h-full" 
+                  src={getFullUrl(selectedVideo.youtubeId)} 
+                  frameBorder="0" 
+                  allow="autoplay; encrypted-media"
+                  allowFullScreen 
+                />
               </div>
             )}
           </DialogContent>

@@ -56,22 +56,22 @@ export function VaelHeader() {
   };
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-[300] transition-all duration-300">
+    <div className="fixed top-0 left-0 right-0 z-[300] transition-all duration-300 bg-black">
       <nav className={cn(
         "transition-all duration-300 px-6 md:px-16 flex items-center justify-between",
-        isScrolled ? 'bg-black py-2' : 'bg-black/90 py-3'
+        isScrolled ? 'py-1' : 'py-2'
       )}>
         <div className="flex-1 hidden md:block" />
 
         <div className="flex-none text-center">
-          <Link href="/" className="font-headline text-xl md:text-2xl tracking-tighter hover:text-primary transition-all duration-700 italic font-bold uppercase block">
+          <Link href="/" className="font-headline text-lg md:text-xl tracking-tighter hover:text-primary transition-all duration-700 italic font-bold uppercase block">
             ERROL <span className="text-primary not-italic font-light">ADITYA</span>
           </Link>
         </div>
 
         <div className="flex-1 flex justify-end">
           <Button 
-            className="rounded-none bg-primary text-black hover:bg-white hover:text-black px-5 h-8 text-[9px] tracking-[0.2em] uppercase transition-all font-bold"
+            className="rounded-none bg-primary text-black hover:bg-white hover:text-black px-4 h-7 text-[8px] tracking-[0.2em] uppercase transition-all font-bold"
             asChild
           >
             <Link href="#contact">CONTACT US</Link>
@@ -79,17 +79,15 @@ export function VaelHeader() {
         </div>
       </nav>
 
-      {/* Tighter Category Menu */}
-      <div className={cn(
-        "bg-black transition-all duration-300 overflow-hidden border-b border-white/5 h-8"
-      )}>
-        <div className="max-w-7xl mx-auto px-6 md:px-16 h-full flex items-center overflow-x-auto no-scrollbar gap-8 md:gap-12 justify-center">
+      {/* Tighter Category Menu sitting flush with nav */}
+      <div className="bg-black overflow-hidden border-b border-white/5 h-7">
+        <div className="max-w-7xl mx-auto px-6 md:px-16 h-full flex items-center overflow-x-auto no-scrollbar gap-8 md:gap-10 justify-center">
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setCategory(cat)}
               className={cn(
-                "relative text-[8px] tracking-[0.15em] uppercase whitespace-nowrap transition-all duration-300 font-body py-1 opacity-60 hover:opacity-100",
+                "relative text-[7px] tracking-[0.15em] uppercase whitespace-nowrap transition-all duration-300 font-body py-1 opacity-60 hover:opacity-100",
                 activeCategory === cat ? "text-primary opacity-100 font-bold" : "text-white"
               )}
             >
