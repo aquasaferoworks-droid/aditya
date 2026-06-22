@@ -1,8 +1,9 @@
+
 'use client';
 
 import Link from 'next/link';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -33,6 +34,7 @@ export function VaelHeader() {
   const pathname = usePathname();
   const activeCategory = searchParams.get('category') || 'all';
   const [isScrolled, setIsScrolled] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -55,23 +57,33 @@ export function VaelHeader() {
     }
   };
 
+  const handleWheel = (e: React.WheelEvent) => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollLeft += e.deltaY;
+    }
+  };
+
   return (
-    <div className="fixed top-0 left-0 right-0 z-[300] transition-all duration-300 bg-black">
+    <header className="fixed top-0 left-0 right-0 z-[300] bg-black">
+      {/* Primary Brand Bar */}
       <nav className={cn(
-        "transition-all duration-300 px-6 md:px-16 flex items-center justify-between",
-        isScrolled ? 'pt-1 pb-0' : 'pt-2 pb-0'
+        "px-6 md:px-16 flex items-center justify-between transition-all duration-300",
+        isScrolled ? "h-12" : "h-16"
       )}>
+        {/* Placeholder for balance */}
         <div className="flex-1 hidden md:block" />
 
+        {/* Centered Logo */}
         <div className="flex-none text-center">
           <Link href="/" className="font-headline text-lg md:text-xl tracking-tighter hover:text-primary transition-all duration-700 italic font-bold uppercase block">
             ERROL <span className="text-primary not-italic font-light">ADITYA</span>
           </Link>
         </div>
 
+        {/* Contact CTA */}
         <div className="flex-1 flex justify-end">
           <Button 
-            className="rounded-none bg-primary text-black hover:bg-white hover:text-black px-4 h-7 text-[8px] tracking-[0.2em] uppercase transition-all font-bold"
+            className="rounded-none bg-primary text-black hover:bg-white hover:text-black px-6 h-8 text-[9px] tracking-[0.2em] uppercase transition-all font-bold"
             asChild
           >
             <Link href="#contact">CONTACT US</Link>
@@ -79,26 +91,34 @@ export function VaelHeader() {
         </div>
       </nav>
 
-      {/* Tighter Category Menu sitting flush with nav */}
-      <div className="bg-black overflow-hidden border-b border-white/5 h-8">
-        <div className="max-w-7xl mx-auto px-6 md:px-16 h-full flex items-center overflow-x-auto no-scrollbar gap-10 md:gap-14 justify-center">
+      {/* Secondary Scrollable Category Bar */}
+      <div className="relative group bg-black border-b border-white/5 h-10 flex items-center">
+        {/* Fades */}
+        <div className="absolute left-0 top-0 bottom-0 w-24 z-10 pointer-events-none nav-fade-left opacity-100 group-hover:opacity-40 transition-opacity" />
+        <div className="absolute right-0 top-0 bottom-0 w-24 z-10 pointer-events-none nav-fade-right opacity-100 group-hover:opacity-40 transition-opacity" />
+
+        <div 
+          ref={scrollRef}
+          onWheel={handleWheel}
+          className="max-w-screen-xl mx-auto w-full px-12 h-full flex items-center overflow-x-auto no-scrollbar gap-10 md:gap-16 scroll-smooth"
+        >
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setCategory(cat)}
               className={cn(
-                "relative text-[7.5px] tracking-[0.15em] uppercase whitespace-nowrap transition-all duration-300 font-body py-1 opacity-60 hover:opacity-100",
+                "relative text-[8px] tracking-[0.2em] uppercase whitespace-nowrap transition-all duration-300 font-body py-1 opacity-60 hover:opacity-100 flex-shrink-0",
                 activeCategory === cat ? "text-primary opacity-100 font-bold" : "text-white"
               )}
             >
               {cat}
               {activeCategory === cat && (
-                <motion.div layoutId="activeCategory" className="absolute -bottom-1 left-0 right-0 h-[1.5px] bg-primary" />
+                <motion.div layoutId="activeCategoryHeader" className="absolute -bottom-1.5 left-0 right-0 h-[2px] bg-primary" />
               )}
             </button>
           ))}
         </div>
       </div>
-    </div>
+    </header>
   );
 }
