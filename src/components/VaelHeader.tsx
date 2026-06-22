@@ -59,7 +59,7 @@ export function VaelHeader() {
     <div className="fixed top-0 left-0 right-0 z-[300] transition-all duration-300">
       <nav className={cn(
         "transition-all duration-300 px-6 md:px-16 flex items-center justify-between",
-        isScrolled ? 'bg-black py-2' : 'bg-black/80 backdrop-blur-md py-4'
+        isScrolled ? 'bg-black py-2' : 'bg-black/90 py-3'
       )}>
         <div className="flex-1 hidden md:block" />
 
@@ -79,9 +79,9 @@ export function VaelHeader() {
         </div>
       </nav>
 
+      {/* Tighter Category Menu */}
       <div className={cn(
-        "bg-black transition-all duration-300 overflow-hidden border-b border-white/5",
-        isScrolled ? "h-8" : "h-9"
+        "bg-black transition-all duration-300 overflow-hidden border-b border-white/5 h-8"
       )}>
         <div className="max-w-7xl mx-auto px-6 md:px-16 h-full flex items-center overflow-x-auto no-scrollbar gap-8 md:gap-12 justify-center">
           {categories.map((cat) => (

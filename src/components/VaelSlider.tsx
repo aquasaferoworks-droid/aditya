@@ -93,7 +93,7 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
   if (loading || slides.length === 0) return null;
 
   return (
-    <section className="relative w-full bg-black py-6 md:py-16 flex flex-col justify-center overflow-hidden select-none">
+    <section className="relative w-full bg-black py-4 md:py-8 flex flex-col justify-center overflow-hidden select-none">
       <div className="relative">
         <div className="embla overflow-visible" ref={emblaRef}>
           <div className="embla__container flex items-center">
@@ -150,19 +150,19 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
           </div>
         </div>
 
-        {/* Minimalist, Sleek Arrow Controls (No Box/Border) */}
-        <div className="absolute bottom-10 right-[15%] z-50 flex items-center gap-6 pointer-events-none">
+        {/* Sleek Minimalist Arrow Controls - Grouped Closely */}
+        <div className="absolute bottom-6 md:bottom-12 right-[15%] z-50 flex items-center gap-4 pointer-events-none">
           <button 
             onClick={scrollPrev}
             className="pointer-events-auto flex items-center justify-center transition-all group/btn"
           >
-            <ChevronLeft className="w-5 h-5 text-white/40 group-hover/btn:text-primary transition-colors" />
+            <ChevronLeft className="w-5 h-5 text-white/30 group-hover/btn:text-primary transition-colors" />
           </button>
           <button 
             onClick={scrollNext}
             className="pointer-events-auto flex items-center justify-center transition-all group/btn"
           >
-            <ChevronRight className="w-5 h-5 text-white/40 group-hover/btn:text-primary transition-colors" />
+            <ChevronRight className="w-5 h-5 text-white/30 group-hover/btn:text-primary transition-colors" />
           </button>
         </div>
       </div>
@@ -172,7 +172,7 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
           <DialogOverlay className="z-[250] bg-black/95 backdrop-blur-sm" />
           <DialogContent className="z-[300] max-w-[95vw] md:max-w-7xl bg-black border border-white/10 p-0 overflow-hidden shadow-2xl rounded-none aspect-video focus:outline-none">
             <DialogTitle className="sr-only">{selectedVideo?.title}</DialogTitle>
-            <DialogDescription className="sr-only">Cinematic archive entry directed by Errol Aditya</DialogDescription>
+            <DialogDescription className="sr-only">Cinematic entry by Errol Aditya</DialogDescription>
             {selectedVideo && (
               <div className="relative w-full h-full">
                 <iframe className="w-full h-full" src={getFullUrl(selectedVideo.youtubeId)} frameBorder="0" allowFullScreen />

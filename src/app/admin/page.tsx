@@ -109,6 +109,12 @@ export default function AdminPage() {
 
   const sortedVideos = (rawVideos || []).sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
 
+  const extractYoutubeId = (urlOrId: string) => {
+    const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+    const match = urlOrId.match(regExp);
+    return (match && match[7].length === 11) ? match[7] : urlOrId;
+  };
+
   const handleCategoryToggle = (cat: string) => {
     setFormData(prev => {
       const current = prev.category;
@@ -124,20 +130,23 @@ export default function AdminPage() {
     e.preventDefault();
     if (!firestore) return;
     setIsSubmitting(true);
+
+    const cleanId = extractYoutubeId(formData.youtubeId);
+
     try {
       if (editingId) {
-        // Update existing
         const docRef = doc(firestore, 'videos', editingId);
         await updateDoc(docRef, {
           ...formData,
+          youtubeId: cleanId,
           order: Number(formData.order) || 0,
           updatedAt: serverTimestamp()
         });
-        toast({ title: "Entry Updated" });
+        toast({ title: "Project Updated" });
       } else {
-        // Add new
         await addDoc(collection(firestore, 'videos'), {
           ...formData,
+          youtubeId: cleanId,
           order: Number(formData.order) || (sortedVideos.length + 1),
           createdAt: serverTimestamp()
         });
@@ -175,7 +184,6 @@ export default function AdminPage() {
       type: v.type || 'reel-horizontal',
       order: v.order || 0
     });
-    // Scroll to form
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -222,8 +230,8 @@ export default function AdminPage() {
   return (
     <main className="min-h-screen bg-background text-foreground font-body">
       <VaelHeader />
-      <div className="flex pt-28 min-h-screen">
-        <aside className="w-96 border-r border-white/5 bg-black/40 flex flex-col sticky top-28 h-[calc(100vh-7rem)] p-8 overflow-y-auto no-scrollbar">
+      <div className="flex pt-24 min-h-screen">
+        <aside className="w-96 border-r border-white/5 bg-black/40 flex flex-col sticky top-24 h-[calc(100vh-6rem)] p-8 overflow-y-auto no-scrollbar">
           <Tabs defaultValue="videos" className="w-full">
             <TabsList className="bg-white/5 rounded-none p-1 w-full grid grid-cols-2 mb-8">
               <TabsTrigger value="videos" className="rounded-none text-[10px] uppercase tracking-widest py-3 font-bold">Manage Series</TabsTrigger>
@@ -233,7 +241,7 @@ export default function AdminPage() {
             <TabsContent value="videos" className="space-y-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-[11px] uppercase tracking-widest font-bold text-primary">
-                  {editingId ? 'Edit Project' : 'Publish New Project'}
+                  {editingId ? 'Edit Project' : 'Publish Project'}
                 </h2>
                 {editingId && (
                   <button onClick={resetForm} className="text-[10px] uppercase tracking-widest text-white/40 hover:text-white flex items-center gap-1 font-bold">
@@ -275,15 +283,15 @@ export default function AdminPage() {
                   </div>
 
                   <div className="space-y-4">
-                    <Label className="text-[9px] uppercase tracking-widest text-muted-foreground font-bold">Project Information</Label>
+                    <Label className="text-[9px] uppercase tracking-widest text-muted-foreground font-bold">Project Details</Label>
                     <Input placeholder="DIRECTOR / ROLE" className="rounded-none bg-background border-white/10 h-10 text-xs" value={formData.upperText} onChange={e => setFormData({...formData, upperText: e.target.value})} />
                     <Input required placeholder="BRAND / TITLE" className="rounded-none bg-background border-white/10 h-10 text-xs" value={formData.lowerText} onChange={e => setFormData({...formData, lowerText: e.target.value})} />
-                    <Input required placeholder="YOUTUBE VIDEO ID" className="rounded-none bg-background border-white/10 h-10 text-xs" value={formData.youtubeId} onChange={e => setFormData({...formData, youtubeId: e.target.value})} />
-                    <Input type="number" placeholder="SEQUENCE ORDER" className="rounded-none bg-background border-white/10 h-10 text-xs" value={formData.order} onChange={e => setFormData({...formData, order: Number(e.target.value)})} />
+                    <Input required placeholder="YOUTUBE URL OR VIDEO ID" className="rounded-none bg-background border-white/10 h-10 text-xs" value={formData.youtubeId} onChange={e => setFormData({...formData, youtubeId: e.target.value})} />
+                    <Input type="number" placeholder="SERIES SEQUENCE" className="rounded-none bg-background border-white/10 h-10 text-xs" value={formData.order} onChange={e => setFormData({...formData, order: Number(e.target.value)})} />
                   </div>
                 </div>
                 <Button type="submit" disabled={isSubmitting} className="w-full rounded-none bg-primary text-black text-[10px] tracking-widest uppercase font-bold py-6">
-                  {isSubmitting ? <Loader2 className="animate-spin" /> : editingId ? 'Update Entry' : 'Publish Project'}
+                  {isSubmitting ? <Loader2 className="animate-spin" /> : editingId ? 'Update Project' : 'Publish Project'}
                 </Button>
               </form>
             </TabsContent>
