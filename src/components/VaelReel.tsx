@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState } from 'react';
@@ -67,7 +68,7 @@ const VideoCard = ({ video, aspectRatio, onClick }: { video: VideoItem, aspectRa
       <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 to-transparent z-15 pointer-events-none" />
 
       <div className="absolute bottom-0 left-0 right-0 z-30 p-6 md:p-8 flex flex-col justify-end transition-all duration-700 pointer-events-none translate-y-2 group-hover:translate-y-0">
-        <h3 className="text-sm md:text-2xl font-headline text-white italic tracking-tighter uppercase leading-none truncate mb-1">
+        <h3 className="text-sm md:text-xl font-headline text-white italic tracking-tighter uppercase leading-none truncate mb-1">
           {video.upperText}
         </h3>
         <span className="text-[7px] md:text-[9px] tracking-[0.5em] text-primary uppercase font-bold block">
@@ -161,7 +162,7 @@ export function VaelReel({ activeCategory }: VaelReelProps) {
       <Dialog open={!!selectedVideo} onOpenChange={(open) => !open && setSelectedVideo(null)}>
         <DialogPortal>
           <DialogOverlay className="z-[400] bg-black/95 backdrop-blur-sm" />
-          <DialogContent className="z-[500] max-w-[95vw] md:max-w-7xl bg-black border border-white/10 p-0 overflow-hidden shadow-2xl rounded-none aspect-video focus:outline-none">
+          <DialogContent className="z-[500] max-w-[95vw] md:max-w-5xl bg-black border border-white/10 p-0 overflow-hidden shadow-2xl rounded-none aspect-video focus:outline-none">
             <DialogTitle className="sr-only">{selectedVideo?.title}</DialogTitle>
             <DialogDescription className="sr-only">Viewing project: {selectedVideo?.title}</DialogDescription>
             {selectedVideo && (

@@ -140,10 +140,10 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
                     {isActive && (
                       <div className="absolute inset-0 z-20 p-6 md:p-12 flex flex-col justify-end pointer-events-none">
                         <div className="space-y-1">
-                          <h2 className="text-xl md:text-4xl font-headline text-white italic tracking-tighter uppercase leading-none">
+                          <h2 className="text-lg md:text-3xl font-headline text-white italic tracking-tighter uppercase leading-none">
                             {slide.upperText}
                           </h2>
-                          <span className="text-[7px] md:text-[10px] tracking-[0.5em] text-primary uppercase font-bold block pt-1">
+                          <span className="text-[7px] md:text-[9px] tracking-[0.5em] text-primary uppercase font-bold block pt-1">
                             {slide.lowerText || slide.title}
                           </span>
                         </div>
@@ -156,25 +156,24 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
           </div>
         </div>
 
-        {/* Repositioned Minimalist Arrows - Closer to the video edge */}
         <button 
           onClick={scrollPrev}
           className="absolute left-[8%] md:left-[12%] top-1/2 -translate-y-1/2 z-40 p-2 transition-all group hover:scale-110 focus:outline-none"
         >
-          <ChevronLeft className="w-4 h-4 md:w-6 md:h-6 text-white/20 group-hover:text-primary transition-colors" />
+          <ChevronLeft className="w-4 h-4 md:w-5 md:h-5 text-white/20 group-hover:text-primary transition-colors" />
         </button>
         <button 
           onClick={scrollNext}
           className="absolute right-[8%] md:right-[12%] top-1/2 -translate-y-1/2 z-40 p-2 transition-all group hover:scale-110 focus:outline-none"
         >
-          <ChevronRight className="w-4 h-4 md:w-6 md:h-6 text-white/20 group-hover:text-primary transition-colors" />
+          <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-white/20 group-hover:text-primary transition-colors" />
         </button>
       </div>
 
       <Dialog open={!!selectedVideo} onOpenChange={(open) => !open && setSelectedVideo(null)}>
         <DialogPortal>
           <DialogOverlay className="z-[400] bg-black/95 backdrop-blur-sm" />
-          <DialogContent className="z-[500] max-w-[95vw] md:max-w-7xl bg-black border border-white/10 p-0 overflow-hidden shadow-2xl rounded-none aspect-video focus:outline-none">
+          <DialogContent className="z-[500] max-w-[95vw] md:max-w-5xl bg-black border border-white/10 p-0 overflow-hidden shadow-2xl rounded-none aspect-video focus:outline-none">
             <DialogTitle className="sr-only">{selectedVideo?.title}</DialogTitle>
             <DialogDescription className="sr-only">Cinematic entry view</DialogDescription>
             {selectedVideo && (

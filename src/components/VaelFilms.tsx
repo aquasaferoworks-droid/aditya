@@ -1,3 +1,4 @@
+
 'use client';
 
 import Image from 'next/image';
@@ -134,7 +135,7 @@ export function VaelFilms() {
       <Dialog open={!!selectedFilm} onOpenChange={(open) => !open && setSelectedFilm(null)}>
         <DialogPortal>
           <DialogOverlay className="z-[250] bg-black/95 backdrop-blur-sm" />
-          <DialogContent className="z-[300] max-w-[95vw] md:max-w-6xl bg-black border border-white/10 p-0 overflow-hidden rounded-none aspect-video focus:outline-none">
+          <DialogContent className="z-[300] max-w-[95vw] md:max-w-5xl bg-black border border-white/10 p-0 overflow-hidden rounded-none aspect-video focus:outline-none">
             <DialogTitle className="sr-only">{selectedFilm?.title}</DialogTitle>
             <DialogDescription className="sr-only">Viewing: {selectedFilm?.title}</DialogDescription>
             {selectedFilm && (
