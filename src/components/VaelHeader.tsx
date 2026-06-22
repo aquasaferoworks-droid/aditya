@@ -9,16 +9,22 @@ import { Button } from '@/components/ui/button';
 
 const categories = [
   'all',
-  'celebrity',
-  'ads',
-  'promo',
-  'humor',
-  'cricketers',
-  'vfx',
-  'home&living',
-  'car',
-  'food',
-  'life style'
+  'Ads',
+  'Promo',
+  'Celebrity',
+  'Humor',
+  'Cricketers',
+  'VFX',
+  'Home & Living',
+  'Food',
+  'Car',
+  'Lifestyle',
+  'Drama',
+  'Sports',
+  'High Concept',
+  'Story',
+  'Fashion',
+  'Anthem'
 ];
 
 export function VaelHeader() {
@@ -53,7 +59,7 @@ export function VaelHeader() {
     <div className="fixed top-0 left-0 right-0 z-[300] transition-all duration-300">
       <nav className={cn(
         "transition-all duration-300 px-6 md:px-16 flex items-center justify-between",
-        isScrolled ? 'bg-black py-2' : 'bg-black/60 backdrop-blur-md py-3'
+        isScrolled ? 'bg-black py-2' : 'bg-black/80 backdrop-blur-md py-4'
       )}>
         <div className="flex-1 hidden md:block" />
 
@@ -74,7 +80,7 @@ export function VaelHeader() {
       </nav>
 
       <div className={cn(
-        "bg-black transition-all duration-300 overflow-hidden",
+        "bg-black transition-all duration-300 overflow-hidden border-b border-white/5",
         isScrolled ? "h-8" : "h-9"
       )}>
         <div className="max-w-7xl mx-auto px-6 md:px-16 h-full flex items-center overflow-x-auto no-scrollbar gap-8 md:gap-12 justify-center">
@@ -87,7 +93,7 @@ export function VaelHeader() {
                 activeCategory === cat ? "text-primary opacity-100 font-bold" : "text-white"
               )}
             >
-              {cat.replace('&', ' & ')}
+              {cat}
               {activeCategory === cat && (
                 <motion.div layoutId="activeCategory" className="absolute -bottom-1 left-0 right-0 h-[1px] bg-primary" />
               )}

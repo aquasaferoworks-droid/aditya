@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { VaelHeader } from '@/components/VaelHeader';
-import { Loader2, Trash2, LayoutGrid, Film, Smartphone, Maximize, Box, List, Instagram, Youtube, Facebook, Twitter, Phone } from 'lucide-react';
+import { Loader2, Trash2, LayoutGrid, Film, Smartphone, Maximize, Box, List, Instagram, Youtube, Facebook, Twitter, Phone, Settings } from 'lucide-react';
 import { useMemoFirebase } from '@/firebase/firestore/use-collection';
 import { useToast } from '@/hooks/use-toast';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -21,20 +21,25 @@ const PLACEMENT_TYPES = [
   { value: 'reel-feature', label: 'Row 3 (Feature)', icon: Maximize },
   { value: 'reel-medium', label: 'Row 4 (Medium)', icon: Box },
   { value: 'reel-vertical', label: 'Row 5 (Vertical)', icon: Smartphone },
-  { value: 'sidebar', label: 'Unlimited Archive', icon: List },
 ];
 
 const CATEGORIES = [
-  'celebrity',
-  'ads',
-  'promo',
-  'humor',
-  'cricketers',
-  'vfx',
-  'home&living',
-  'car',
-  'food',
-  'life style'
+  'Ads',
+  'Promo',
+  'Celebrity',
+  'Humor',
+  'Cricketers',
+  'VFX',
+  'Home & Living',
+  'Food',
+  'Car',
+  'Lifestyle',
+  'Drama',
+  'Sports',
+  'High Concept',
+  'Story',
+  'Fashion',
+  'Anthem'
 ];
 
 export default function AdminPage() {
@@ -48,7 +53,7 @@ export default function AdminPage() {
     title: '',
     upperText: '',
     lowerText: '',
-    category: ['ads'] as string[],
+    category: ['Ads'] as string[],
     youtubeId: '',
     type: 'reel-horizontal',
     order: 0
@@ -167,7 +172,7 @@ export default function AdminPage() {
   };
 
   return (
-    <main className="min-h-screen bg-background text-foreground">
+    <main className="min-h-screen bg-background text-foreground font-body">
       <VaelHeader />
       <div className="flex pt-32 min-h-screen">
         <aside className="w-96 border-r border-white/5 bg-black/40 flex flex-col sticky top-32 h-[calc(100vh-8rem)] p-8 overflow-y-auto no-scrollbar">
@@ -196,7 +201,7 @@ export default function AdminPage() {
 
                   <div className="space-y-2">
                     <Label className="text-[9px] uppercase tracking-widest text-muted-foreground font-bold">Genres</Label>
-                    <div className="grid grid-cols-2 gap-2 border border-white/5 p-3 bg-black/20">
+                    <div className="grid grid-cols-2 gap-2 border border-white/5 p-3 bg-black/20 max-h-48 overflow-y-auto no-scrollbar">
                       {CATEGORIES.map(cat => (
                         <div key={cat} className="flex items-center space-x-2">
                           <Checkbox 
@@ -240,7 +245,7 @@ export default function AdminPage() {
                 </div>
 
                 <div className="space-y-4">
-                  <Label className="text-[9px] uppercase tracking-widest text-muted-foreground font-bold">Social Links</Label>
+                  <Label className="text-[9px] uppercase tracking-widest text-muted-foreground font-bold">Social Channels</Label>
                   <div className="space-y-2">
                     <div className="flex items-center gap-3">
                       <Instagram className="w-4 h-4 text-primary" />
@@ -291,7 +296,7 @@ export default function AdminPage() {
                       <div key={v.id} className="bg-white/[0.02] border border-white/5 p-4 flex items-center justify-between group">
                         <div className="flex items-center gap-6">
                           <div className="w-20 aspect-video relative bg-black border border-white/5">
-                            <img src={`https://img.youtube.com/vi/${v.youtubeId}/mqdefault.jpg`} className="object-cover w-full h-full opacity-60" />
+                            <img src={`https://img.youtube.com/vi/${v.youtubeId}/mqdefault.jpg`} className="object-cover w-full h-full opacity-60" alt="" />
                           </div>
                           <div>
                             <p className="text-[8px] uppercase tracking-widest text-primary font-bold">{v.upperText}</p>
