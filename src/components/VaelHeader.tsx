@@ -59,7 +59,7 @@ export function VaelHeader() {
     <div className="fixed top-0 left-0 right-0 z-[300] transition-all duration-300 bg-black">
       <nav className={cn(
         "transition-all duration-300 px-6 md:px-16 flex items-center justify-between",
-        isScrolled ? 'py-1' : 'py-2'
+        isScrolled ? 'pt-1 pb-0' : 'pt-2 pb-0'
       )}>
         <div className="flex-1 hidden md:block" />
 
@@ -80,20 +80,20 @@ export function VaelHeader() {
       </nav>
 
       {/* Tighter Category Menu sitting flush with nav */}
-      <div className="bg-black overflow-hidden border-b border-white/5 h-7">
-        <div className="max-w-7xl mx-auto px-6 md:px-16 h-full flex items-center overflow-x-auto no-scrollbar gap-8 md:gap-10 justify-center">
+      <div className="bg-black overflow-hidden border-b border-white/5 h-8">
+        <div className="max-w-7xl mx-auto px-6 md:px-16 h-full flex items-center overflow-x-auto no-scrollbar gap-10 md:gap-14 justify-center">
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setCategory(cat)}
               className={cn(
-                "relative text-[7px] tracking-[0.15em] uppercase whitespace-nowrap transition-all duration-300 font-body py-1 opacity-60 hover:opacity-100",
+                "relative text-[7.5px] tracking-[0.15em] uppercase whitespace-nowrap transition-all duration-300 font-body py-1 opacity-60 hover:opacity-100",
                 activeCategory === cat ? "text-primary opacity-100 font-bold" : "text-white"
               )}
             >
               {cat}
               {activeCategory === cat && (
-                <motion.div layoutId="activeCategory" className="absolute -bottom-1 left-0 right-0 h-[1px] bg-primary" />
+                <motion.div layoutId="activeCategory" className="absolute -bottom-1 left-0 right-0 h-[1.5px] bg-primary" />
               )}
             </button>
           ))}

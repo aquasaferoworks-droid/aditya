@@ -111,20 +111,10 @@ export default function AdminPage() {
 
   const extractYoutubeId = (urlOrId: string) => {
     if (!urlOrId) return '';
-    // Handle full URLs (Standard, Share, Shorts, Embed)
-    const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-    const match = urlOrId.match(regExp);
-    if (match && match[7] && match[7].length === 11) {
-      return match[7];
-    }
-    // Handle short links
-    const shortRegExp = /youtu\.be\/([a-zA-Z0-9_-]{11})/;
-    const shortMatch = urlOrId.match(shortRegExp);
-    if (shortMatch && shortMatch[1]) {
-      return shortMatch[1];
-    }
-    // Return original if it looks like an ID
-    return urlOrId.trim();
+    // Robust regex to handle almost all YouTube URL formats
+    const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
+    const match = urlOrId.match(regex);
+    return match ? match[1] : urlOrId.trim();
   };
 
   const handleCategoryToggle = (cat: string) => {

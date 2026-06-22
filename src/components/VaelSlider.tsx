@@ -87,9 +87,8 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
     emblaApi.on('reInit', onSelect);
   }, [emblaApi, onSelect]);
 
-  // Using hqdefault as it's much more reliable than maxresdefault
   const getYoutubeThumb = (id: string) => `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
-  const getFullUrl = (id: string) => `https://www.youtube.com/embed/${id}?autoplay=1&modestbranding=1&rel=0`;
+  const getFullUrl = (id: string) => `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&showinfo=0&modestbranding=1&enablejsapi=1`;
 
   if (loading || slides.length === 0) return null;
 
@@ -123,7 +122,7 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
                         fill
                         className="object-cover"
                         priority={isActive}
-                        unoptimized // Bypassing Next.js optimization for external YouTube thumbs
+                        unoptimized
                       />
                     </div>
 
@@ -152,7 +151,6 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
           </div>
         </div>
 
-        {/* Minimalist Arrow Controls grouped closely in the cinematic area */}
         <div className="absolute bottom-6 md:bottom-12 right-[12%] z-50 flex items-center gap-6 pointer-events-none">
           <button 
             onClick={scrollPrev}
@@ -181,7 +179,7 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
                   className="w-full h-full" 
                   src={getFullUrl(selectedVideo.youtubeId)} 
                   frameBorder="0" 
-                  allow="autoplay; encrypted-media" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
                   allowFullScreen 
                 />
               </div>
