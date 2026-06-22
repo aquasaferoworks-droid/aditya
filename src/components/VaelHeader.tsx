@@ -17,7 +17,8 @@ const categories = [
   'vfx',
   'home&living',
   'car',
-  'food'
+  'food',
+  'life style'
 ];
 
 export function VaelHeader() {
@@ -54,17 +55,14 @@ export function VaelHeader() {
         "transition-all duration-300 px-6 md:px-16 flex items-center justify-between",
         isScrolled ? 'bg-black py-2' : 'bg-black/60 backdrop-blur-md py-3'
       )}>
-        {/* Left Side: Spacer for symmetry */}
         <div className="flex-1 hidden md:block" />
 
-        {/* Center: Centered Logo */}
         <div className="flex-none text-center">
           <Link href="/" className="font-headline text-xl md:text-2xl tracking-tighter hover:text-primary transition-all duration-700 italic font-bold uppercase block">
             ERROL <span className="text-primary not-italic font-light">ADITYA</span>
           </Link>
         </div>
 
-        {/* Right Side: Contact Us Button */}
         <div className="flex-1 flex justify-end">
           <Button 
             className="rounded-none bg-primary text-black hover:bg-white hover:text-black px-5 h-8 text-[9px] tracking-[0.2em] uppercase transition-all font-bold"
@@ -75,7 +73,6 @@ export function VaelHeader() {
         </div>
       </nav>
 
-      {/* Sleek Category Bar - Tighter spacing and closer to logo */}
       <div className={cn(
         "bg-black transition-all duration-300 overflow-hidden",
         isScrolled ? "h-8" : "h-9"

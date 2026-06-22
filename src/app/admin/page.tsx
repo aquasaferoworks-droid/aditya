@@ -33,7 +33,8 @@ const CATEGORIES = [
   'vfx',
   'home&living',
   'car',
-  'food'
+  'food',
+  'life style'
 ];
 
 export default function AdminPage() {
@@ -76,7 +77,7 @@ export default function AdminPage() {
   }, [firestore]);
 
   const { data: rawVideos, loading: videosLoading } = useCollection(videosQuery);
-  const { data: settingsDoc, loading: settingsLoading } = useDoc(settingsRef);
+  const { data: settingsDoc } = useDoc(settingsRef);
 
   useEffect(() => {
     if (settingsDoc) {
