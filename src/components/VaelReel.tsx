@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState } from 'react';
@@ -59,7 +58,7 @@ const VideoCard = ({ video, aspectRatio, onClick }: { video: VideoItem, aspectRa
         ) : (
           <div className="flex flex-col items-center gap-2 text-white/5">
             <Video className="w-8 h-8" />
-            <span className="text-[8px] uppercase tracking-widest font-bold">Direct Source</span>
+            <span className="text-[8px] uppercase tracking-widest font-bold italic">Direct Source</span>
           </div>
         )}
       </div>
@@ -71,7 +70,7 @@ const VideoCard = ({ video, aspectRatio, onClick }: { video: VideoItem, aspectRa
         <h3 className="text-sm md:text-xl font-headline text-white italic tracking-tighter uppercase leading-none truncate mb-1">
           {video.upperText}
         </h3>
-        <span className="text-[7px] md:text-[9px] tracking-[0.5em] text-primary uppercase font-bold block">
+        <span className="text-[7px] md:text-[9px] tracking-[0.5em] text-primary uppercase font-bold block italic">
           {video.lowerText || video.title}
         </span>
       </div>
@@ -109,7 +108,7 @@ export function VaelReel({ activeCategory }: VaelReelProps) {
       <div className="max-w-[1600px] mx-auto px-6 md:px-16 space-y-4 md:space-y-12">
         
         <div className="flex items-center gap-6 mb-8">
-          <span className="text-[10px] tracking-[0.8em] uppercase text-primary font-bold whitespace-nowrap">{activeCategory}</span>
+          <span className="text-[10px] tracking-[0.8em] uppercase text-primary font-bold whitespace-nowrap italic">{activeCategory}</span>
           <div className="h-px flex-1 bg-white/5" />
         </div>
 
@@ -155,7 +154,7 @@ export function VaelReel({ activeCategory }: VaelReelProps) {
 
         <div className="flex items-center gap-6 mt-24">
           <div className="h-px flex-1 bg-white/5" />
-          <span className="text-[10px] tracking-[0.8em] uppercase text-primary/40 font-bold whitespace-nowrap">{activeCategory}</span>
+          <span className="text-[10px] tracking-[0.8em] uppercase text-primary/40 font-bold whitespace-nowrap italic">{activeCategory}</span>
         </div>
       </div>
 

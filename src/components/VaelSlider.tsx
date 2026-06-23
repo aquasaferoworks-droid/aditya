@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
@@ -130,7 +129,7 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
                       ) : (
                         <div className="flex flex-col items-center gap-4 text-white/10">
                           <Video className="w-16 h-16" />
-                          <span className="text-[10px] tracking-[0.4em] uppercase font-bold">Source Link Required</span>
+                          <span className="text-[10px] tracking-[0.4em] uppercase font-bold italic">Source Link Required</span>
                         </div>
                       )}
                     </div>
@@ -143,7 +142,7 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
                           <h2 className="text-lg md:text-3xl font-headline text-white italic tracking-tighter uppercase leading-none">
                             {slide.upperText}
                           </h2>
-                          <span className="text-[7px] md:text-[9px] tracking-[0.5em] text-primary uppercase font-bold block pt-1">
+                          <span className="text-[7px] md:text-[9px] tracking-[0.5em] text-primary uppercase font-bold block pt-1 italic">
                             {slide.lowerText || slide.title}
                           </span>
                         </div>
@@ -156,6 +155,7 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
           </div>
         </div>
 
+        {/* Minimalist Centered Arrows */}
         <button 
           onClick={scrollPrev}
           className="absolute left-[8%] md:left-[12%] top-1/2 -translate-y-1/2 z-40 p-2 transition-all group hover:scale-110 focus:outline-none"
