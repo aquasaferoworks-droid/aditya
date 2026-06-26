@@ -9,13 +9,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { VaelHeader } from '@/components/VaelHeader';
-import { Loader2, Trash2, LayoutGrid, Film, Smartphone, Maximize, Box, MoreVertical, Pencil, X, Video, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Loader2, Trash2, LayoutGrid, Film, Smartphone, Maximize, Box, MoreVertical, Pencil, X, Video, AlertCircle, Image as ImageIcon } from 'lucide-react';
 import { useMemoFirebase } from '@/firebase/firestore/use-collection';
 import { useToast } from '@/hooks/use-toast';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
-import { getVideoType, extractYoutubeId } from '@/lib/video-utils';
+import { extractYoutubeId, getYoutubeThumbnail } from '@/lib/video-utils';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -52,6 +52,7 @@ export default function AdminPage() {
     lowerText: '',
     category: ['Ads'] as string[],
     youtubeId: '',
+    thumbnailUrl: '',
     type: 'reel-horizontal',
     order: 0
   });
@@ -159,6 +160,7 @@ export default function AdminPage() {
       lowerText: '',
       category: ['Ads'],
       youtubeId: '',
+      thumbnailUrl: '',
       type: 'reel-horizontal',
       order: sortedVideos.length + 1
     });
@@ -172,6 +174,7 @@ export default function AdminPage() {
       lowerText: v.lowerText || '',
       category: Array.isArray(v.category) ? v.category : [v.category],
       youtubeId: v.youtubeId || '',
+      thumbnailUrl: v.thumbnailUrl || '',
       type: v.type || 'reel-horizontal',
       order: v.order || 0
     });
@@ -184,7 +187,7 @@ export default function AdminPage() {
     try {
       const docRef = doc(firestore, 'videos', id);
       await updateDoc(docRef, { order: Number(newOrder) });
-      toast({ title: "Order Updated" });
+      toast({ title: "Sequence Updated" });
     } catch (error: any) {
       toast({ title: "Update Failed", variant: "destructive" });
     } finally {
@@ -299,9 +302,10 @@ export default function AdminPage() {
                         <Input placeholder="HEADING (E.G. SLEEK KITCHEN)" className="rounded-none bg-background border-white/10 h-12 text-xs italic font-bold placeholder:font-normal" value={formData.upperText} onChange={e => setFormData({...formData, upperText: e.target.value})} />
                         <Input required placeholder="SUBTEXT (E.G. ASIAN PAINT)" className="rounded-none bg-background border-white/10 h-12 text-xs italic text-primary font-bold placeholder:text-white/40 placeholder:font-normal" value={formData.lowerText} onChange={e => setFormData({...formData, lowerText: e.target.value})} />
                         <Input required placeholder="YOUTUBE LINK OR VIDEO URL" className="rounded-none bg-background border-white/10 h-12 text-xs font-mono" value={formData.youtubeId} onChange={e => setFormData({...formData, youtubeId: e.target.value})} />
+                        <Input placeholder="CUSTOM THUMBNAIL URL (OPTIONAL)" className="rounded-none bg-background border-white/10 h-12 text-xs font-mono" value={formData.thumbnailUrl} onChange={e => setFormData({...formData, thumbnailUrl: e.target.value})} />
                         <div className="flex items-center gap-3">
                            <div className="flex-1 space-y-2">
-                              <Label className="text-[8px] uppercase tracking-widest text-white/20 font-bold italic">Sequence</Label>
+                              <Label className="text-[8px] uppercase tracking-widest text-white/20 font-bold italic">Series Sequence</Label>
                               <Input type="number" className="rounded-none bg-background border-white/10 h-10 text-xs font-bold" value={formData.order} onChange={e => setFormData({...formData, order: Number(e.target.value)})} />
                            </div>
                         </div>
@@ -391,8 +395,8 @@ export default function AdminPage() {
 
                     <div className="grid grid-cols-1 gap-4">
                       {videos.map(v => {
-                        const vType = getVideoType(v.youtubeId);
                         const ytId = extractYoutubeId(v.youtubeId);
+                        const displayThumbnail = v.thumbnailUrl || (ytId ? getYoutubeThumbnail(ytId, 'hq') : null);
                         
                         return (
                           <div key={v.id} className={cn(
@@ -401,12 +405,12 @@ export default function AdminPage() {
                           )}>
                             <div className="flex items-center gap-10">
                               <div className="w-32 aspect-video relative bg-black border border-white/5 overflow-hidden">
-                                {vType === 'youtube' && ytId ? (
-                                  <img src={`https://img.youtube.com/vi/${ytId}/mqdefault.jpg`} className="object-cover w-full h-full opacity-60 group-hover:opacity-100 transition-opacity duration-700" alt="" />
+                                {displayThumbnail ? (
+                                  <img src={displayThumbnail} className="object-cover w-full h-full opacity-60 group-hover:opacity-100 transition-opacity duration-700" alt="" />
                                 ) : (
                                   <div className="flex flex-col items-center justify-center h-full gap-2 opacity-20">
-                                    <Video className="w-8 h-8" />
-                                    <span className="text-[8px] uppercase font-bold italic">Direct</span>
+                                    <ImageIcon className="w-8 h-8" />
+                                    <span className="text-[8px] uppercase font-bold italic">No Media</span>
                                   </div>
                                 )}
                                 {editingId === v.id && <div className="absolute inset-0 bg-primary/10 border-2 border-primary" />}
@@ -426,7 +430,7 @@ export default function AdminPage() {
                                 <span className="text-[8px] uppercase tracking-widest text-white/20 font-bold italic">Sequence</span>
                                 <Input 
                                   type="number" 
-                                  className="w-20 h-10 rounded-none bg-black border-white/10 text-[10px] text-center font-bold"
+                                  className="w-20 h-10 rounded-none bg-black border-white/10 text-[10px] text-center font-bold focus:border-primary transition-colors"
                                   defaultValue={v.order}
                                   onBlur={(e) => handleUpdateOrder(v.id, Number(e.target.value))}
                                 />

@@ -1,3 +1,4 @@
+
 {
   "entities": {
     "Video": {
@@ -8,6 +9,7 @@
         "title": { "type": "string" },
         "category": { "type": "array", "items": { "type": "string" } },
         "youtubeId": { "type": "string" },
+        "thumbnailUrl": { "type": "string" },
         "type": { 
           "type": "string", 
           "enum": ["slider", "reel-horizontal", "reel-feature", "reel-medium", "reel-vertical", "sidebar"] 

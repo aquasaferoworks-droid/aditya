@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
@@ -9,7 +10,7 @@ import { useFirestore, useCollection } from '@/firebase';
 import { collection } from 'firebase/firestore';
 import { useMemoFirebase } from '@/firebase/firestore/use-collection';
 import { ChevronLeft, ChevronRight, Video } from 'lucide-react';
-import { getVideoType, getYoutubeThumbnail } from '@/lib/video-utils';
+import { getVideoType, getYoutubeThumbnail, extractYoutubeId } from '@/lib/video-utils';
 import { UnifiedVideoPlayer } from './UnifiedVideoPlayer';
 import {
   Dialog,
@@ -25,6 +26,7 @@ interface VideoData {
   title: string;
   category: string | string[];
   youtubeId: string;
+  thumbnailUrl?: string;
   type: string;
   upperText?: string;
   lowerText?: string;
@@ -98,8 +100,8 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
           <div className="embla__container flex items-center">
             {slides.map((slide, index) => {
               const isActive = selectedIndex === index;
-              const vType = getVideoType(slide.youtubeId);
-              const thumbUrl = vType === 'youtube' ? getYoutubeThumbnail(slide.youtubeId, 'max') : null;
+              const ytId = extractYoutubeId(slide.youtubeId);
+              const thumbUrl = slide.thumbnailUrl || (ytId ? getYoutubeThumbnail(ytId, 'max') : null);
               
               return (
                 <div 
@@ -122,14 +124,14 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
                           src={thumbUrl}
                           alt={slide.title}
                           fill
-                          className="object-cover"
+                          className="object-cover transition-opacity duration-700"
                           priority={isActive}
                           unoptimized
                         />
                       ) : (
                         <div className="flex flex-col items-center gap-4 text-white/10">
                           <Video className="w-16 h-16" />
-                          <span className="text-[10px] tracking-[0.4em] uppercase font-bold italic">Source Link Required</span>
+                          <span className="text-[10px] tracking-[0.4em] uppercase font-bold italic">Source Required</span>
                         </div>
                       )}
                     </div>
@@ -155,7 +157,6 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
           </div>
         </div>
 
-        {/* Minimalist Centered Arrows */}
         <button 
           onClick={scrollPrev}
           className="absolute left-[8%] md:left-[12%] top-1/2 -translate-y-1/2 z-40 p-2 transition-all group hover:scale-110 focus:outline-none"

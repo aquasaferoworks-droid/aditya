@@ -9,7 +9,7 @@ import { collection } from 'firebase/firestore';
 import { useMemoFirebase } from '@/firebase/firestore/use-collection';
 import { FilterX, X, Video } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getVideoType, getYoutubeThumbnail } from '@/lib/video-utils';
+import { getVideoType, getYoutubeThumbnail, extractYoutubeId } from '@/lib/video-utils';
 import { UnifiedVideoPlayer } from './UnifiedVideoPlayer';
 import {
   Dialog,
@@ -75,8 +75,8 @@ export function VaelFilms() {
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
             >
               {films.map((film: any) => {
-                const vType = getVideoType(film.youtubeId);
-                const thumbUrl = vType === 'youtube' ? getYoutubeThumbnail(film.youtubeId, 'max') : null;
+                const ytId = extractYoutubeId(film.youtubeId);
+                const thumbUrl = film.thumbnailUrl || (ytId ? getYoutubeThumbnail(ytId, 'max') : null);
 
                 return (
                   <div 
@@ -95,7 +95,7 @@ export function VaelFilms() {
                     ) : (
                       <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 text-white/5 bg-white/[0.02]">
                         <Video className="w-12 h-12" />
-                        <span className="text-[8px] tracking-[0.4em] uppercase font-bold">Direct Source</span>
+                        <span className="text-[8px] tracking-[0.4em] uppercase font-bold">Source Required</span>
                       </div>
                     )}
                     <div className="absolute inset-0 bg-black/40 group-hover:bg-black/0 transition-colors duration-700" />

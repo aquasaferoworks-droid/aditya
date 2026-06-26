@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState } from 'react';
@@ -6,7 +7,7 @@ import Image from 'next/image';
 import { useFirestore, useCollection } from '@/firebase';
 import { collection } from 'firebase/firestore';
 import { useMemoFirebase } from '@/firebase/firestore/use-collection';
-import { getVideoType, getYoutubeThumbnail } from '@/lib/video-utils';
+import { getVideoType, getYoutubeThumbnail, extractYoutubeId } from '@/lib/video-utils';
 import { UnifiedVideoPlayer } from './UnifiedVideoPlayer';
 import { Video } from 'lucide-react';
 import {
@@ -23,6 +24,7 @@ interface VideoItem {
   title: string;
   category: string | string[];
   youtubeId: string;
+  thumbnailUrl?: string;
   type: string;
   upperText?: string;
   lowerText?: string;
@@ -34,8 +36,8 @@ interface VaelReelProps {
 }
 
 const VideoCard = ({ video, aspectRatio, onClick }: { video: VideoItem, aspectRatio: string, onClick: (v: VideoItem) => void }) => {
-  const vType = getVideoType(video.youtubeId);
-  const thumbUrl = vType === 'youtube' ? getYoutubeThumbnail(video.youtubeId, 'hq') : null;
+  const ytId = extractYoutubeId(video.youtubeId);
+  const thumbUrl = video.thumbnailUrl || (ytId ? getYoutubeThumbnail(ytId, 'hq') : null);
 
   return (
     <motion.div
@@ -49,7 +51,7 @@ const VideoCard = ({ video, aspectRatio, onClick }: { video: VideoItem, aspectRa
       <div className="absolute inset-0 z-0 bg-black flex items-center justify-center">
         {thumbUrl ? (
           <Image 
-            src={thumbUrl}
+            src={thumbUrl} 
             alt={video.title || "Video Entry"}
             fill
             className="object-cover transition-transform duration-1000 group-hover:scale-105 opacity-50 group-hover:opacity-100"
@@ -58,7 +60,7 @@ const VideoCard = ({ video, aspectRatio, onClick }: { video: VideoItem, aspectRa
         ) : (
           <div className="flex flex-col items-center gap-2 text-white/5">
             <Video className="w-8 h-8" />
-            <span className="text-[8px] uppercase tracking-widest font-bold italic">Direct Source</span>
+            <span className="text-[8px] uppercase tracking-widest font-bold italic">Source Required</span>
           </div>
         )}
       </div>
