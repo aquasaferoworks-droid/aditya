@@ -428,9 +428,9 @@ export default function AdminPage() {
                             <div className="flex items-center gap-6">
                               <div className="flex flex-col items-end gap-1">
                                 <span className="text-[8px] uppercase tracking-widest text-white/20 font-bold italic">Sequence</span>
-                                <Input 
+                                <input 
                                   type="number" 
-                                  className="w-20 h-10 rounded-none bg-black border-white/10 text-[10px] text-center font-bold focus:border-primary transition-colors"
+                                  className="w-20 h-10 rounded-none bg-black border-white/10 text-[10px] text-center font-bold focus:border-primary transition-colors focus:outline-none"
                                   defaultValue={v.order}
                                   onBlur={(e) => handleUpdateOrder(v.id, Number(e.target.value))}
                                 />
