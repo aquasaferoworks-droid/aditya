@@ -1,4 +1,3 @@
-
 'use client';
 
 import Image from 'next/image';
@@ -52,8 +51,8 @@ export function VaelFilms() {
     <section id="work" className="py-24 md:py-32 bg-background px-8 md:px-16 border-t border-border/10">
       <div className="max-w-7xl mx-auto mb-16 md:mb-24 flex flex-col md:flex-row md:items-end justify-between gap-12">
         <div className="space-y-6">
-          <span className="text-[10px] tracking-[0.6em] uppercase text-primary/60 block font-medium">Work Showcase</span>
-          <h2 className="text-5xl md:text-9xl font-headline leading-[0.85] italic tracking-tighter text-white uppercase">
+          <span className="text-[10px] tracking-[0.4em] uppercase text-primary/60 block font-medium">Work Showcase</span>
+          <h2 className="text-5xl md:text-7xl font-headline leading-tight italic tracking-tight text-white uppercase">
             {activeCategory}
           </h2>
         </div>
@@ -82,7 +81,7 @@ export function VaelFilms() {
                   <div 
                     key={film.id} 
                     onClick={() => setSelectedFilm(film)}
-                    className="group relative overflow-hidden bg-black aspect-video cursor-pointer border border-white/5 rounded-none"
+                    className="group relative overflow-hidden bg-black aspect-video cursor-pointer border border-white/5 rounded-lg"
                   >
                     {thumbUrl ? (
                       <Image 
@@ -102,11 +101,11 @@ export function VaelFilms() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent z-10" />
                     
                     <div className="absolute inset-x-0 bottom-0 z-30 p-6 md:p-8 flex flex-col justify-end translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-700">
-                      <h3 className="text-xl font-headline text-white italic tracking-tighter uppercase leading-none truncate mb-1">
+                      <h3 className="text-xl font-headline text-white italic tracking-normal uppercase leading-none truncate mb-1">
                         {film.upperText}
                       </h3>
                       <div className="flex justify-between items-end gap-4">
-                        <span className="text-[8px] tracking-[0.4em] text-primary uppercase font-bold truncate">
+                        <span className="text-[8px] tracking-[0.2em] text-primary uppercase font-bold truncate">
                           {film.lowerText || film.title}
                         </span>
                          <span className="text-[7px] tracking-[0.2em] text-white/30 uppercase font-bold whitespace-nowrap">
@@ -135,14 +134,14 @@ export function VaelFilms() {
       <Dialog open={!!selectedFilm} onOpenChange={(open) => !open && setSelectedFilm(null)}>
         <DialogPortal>
           <DialogOverlay className="z-[250] bg-black/95 backdrop-blur-sm" />
-          <DialogContent className="z-[300] max-w-[95vw] md:max-w-5xl bg-black border border-white/10 p-0 overflow-hidden rounded-none aspect-video focus:outline-none">
+          <DialogContent className="z-[300] max-w-[90vw] md:max-w-4xl bg-black border border-white/10 p-0 overflow-hidden rounded-lg aspect-video focus:outline-none">
             <DialogTitle className="sr-only">{selectedFilm?.title}</DialogTitle>
             <DialogDescription className="sr-only">Viewing: {selectedFilm?.title}</DialogDescription>
             {selectedFilm && (
               <div className="relative w-full h-full">
                 <UnifiedVideoPlayer url={selectedFilm.youtubeId} />
                 <DialogClose className="absolute top-6 right-6 z-[201]">
-                  <div className="w-10 h-10 bg-black/40 border border-white/10 flex items-center justify-center">
+                  <div className="w-10 h-10 bg-black/40 border border-white/10 flex items-center justify-center rounded-lg">
                     <X className="w-5 h-5 text-white" />
                   </div>
                 </DialogClose>

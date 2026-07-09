@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
@@ -116,7 +115,7 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
                       opacity: isActive ? 1 : 0.3,
                     }}
                     transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
-                    className="relative aspect-video md:aspect-[21/9] overflow-hidden bg-zinc-900 shadow-2xl group cursor-pointer border border-white/5 rounded-none"
+                    className="relative aspect-video md:aspect-[21/9] overflow-hidden bg-zinc-900 shadow-2xl group cursor-pointer border border-white/5 rounded-lg"
                   >
                     <div className="absolute inset-0 z-0 bg-black flex items-center justify-center">
                       {thumbUrl ? (
@@ -141,10 +140,10 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
                     {isActive && (
                       <div className="absolute inset-0 z-20 p-6 md:p-12 flex flex-col justify-end pointer-events-none">
                         <div className="space-y-1">
-                          <h2 className="text-lg md:text-3xl font-headline text-white italic tracking-tighter uppercase leading-none">
+                          <h2 className="text-lg md:text-2xl font-headline text-white italic tracking-normal uppercase leading-none">
                             {slide.upperText}
                           </h2>
-                          <span className="text-[7px] md:text-[9px] tracking-[0.5em] text-primary uppercase font-bold block pt-1 italic">
+                          <span className="text-[7px] md:text-[8px] tracking-[0.2em] text-primary uppercase font-bold block pt-1 italic">
                             {slide.lowerText || slide.title}
                           </span>
                         </div>
@@ -161,20 +160,20 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
           onClick={scrollPrev}
           className="absolute left-[8%] md:left-[12%] top-1/2 -translate-y-1/2 z-40 p-2 transition-all group hover:scale-110 focus:outline-none"
         >
-          <ChevronLeft className="w-4 h-4 md:w-5 md:h-5 text-white/20 group-hover:text-primary transition-colors" />
+          <ChevronLeft className="w-4 h-4 md:w-5 md:h-5 text-white/40 group-hover:text-primary transition-colors" />
         </button>
         <button 
           onClick={scrollNext}
           className="absolute right-[8%] md:right-[12%] top-1/2 -translate-y-1/2 z-40 p-2 transition-all group hover:scale-110 focus:outline-none"
         >
-          <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-white/20 group-hover:text-primary transition-colors" />
+          <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-white/40 group-hover:text-primary transition-colors" />
         </button>
       </div>
 
       <Dialog open={!!selectedVideo} onOpenChange={(open) => !open && setSelectedVideo(null)}>
         <DialogPortal>
           <DialogOverlay className="z-[400] bg-black/95 backdrop-blur-sm" />
-          <DialogContent className="z-[500] max-w-[95vw] md:max-w-5xl bg-black border border-white/10 p-0 overflow-hidden shadow-2xl rounded-none aspect-video focus:outline-none">
+          <DialogContent className="z-[500] max-w-[90vw] md:max-w-4xl bg-black border border-white/10 p-0 overflow-hidden shadow-2xl rounded-lg aspect-video focus:outline-none">
             <DialogTitle className="sr-only italic">{selectedVideo?.title}</DialogTitle>
             <DialogDescription className="sr-only">Cinematic entry view</DialogDescription>
             {selectedVideo && (

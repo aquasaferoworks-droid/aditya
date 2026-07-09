@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState } from 'react';
@@ -41,7 +40,7 @@ const VideoCard = ({ video, aspectRatio, onClick }: { video: VideoItem, aspectRa
 
   return (
     <motion.div
-      className={`relative overflow-hidden bg-black border border-white/5 group cursor-pointer ${aspectRatio} rounded-none`}
+      className={`relative overflow-hidden bg-black border border-white/5 group cursor-pointer ${aspectRatio} rounded-lg`}
       onClick={() => onClick(video)}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -69,10 +68,10 @@ const VideoCard = ({ video, aspectRatio, onClick }: { video: VideoItem, aspectRa
       <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 to-transparent z-15 pointer-events-none" />
 
       <div className="absolute bottom-0 left-0 right-0 z-30 p-6 md:p-8 flex flex-col justify-end transition-all duration-700 pointer-events-none translate-y-2 group-hover:translate-y-0">
-        <h3 className="text-sm md:text-xl font-headline text-white italic tracking-tighter uppercase leading-none truncate mb-1">
+        <h3 className="text-sm md:text-xl font-headline text-white italic tracking-normal uppercase leading-none truncate mb-1">
           {video.upperText}
         </h3>
-        <span className="text-[7px] md:text-[9px] tracking-[0.5em] text-primary uppercase font-bold block italic">
+        <span className="text-[7px] md:text-[8px] tracking-[0.2em] text-primary uppercase font-bold block italic">
           {video.lowerText || video.title}
         </span>
       </div>
@@ -110,7 +109,7 @@ export function VaelReel({ activeCategory }: VaelReelProps) {
       <div className="max-w-[1600px] mx-auto px-6 md:px-16 space-y-4 md:space-y-12">
         
         <div className="flex items-center gap-6 mb-8">
-          <span className="text-[10px] tracking-[0.8em] uppercase text-primary font-bold whitespace-nowrap italic">{activeCategory}</span>
+          <span className="text-[10px] tracking-[0.4em] uppercase text-primary font-bold whitespace-nowrap italic">{activeCategory}</span>
           <div className="h-px flex-1 bg-white/5" />
         </div>
 
@@ -156,14 +155,14 @@ export function VaelReel({ activeCategory }: VaelReelProps) {
 
         <div className="flex items-center gap-6 mt-24">
           <div className="h-px flex-1 bg-white/5" />
-          <span className="text-[10px] tracking-[0.8em] uppercase text-primary/40 font-bold whitespace-nowrap italic">{activeCategory}</span>
+          <span className="text-[10px] tracking-[0.4em] uppercase text-primary/40 font-bold whitespace-nowrap italic">{activeCategory}</span>
         </div>
       </div>
 
       <Dialog open={!!selectedVideo} onOpenChange={(open) => !open && setSelectedVideo(null)}>
         <DialogPortal>
           <DialogOverlay className="z-[400] bg-black/95 backdrop-blur-sm" />
-          <DialogContent className="z-[500] max-w-[95vw] md:max-w-5xl bg-black border border-white/10 p-0 overflow-hidden shadow-2xl rounded-none aspect-video focus:outline-none">
+          <DialogContent className="z-[500] max-w-[90vw] md:max-w-4xl bg-black border border-white/10 p-0 overflow-hidden shadow-2xl rounded-lg aspect-video focus:outline-none">
             <DialogTitle className="sr-only italic">{selectedVideo?.title}</DialogTitle>
             <DialogDescription className="sr-only">Viewing project: {selectedVideo?.title}</DialogDescription>
             {selectedVideo && (
