@@ -430,7 +430,7 @@ export default function AdminPage() {
                                 <span className="text-[8px] uppercase tracking-widest text-white/20 font-bold italic">Sequence</span>
                                 <input 
                                   type="number" 
-                                  className="w-20 h-10 rounded-none bg-black border-white/10 text-[10px] text-center font-bold focus:border-primary transition-colors focus:outline-none"
+                                  className="w-20 h-10 rounded-none bg-black border-white/10 text-[10px] text-center font-bold focus:border-primary transition-colors focus:outline-none italic"
                                   defaultValue={v.order}
                                   onBlur={(e) => handleUpdateOrder(v.id, Number(e.target.value))}
                                 />

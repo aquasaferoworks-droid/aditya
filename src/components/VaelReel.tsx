@@ -164,7 +164,7 @@ export function VaelReel({ activeCategory }: VaelReelProps) {
         <DialogPortal>
           <DialogOverlay className="z-[400] bg-black/95 backdrop-blur-sm" />
           <DialogContent className="z-[500] max-w-[95vw] md:max-w-5xl bg-black border border-white/10 p-0 overflow-hidden shadow-2xl rounded-none aspect-video focus:outline-none">
-            <DialogTitle className="sr-only">{selectedVideo?.title}</DialogTitle>
+            <DialogTitle className="sr-only italic">{selectedVideo?.title}</DialogTitle>
             <DialogDescription className="sr-only">Viewing project: {selectedVideo?.title}</DialogDescription>
             {selectedVideo && (
               <UnifiedVideoPlayer url={selectedVideo.youtubeId} />

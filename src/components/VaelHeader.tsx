@@ -80,7 +80,7 @@ export function VaelHeader() {
 
         <div className="flex-1 flex justify-end">
           <Button 
-            className="rounded-none bg-primary text-black hover:bg-white hover:text-black px-6 h-8 text-[9px] tracking-[0.2em] uppercase transition-all font-bold"
+            className="rounded-none bg-primary text-black hover:bg-white hover:text-black px-6 h-8 text-[9px] tracking-[0.2em] uppercase transition-all font-bold italic"
             asChild
           >
             <Link href="#contact">CONTACT US</Link>
@@ -103,8 +103,8 @@ export function VaelHeader() {
               key={cat}
               onClick={() => setCategory(cat)}
               className={cn(
-                "relative text-[8px] tracking-[0.3em] uppercase whitespace-nowrap transition-all duration-300 font-body py-1 opacity-40 hover:opacity-100 flex-shrink-0",
-                activeCategory === cat ? "text-primary opacity-100 font-bold italic" : "text-white"
+                "relative text-[8px] tracking-[0.3em] uppercase whitespace-nowrap transition-all duration-300 font-body py-1 opacity-40 hover:opacity-100 flex-shrink-0 italic",
+                activeCategory === cat ? "text-primary opacity-100 font-bold" : "text-white"
               )}
             >
               {cat}
