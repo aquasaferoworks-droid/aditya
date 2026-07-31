@@ -64,7 +64,7 @@ export function VaelHeader() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-[300] bg-black border-b border-white/5">
-      {/* Primary Brand Bar - High Density */}
+      {/* Primary Brand Bar */}
       <nav className={cn(
         "px-6 md:px-16 flex items-center justify-between transition-all duration-300",
         isScrolled ? "h-12" : "h-14"
@@ -87,22 +87,22 @@ export function VaelHeader() {
         </div>
       </nav>
 
-      {/* Secondary Scrollable Category Bar - Flush Upside */}
-      <div className="relative group bg-black h-9 flex items-center border-t border-white/5">
+      {/* Secondary Scrollable Category Bar - Tightened and more visible */}
+      <div className="relative group bg-black h-10 flex items-center border-t border-white/5">
         <div className="absolute left-0 top-0 bottom-0 w-32 z-10 pointer-events-none nav-fade-left opacity-100 group-hover:opacity-40 transition-opacity" />
         <div className="absolute right-0 top-0 bottom-0 w-32 z-10 pointer-events-none nav-fade-right opacity-100 group-hover:opacity-40 transition-opacity" />
 
         <div 
           ref={scrollRef}
           onWheel={handleWheel}
-          className="max-w-screen-xl mx-auto w-full px-16 h-full flex items-center overflow-x-auto no-scrollbar gap-12 md:gap-20 scroll-smooth"
+          className="max-w-screen-xl mx-auto w-full px-16 h-full flex items-center overflow-x-auto no-scrollbar gap-8 md:gap-10 scroll-smooth"
         >
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setCategory(cat)}
               className={cn(
-                "relative text-[8px] tracking-[0.2em] uppercase whitespace-nowrap transition-all duration-300 font-body py-1 opacity-40 hover:opacity-100 flex-shrink-0 italic",
+                "relative text-[11px] tracking-[0.2em] uppercase whitespace-nowrap transition-all duration-300 font-body py-1 opacity-60 hover:opacity-100 flex-shrink-0 italic",
                 activeCategory === cat ? "text-primary opacity-100 font-bold" : "text-white"
               )}
             >
