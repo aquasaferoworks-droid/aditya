@@ -53,26 +53,26 @@ const VideoCard = ({ video, aspectRatio, onClick }: { video: VideoItem, aspectRa
             src={thumbUrl} 
             alt={video.title || "Video Entry"}
             fill
-            className="object-cover transition-transform duration-1000 group-hover:scale-105 opacity-50 group-hover:opacity-100"
+            className="object-cover transition-transform duration-1000 group-hover:scale-105 opacity-60 group-hover:opacity-100"
             unoptimized
           />
         ) : (
           <div className="flex flex-col items-center gap-2 text-white/5">
             <Video className="w-8 h-8" />
-            <span className="text-[8px] uppercase tracking-widest font-bold italic">Source Required</span>
+            <span className="text-[8px] uppercase tracking-widest font-bold italic">Media Required</span>
           </div>
         )}
       </div>
       
       <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-700 z-10" />
-      <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 to-transparent z-15 pointer-events-none" />
+      <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/95 to-transparent z-15 pointer-events-none" />
 
       <div className="absolute bottom-0 left-0 right-0 z-30 p-6 md:p-8 flex flex-col justify-end transition-all duration-700 pointer-events-none translate-y-2 group-hover:translate-y-0">
-        <h3 className="text-sm md:text-xl font-headline text-white italic tracking-normal uppercase leading-none truncate mb-1">
+        <h3 className="text-xl md:text-2xl font-headline text-white italic tracking-tight uppercase leading-none truncate mb-1">
           {video.upperText}
         </h3>
-        <span className="text-[7px] md:text-[8px] tracking-[0.2em] text-primary uppercase font-bold block italic">
-          {video.lowerText || video.title}
+        <span className="text-[9px] md:text-[10px] tracking-[0.4em] text-primary uppercase font-bold block italic">
+          {video.lowerText}
         </span>
       </div>
     </motion.div>
@@ -91,7 +91,7 @@ export function VaelReel({ activeCategory }: VaelReelProps) {
   const { data: allVideos, loading } = useCollection(reelQuery);
 
   const filteredVideos = (allVideos as VideoItem[] || []).filter(v => {
-    if (activeCategory === 'all') return true;
+    if (activeCategory === 'All') return true;
     const categories = Array.isArray(v.category) ? v.category : [v.category];
     return categories.some(c => c?.toLowerCase() === activeCategory.toLowerCase());
   }).sort((a, b) => (a.order || 0) - (b.order || 0));
@@ -106,63 +106,50 @@ export function VaelReel({ activeCategory }: VaelReelProps) {
 
   return (
     <section id="reel" className="py-24 md:py-32 bg-background overflow-hidden border-t border-white/5">
-      <div className="max-w-[1600px] mx-auto px-6 md:px-16 space-y-4 md:space-y-12">
+      <div className="max-w-[1600px] mx-auto px-6 md:px-16 space-y-6 md:space-y-12">
         
-        <div className="flex items-center gap-6 mb-8">
-          <span className="text-[10px] tracking-[0.4em] uppercase text-primary font-bold whitespace-nowrap italic">{activeCategory}</span>
-          <div className="h-px flex-1 bg-white/5" />
+        <div className="flex items-center gap-6 mb-4">
+          <span className="text-[11px] tracking-[0.5em] uppercase text-primary font-bold whitespace-nowrap italic">{activeCategory} Archive</span>
+          <div className="h-[1px] flex-1 bg-white/10" />
         </div>
 
-        {horizontals.slice(0, 2).length > 0 && (
-          <div className="grid grid-cols-2 gap-4 md:gap-12">
-            {horizontals.slice(0, 2).map((v) => (
+        {horizontals.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12">
+            {horizontals.map((v) => (
               <VideoCard key={v.id} video={v} aspectRatio="aspect-video" onClick={setSelectedVideo} />
             ))}
           </div>
         )}
 
-        {horizontals.slice(2, 4).length > 0 && (
-          <div className="grid grid-cols-2 gap-4 md:gap-12">
-            {horizontals.slice(2, 4).map((v) => (
-              <VideoCard key={v.id} video={v} aspectRatio="aspect-video" onClick={setSelectedVideo} />
-            ))}
-          </div>
-        )}
-
-        {features.slice(0, 1).length > 0 && (
+        {features.length > 0 && (
           <div className="w-full">
-            {features.slice(0, 1).map((v) => (
+            {features.map((v) => (
               <VideoCard key={v.id} video={v} aspectRatio="aspect-video md:aspect-[21/9]" onClick={setSelectedVideo} />
             ))}
           </div>
         )}
 
-        {mediums.slice(0, 2).length > 0 && (
-          <div className="grid grid-cols-2 gap-4 md:gap-12">
-            {mediums.slice(0, 2).map((v) => (
+        {mediums.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12">
+            {mediums.map((v) => (
               <VideoCard key={v.id} video={v} aspectRatio="aspect-video" onClick={setSelectedVideo} />
             ))}
           </div>
         )}
 
-        {verticals.slice(0, 4).length > 0 && (
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-12">
-            {verticals.slice(0, 4).map((v) => (
+        {verticals.length > 0 && (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-12">
+            {verticals.map((v) => (
               <VideoCard key={v.id} video={v} aspectRatio="aspect-[9/16]" onClick={setSelectedVideo} />
             ))}
           </div>
         )}
-
-        <div className="flex items-center gap-6 mt-24">
-          <div className="h-px flex-1 bg-white/5" />
-          <span className="text-[10px] tracking-[0.4em] uppercase text-primary/40 font-bold whitespace-nowrap italic">{activeCategory}</span>
-        </div>
       </div>
 
       <Dialog open={!!selectedVideo} onOpenChange={(open) => !open && setSelectedVideo(null)}>
         <DialogPortal>
           <DialogOverlay className="z-[400] bg-black/95 backdrop-blur-sm" />
-          <DialogContent className="z-[500] max-w-[90vw] md:max-w-4xl bg-black border border-white/10 p-0 overflow-hidden shadow-2xl rounded-lg aspect-video focus:outline-none">
+          <DialogContent className="z-[500] max-w-5xl w-[95vw] bg-black border border-white/10 p-0 overflow-hidden shadow-2xl rounded-lg aspect-video focus:outline-none">
             <DialogTitle className="sr-only italic">{selectedVideo?.title}</DialogTitle>
             <DialogDescription className="sr-only">Viewing project: {selectedVideo?.title}</DialogDescription>
             {selectedVideo && (
