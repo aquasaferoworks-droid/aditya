@@ -78,14 +78,14 @@ export function VaelHeader() {
         {/* Center Logo - Asian Paint Style Strokes */}
         <div className="flex-none text-center">
           <Link href="/" className="font-headline text-2xl tracking-tight hover:opacity-90 transition-opacity block">
-            <span className="text-primary font-medium">Errol</span> <span className="text-white font-medium">Aditya</span>
+            <span className="text-primary font-medium italic">Errol</span> <span className="text-white font-medium italic">Aditya</span>
           </Link>
         </div>
 
         {/* Right Contact Button - Rounded-LG as requested */}
         <div className="flex-1 flex justify-end">
           <Button 
-            className="rounded-lg bg-primary text-black hover:bg-white hover:text-black px-6 h-10 text-[13px] tracking-tight transition-all font-medium"
+            className="rounded-lg bg-primary text-black hover:bg-white hover:text-black px-6 h-10 text-[13px] tracking-tight transition-all font-medium italic"
             asChild
           >
             <Link href="#contact">Contact Us</Link>
@@ -101,14 +101,14 @@ export function VaelHeader() {
         <div 
           ref={scrollRef}
           onWheel={handleWheel}
-          className="w-full px-8 md:px-16 h-full flex items-center overflow-x-auto no-scrollbar gap-8 md:gap-10 scroll-smooth"
+          className="w-full px-8 md:px-16 h-full flex items-center overflow-x-auto no-scrollbar gap-6 md:gap-8 scroll-smooth"
         >
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setCategory(cat)}
               className={cn(
-                "relative text-[13px] tracking-tight whitespace-nowrap transition-all duration-300 font-body py-1 font-medium",
+                "relative text-[13px] tracking-tight whitespace-nowrap transition-all duration-300 font-body py-1 font-medium italic",
                 activeCategory === cat ? "text-primary" : "text-white/60 hover:text-white"
               )}
             >

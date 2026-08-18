@@ -46,7 +46,6 @@ export default function AdminPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   
   const [formData, setFormData] = useState({
-    title: '',
     upperText: '',
     lowerText: '',
     category: ['Ads'] as string[],
@@ -154,7 +153,6 @@ export default function AdminPage() {
   const resetForm = () => {
     setEditingId(null);
     setFormData({
-      title: '',
       upperText: '',
       lowerText: '',
       category: ['Ads'],
@@ -168,7 +166,6 @@ export default function AdminPage() {
   const handleEditClick = (v: any) => {
     setEditingId(v.id);
     setFormData({
-      title: v.title || '',
       upperText: v.upperText || '',
       lowerText: v.lowerText || '',
       category: Array.isArray(v.category) ? v.category : [v.category],
@@ -228,8 +225,8 @@ export default function AdminPage() {
         <aside className="w-[450px] border-r border-white/5 bg-black/60 flex flex-col sticky top-32 h-[calc(100vh-8rem)] p-10 overflow-y-auto no-scrollbar">
           <Tabs defaultValue="videos" className="w-full">
             <TabsList className="bg-white/5 rounded-lg p-1 w-full grid grid-cols-2 mb-10">
-              <TabsTrigger value="videos" className="rounded-md text-[10px] uppercase tracking-widest py-3 font-bold italic">Series Manager</TabsTrigger>
-              <TabsTrigger value="settings" className="rounded-md text-[10px] uppercase tracking-widest py-3 font-bold italic">Studio Settings</TabsTrigger>
+              <TabsTrigger value="videos" className="rounded-md text-[13px] tracking-tight py-3 font-medium italic">Series Manager</TabsTrigger>
+              <TabsTrigger value="settings" className="rounded-md text-[13px] tracking-tight py-3 font-medium italic">Studio Settings</TabsTrigger>
             </TabsList>
 
             <TabsContent value="videos" className="space-y-8">
@@ -240,14 +237,14 @@ export default function AdminPage() {
                 <div className="flex items-center justify-between mb-8">
                   <div className="flex flex-col">
                     <h2 className={cn(
-                      "text-[12px] uppercase tracking-widest font-bold italic",
+                      "text-[14px] tracking-tight font-medium italic",
                       editingId ? "text-primary" : "text-white/60"
                     )}>
-                      {editingId ? 'Edit Entry Mode' : 'Publish New Entry'}
+                      {editingId ? 'Edit Project Entry' : 'Publish New Entry'}
                     </h2>
                   </div>
                   {editingId && (
-                    <button onClick={resetForm} className="text-[10px] uppercase tracking-widest text-white/40 hover:text-white flex items-center gap-1 font-bold italic">
+                    <button onClick={resetForm} className="text-[11px] tracking-tight text-white/40 hover:text-white flex items-center gap-1 font-medium italic">
                       <X className="w-3 h-3" /> Cancel
                     </button>
                   )}
@@ -256,28 +253,28 @@ export default function AdminPage() {
                 <form onSubmit={handleSubmit} className="space-y-8">
                   <div className="space-y-6">
                     <div className="space-y-3">
-                      <Label className="text-[9px] uppercase tracking-widest text-muted-foreground font-bold italic">Placement Row</Label>
+                      <Label className="text-[11px] tracking-tight text-muted-foreground font-medium italic">Placement Row</Label>
                       <Select value={formData.type} onValueChange={val => setFormData({...formData, type: val})}>
-                        <SelectTrigger className="rounded-md bg-background border-white/10 h-12 text-[10px] uppercase font-bold italic">
+                        <SelectTrigger className="rounded-lg bg-background border-white/10 h-12 text-[13px] font-medium italic">
                           <SelectValue />
                         </SelectTrigger>
-                        <SelectContent className="rounded-md bg-black border-white/10">
+                        <SelectContent className="rounded-lg bg-black border-white/10">
                           {PLACEMENT_TYPES.map(pt => (
-                            <SelectItem key={pt.value} value={pt.value} className="text-[10px] uppercase font-bold italic">{pt.label}</SelectItem>
+                            <SelectItem key={pt.value} value={pt.value} className="text-[13px] font-medium italic">{pt.label}</SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
                       
                       {isSlotFull && !editingId && (
-                        <div className="flex items-center gap-2 p-3 bg-primary/10 border border-primary/20 text-[9px] text-primary uppercase font-bold italic tracking-wider rounded-md">
+                        <div className="flex items-center gap-2 p-3 bg-primary/10 border border-primary/20 text-[10px] text-primary uppercase font-medium tracking-wider rounded-lg">
                           <AlertCircle className="w-3 h-3" /> Slot capacity reached for this layout row.
                         </div>
                       )}
                     </div>
 
                     <div className="space-y-3">
-                      <Label className="text-[9px] uppercase tracking-widest text-muted-foreground font-bold italic">Select Genres</Label>
-                      <div className="grid grid-cols-2 gap-3 border border-white/5 p-4 bg-black/40 max-h-56 overflow-y-auto no-scrollbar rounded-md">
+                      <Label className="text-[11px] tracking-tight text-muted-foreground font-medium italic">Select Genres</Label>
+                      <div className="grid grid-cols-2 gap-3 border border-white/5 p-4 bg-black/40 max-h-56 overflow-y-auto no-scrollbar rounded-lg">
                         {CATEGORIES.map(cat => (
                           <div key={cat} className="flex items-center space-x-2">
                             <Checkbox 
@@ -287,7 +284,7 @@ export default function AdminPage() {
                               className="rounded-sm border-white/20" 
                             />
                             <label htmlFor={`cat-${cat}`} className={cn(
-                              "text-[8px] uppercase tracking-widest cursor-pointer font-bold italic",
+                              "text-[10px] tracking-tight cursor-pointer font-medium italic",
                               formData.category.includes(cat) ? "text-primary" : "text-white/40"
                             )}>{cat}</label>
                           </div>
@@ -296,22 +293,21 @@ export default function AdminPage() {
                     </div>
 
                     <div className="space-y-5">
-                      <Label className="text-[9px] uppercase tracking-widest text-muted-foreground font-bold italic">Content Details</Label>
+                      <Label className="text-[11px] tracking-tight text-muted-foreground font-medium italic">Content Details</Label>
                       <div className="space-y-3">
-                        <Input placeholder="INTERNAL TITLE (FOR REFERENCE)" className="rounded-md bg-background border-white/10 h-12 text-xs italic font-bold" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} />
-                        <Input placeholder="HEADING (UPPER TEXT - WHITE)" className="rounded-md bg-background border-white/10 h-12 text-xs italic font-bold" value={formData.upperText} onChange={e => setFormData({...formData, upperText: e.target.value})} />
-                        <Input placeholder="SUBTEXT (LOWER TEXT - YELLOW)" className="rounded-md bg-background border-white/10 h-12 text-xs italic text-primary font-bold" value={formData.lowerText} onChange={e => setFormData({...formData, lowerText: e.target.value})} />
-                        <Input required placeholder="YOUTUBE LINK OR ID" className="rounded-md bg-background border-white/10 h-12 text-xs font-mono" value={formData.youtubeId} onChange={e => setFormData({...formData, youtubeId: e.target.value})} />
-                        <Input placeholder="CUSTOM THUMBNAIL URL (OPTIONAL)" className="rounded-md bg-background border-white/10 h-12 text-xs font-mono" value={formData.thumbnailUrl} onChange={e => setFormData({...formData, thumbnailUrl: e.target.value})} />
+                        <Input placeholder="Cinematic Heading (e.g. Pudin Hara)" className="rounded-lg bg-background border-white/10 h-12 text-[13px] italic font-medium" value={formData.upperText} onChange={e => setFormData({...formData, upperText: e.target.value})} />
+                        <Input placeholder="Cinematic Subtext (e.g. Nation On Vacation)" className="rounded-lg bg-background border-white/10 h-12 text-[13px] italic text-primary font-medium" value={formData.lowerText} onChange={e => setFormData({...formData, lowerText: e.target.value})} />
+                        <Input required placeholder="YouTube Link or ID" className="rounded-lg bg-background border-white/10 h-12 text-[13px] font-medium" value={formData.youtubeId} onChange={e => setFormData({...formData, youtubeId: e.target.value})} />
+                        <Input placeholder="Custom Thumbnail URL (Optional)" className="rounded-lg bg-background border-white/10 h-12 text-[13px] font-medium" value={formData.thumbnailUrl} onChange={e => setFormData({...formData, thumbnailUrl: e.target.value})} />
                         <div className="space-y-2">
-                          <Label className="text-[8px] uppercase tracking-widest text-white/20 font-bold italic">Series Sequence (Manual Re-order)</Label>
-                          <Input type="number" className="rounded-md bg-background border-white/10 h-10 text-xs font-bold" value={formData.order} onChange={e => setFormData({...formData, order: Number(e.target.value)})} />
+                          <Label className="text-[10px] tracking-tight text-white/20 font-medium italic">Series Sequence (Manual Re-order)</Label>
+                          <Input type="number" className="rounded-lg bg-background border-white/10 h-10 text-[13px] font-medium" value={formData.order} onChange={e => setFormData({...formData, order: Number(e.target.value)})} />
                         </div>
                       </div>
                     </div>
                   </div>
                   <Button type="submit" disabled={isSubmitting} className={cn(
-                    "w-full rounded-md text-black text-[10px] tracking-[0.2em] uppercase font-bold py-8 italic shadow-2xl transition-all",
+                    "w-full rounded-lg text-black text-[13px] tracking-tight font-medium py-8 italic shadow-2xl transition-all",
                     editingId ? "bg-primary hover:bg-white" : "bg-white hover:bg-primary"
                   )}>
                     {isSubmitting ? <Loader2 className="animate-spin" /> : editingId ? 'Update Cinematic Entry' : 'Publish Cinematic Entry'}
@@ -323,18 +319,18 @@ export default function AdminPage() {
             <TabsContent value="settings" className="space-y-8">
               <form onSubmit={handleSaveSettings} className="space-y-8">
                 <div className="space-y-5">
-                  <Label className="text-[9px] uppercase tracking-widest text-muted-foreground font-bold italic">Inquiry Section</Label>
-                  <Input placeholder="FORM HEADING" className="rounded-md bg-background border-white/10 h-12 text-xs italic font-bold" value={contactSettings.formHeading} onChange={e => setContactSettings({...contactSettings, formHeading: e.target.value})} />
-                  <Textarea placeholder="SHORT WELCOME MESSAGE" className="rounded-md bg-background border-white/10 min-h-[120px] text-xs italic leading-relaxed" value={contactSettings.formDescription} onChange={e => setContactSettings({...contactSettings, formDescription: e.target.value})} />
+                  <Label className="text-[11px] tracking-tight text-muted-foreground font-medium italic">Inquiry Section</Label>
+                  <Input placeholder="Form Heading" className="rounded-lg bg-background border-white/10 h-12 text-[13px] italic font-medium" value={contactSettings.formHeading} onChange={e => setContactSettings({...contactSettings, formHeading: e.target.value})} />
+                  <Textarea placeholder="Short Welcome Message" className="rounded-lg bg-background border-white/10 min-h-[120px] text-[13px] italic leading-relaxed" value={contactSettings.formDescription} onChange={e => setContactSettings({...contactSettings, formDescription: e.target.value})} />
                 </div>
                 <div className="space-y-5">
-                  <Label className="text-[9px] uppercase tracking-widest text-muted-foreground font-bold italic">Direct Contact & Socials</Label>
-                  <Input placeholder="PUBLIC EMAIL" className="rounded-md bg-background border-white/10 h-10 text-xs" value={contactSettings.email} onChange={e => setContactSettings({...contactSettings, email: e.target.value})} />
-                  <Input placeholder="LOCATIONS (MUMBAI, DELHI, ETC)" className="rounded-md bg-background border-white/10 h-10 text-xs" value={contactSettings.locations} onChange={e => setContactSettings({...contactSettings, locations: e.target.value})} />
-                  <Input placeholder="INSTAGRAM URL" className="rounded-md bg-background border-white/10 h-10 text-xs" value={contactSettings.instagram} onChange={e => setContactSettings({...contactSettings, instagram: e.target.value})} />
-                  <Input placeholder="WHATSAPP NUMBER" className="rounded-md bg-background border-white/10 h-10 text-xs" value={contactSettings.whatsapp} onChange={e => setContactSettings({...contactSettings, whatsapp: e.target.value})} />
+                  <Label className="text-[11px] tracking-tight text-muted-foreground font-medium italic">Direct Contact & Socials</Label>
+                  <Input placeholder="Public Email" className="rounded-lg bg-background border-white/10 h-10 text-[13px] font-medium" value={contactSettings.email} onChange={e => setContactSettings({...contactSettings, email: e.target.value})} />
+                  <Input placeholder="Locations (Mumbai, Delhi, etc)" className="rounded-lg bg-background border-white/10 h-10 text-[13px] font-medium" value={contactSettings.locations} onChange={e => setContactSettings({...contactSettings, locations: e.target.value})} />
+                  <Input placeholder="Instagram URL" className="rounded-lg bg-background border-white/10 h-10 text-[13px] font-medium" value={contactSettings.instagram} onChange={e => setContactSettings({...contactSettings, instagram: e.target.value})} />
+                  <Input placeholder="WhatsApp Number" className="rounded-lg bg-background border-white/10 h-10 text-[13px] font-medium" value={contactSettings.whatsapp} onChange={e => setContactSettings({...contactSettings, whatsapp: e.target.value})} />
                 </div>
-                <Button type="submit" disabled={isSavingSettings} className="w-full rounded-md bg-primary text-black text-[10px] tracking-[0.2em] uppercase font-bold py-8 italic shadow-2xl">
+                <Button type="submit" disabled={isSavingSettings} className="w-full rounded-lg bg-primary text-black text-[13px] tracking-tight font-medium py-8 italic shadow-2xl">
                   {isSavingSettings ? <Loader2 className="animate-spin" /> : 'Synchronize Studio Settings'}
                 </Button>
               </form>
@@ -345,7 +341,7 @@ export default function AdminPage() {
         {/* Project Archive View */}
         <div className="flex-1 p-16 overflow-y-auto no-scrollbar bg-white/[0.01]">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-6xl font-headline italic uppercase tracking-tighter mb-4 text-white">Project <span className="text-primary not-italic">Archive</span></h1>
+            <h1 className="text-6xl font-headline italic tracking-tighter mb-4 text-white">Project <span className="text-primary not-italic">Archive</span></h1>
             <p className="text-muted-foreground font-body text-sm tracking-widest uppercase mb-16 italic opacity-40">Manage your directorial series and placement sequence.</p>
 
             <div className="space-y-24">
@@ -359,8 +355,8 @@ export default function AdminPage() {
                           <section.icon className="w-5 h-5" />
                         </div>
                         <div className="flex flex-col">
-                          <h2 className="text-[12px] uppercase tracking-widest font-bold italic text-white">{section.label}</h2>
-                          <span className="text-[8px] uppercase tracking-widest text-white/20 font-bold italic mt-1">
+                          <h2 className="text-[13px] tracking-tight font-medium italic text-white">{section.label}</h2>
+                          <span className="text-[10px] tracking-tight text-white/20 font-medium italic mt-1">
                             {videos.length} / {section.limit === 99 ? '∞' : section.limit} Entries
                           </span>
                         </div>
@@ -379,7 +375,7 @@ export default function AdminPage() {
                             editingId === v.id ? 'border-primary shadow-[0_0_30px_rgba(255,215,0,0.1)]' : 'border-white/5 hover:border-white/10'
                           )}>
                             <div className="flex items-center gap-10">
-                              <div className="w-32 aspect-video relative bg-black border border-white/5 overflow-hidden rounded-md">
+                              <div className="w-32 aspect-video relative bg-black border border-white/5 overflow-hidden rounded-lg">
                                 {displayThumbnail ? (
                                   <img src={displayThumbnail} className="object-cover w-full h-full opacity-60 group-hover:opacity-100 transition-opacity duration-700" alt="" />
                                 ) : (
@@ -389,43 +385,41 @@ export default function AdminPage() {
                                 )}
                               </div>
                               <div className="space-y-2">
-                                <h3 className="text-xl font-headline italic uppercase text-white tracking-normal leading-none">{v.upperText || v.title}</h3>
+                                <h3 className="text-xl font-headline italic text-white tracking-tight leading-none truncate mb-1">{v.upperText || "Untitled Project"}</h3>
                                 <div className="flex items-center gap-4">
-                                  <p className="text-[9px] uppercase tracking-[0.2em] text-primary font-bold italic">{v.lowerText}</p>
-                                  <span className="w-1 h-1 bg-white/10 rounded-full" />
-                                  <p className="text-[9px] uppercase tracking-widest text-white/20 font-bold italic">{v.title}</p>
+                                  <p className="text-[11px] tracking-tight text-primary font-medium italic">{v.lowerText}</p>
                                 </div>
                               </div>
                             </div>
                             
                             <div className="flex items-center gap-6">
                               <div className="flex flex-col items-end gap-1">
-                                <span className="text-[8px] uppercase tracking-widest text-white/20 font-bold italic">Order</span>
+                                <span className="text-[10px] tracking-tight text-white/20 font-medium italic">Order</span>
                                 <input 
                                   type="number" 
                                   value={v.order || 0}
                                   onChange={(e) => handleUpdateOrder(v.id, Number(e.target.value))}
                                   disabled={isUpdatingOrder === v.id}
-                                  className="w-12 bg-transparent border-b border-white/10 text-[10px] text-center font-bold text-primary focus:outline-none focus:border-primary"
+                                  className="w-12 bg-transparent border-b border-white/10 text-[13px] text-center font-medium text-primary focus:outline-none focus:border-primary"
                                 />
                               </div>
 
                               <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                  <button className="p-3 bg-white/5 hover:bg-white/10 text-white/20 hover:text-white transition-all rounded-md">
+                                  <button className="p-3 bg-white/5 hover:bg-white/10 text-white/20 hover:text-white transition-all rounded-lg">
                                     <MoreVertical className="w-5 h-5" />
                                   </button>
                                 </DropdownMenuTrigger>
-                                <DropdownMenuContent className="rounded-md bg-black border-white/10 min-w-[160px] p-2">
+                                <DropdownMenuContent className="rounded-lg bg-black border-white/10 min-w-[160px] p-2">
                                   <DropdownMenuItem 
                                     onClick={() => handleEditClick(v)}
-                                    className="text-[10px] uppercase tracking-widest cursor-pointer focus:bg-primary focus:text-black font-bold italic py-3 rounded-md"
+                                    className="text-[12px] tracking-tight cursor-pointer focus:bg-primary focus:text-black font-medium italic py-3 rounded-md"
                                   >
                                     <Pencil className="w-3 h-3 mr-3" /> Edit Entry
                                   </DropdownMenuItem>
                                   <DropdownMenuItem 
                                     onClick={() => handleDelete(v.id)}
-                                    className="text-[10px] uppercase tracking-widest cursor-pointer text-destructive focus:bg-destructive focus:text-white font-bold italic py-3 rounded-md"
+                                    className="text-[12px] tracking-tight cursor-pointer text-destructive focus:bg-destructive focus:text-white font-medium italic py-3 rounded-md"
                                   >
                                     <Trash2 className="w-3 h-3 mr-3" /> Remove Permanent
                                   </DropdownMenuItem>
@@ -438,7 +432,7 @@ export default function AdminPage() {
                       {videos.length === 0 && (
                         <div className="py-12 flex flex-col items-center justify-center opacity-10 border border-dashed border-white/20 rounded-lg">
                           <ImageIcon className="w-8 h-8 mb-2" />
-                          <p className="text-[10px] uppercase tracking-[0.2em] font-bold italic">No entries for this row</p>
+                          <p className="text-[11px] tracking-tight font-medium italic">No entries for this row</p>
                         </div>
                       )}
                     </div>

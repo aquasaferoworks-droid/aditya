@@ -52,12 +52,12 @@ export function VaelFilms() {
       <div className="max-w-7xl mx-auto mb-16 md:mb-24 flex flex-col md:flex-row md:items-end justify-between gap-12">
         <div className="space-y-6">
           <span className="text-[11px] tracking-[0.5em] uppercase text-primary/60 block font-bold italic">Curated Works</span>
-          <h2 className="text-5xl md:text-7xl font-headline leading-tight italic tracking-tight text-white uppercase">
+          <h2 className="text-5xl md:text-7xl font-headline leading-tight italic tracking-tight text-white">
             {activeCategory}
           </h2>
         </div>
         <div className="flex flex-col md:items-end gap-4">
-          <p className="max-w-xs text-muted-foreground text-[11px] tracking-widest leading-relaxed uppercase font-body md:text-right italic">
+          <p className="max-w-xs text-muted-foreground text-[13px] tracking-tight leading-relaxed font-medium md:text-right italic">
             Displaying {films.length} professional entries.
           </p>
         </div>
@@ -86,7 +86,7 @@ export function VaelFilms() {
                     {thumbUrl ? (
                       <Image 
                         src={thumbUrl} 
-                        alt={film.title}
+                        alt={film.upperText || "Cinematic Work"}
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-1000 opacity-60 group-hover:opacity-100"
                         unoptimized
@@ -94,7 +94,7 @@ export function VaelFilms() {
                     ) : (
                       <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 text-white/5 bg-white/[0.02]">
                         <Video className="w-12 h-12" />
-                        <span className="text-[8px] tracking-[0.4em] uppercase font-bold">Media Missing</span>
+                        <span className="text-[10px] tracking-widest font-medium italic">Media Missing</span>
                       </div>
                     )}
                     <div className="absolute inset-0 bg-black/30 group-hover:bg-black/0 transition-colors duration-700" />
@@ -105,7 +105,7 @@ export function VaelFilms() {
                         {film.upperText}
                       </h3>
                       <div className="flex justify-between items-end gap-4">
-                        <span className="text-[9px] tracking-[0.3em] text-primary uppercase font-bold truncate italic">
+                        <span className="text-[11px] tracking-tight text-primary italic font-medium truncate">
                           {film.lowerText}
                         </span>
                       </div>
@@ -132,8 +132,8 @@ export function VaelFilms() {
         <DialogPortal>
           <DialogOverlay className="z-[250] bg-black/95 backdrop-blur-sm" />
           <DialogContent className="z-[300] max-w-5xl w-[95vw] bg-black border border-white/10 p-0 overflow-hidden rounded-lg aspect-video focus:outline-none">
-            <DialogTitle className="sr-only">{selectedFilm?.title}</DialogTitle>
-            <DialogDescription className="sr-only">Viewing: {selectedFilm?.title}</DialogDescription>
+            <DialogTitle className="sr-only">{selectedFilm?.upperText}</DialogTitle>
+            <DialogDescription className="sr-only">Viewing cinematic content</DialogDescription>
             {selectedFilm && (
               <div className="relative w-full h-full">
                 <UnifiedVideoPlayer url={selectedFilm.youtubeId} />

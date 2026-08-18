@@ -23,7 +23,6 @@ import {
 
 interface VideoData {
   id: string;
-  title: string;
   category: string | string[];
   youtubeId: string;
   thumbnailUrl?: string;
@@ -122,7 +121,7 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
                       {thumbUrl ? (
                         <Image 
                           src={thumbUrl}
-                          alt={slide.title}
+                          alt={slide.upperText || "Cinematic Slide"}
                           fill
                           className="object-cover transition-opacity duration-700"
                           priority={isActive}
@@ -131,7 +130,7 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
                       ) : (
                         <div className="flex flex-col items-center gap-4 text-white/10">
                           <Video className="w-16 h-16" />
-                          <span className="text-[10px] tracking-widest font-medium">Media Required</span>
+                          <span className="text-[10px] tracking-widest font-medium italic">Media Required</span>
                         </div>
                       )}
                     </div>
@@ -141,11 +140,10 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
                     {isActive && (
                       <div className="absolute inset-0 z-20 p-8 md:p-14 flex flex-col justify-end pointer-events-none">
                         <div className="space-y-1">
-                          {/* Asian Paint Style - Title Case (First capital then small) */}
-                          <h2 className="text-2xl md:text-5xl font-headline text-white font-medium tracking-tight leading-none">
+                          <h2 className="text-2xl md:text-5xl font-headline text-white font-medium italic tracking-tight leading-none">
                             {slide.upperText}
                           </h2>
-                          <span className="text-[11px] md:text-[13px] text-primary font-medium block pt-1 tracking-tight">
+                          <span className="text-[11px] md:text-[13px] text-primary font-medium italic block pt-1 tracking-tight">
                             {slide.lowerText}
                           </span>
                         </div>
@@ -158,7 +156,7 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
           </div>
         </div>
 
-        {/* Minimalist Nav Arrows - Direct on video frame as requested */}
+        {/* Minimalist Nav Arrows */}
         <button 
           onClick={scrollPrev}
           className="absolute left-[6%] md:left-[11%] top-1/2 -translate-y-1/2 z-40 p-2 transition-all hover:scale-125 group focus:outline-none"
@@ -177,7 +175,7 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
         <DialogPortal>
           <DialogOverlay className="z-[400] bg-black/95 backdrop-blur-sm" />
           <DialogContent className="z-[500] max-w-5xl w-[95vw] bg-black border border-white/10 p-0 overflow-hidden shadow-2xl rounded-lg aspect-video focus:outline-none">
-            <DialogTitle className="sr-only">{selectedVideo?.title}</DialogTitle>
+            <DialogTitle className="sr-only">{selectedVideo?.upperText}</DialogTitle>
             <DialogDescription className="sr-only">Cinematic project view</DialogDescription>
             {selectedVideo && (
               <div className="relative w-full h-full">
