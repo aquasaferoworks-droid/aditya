@@ -72,20 +72,20 @@ export function VaelHeader() {
         "px-6 md:px-16 flex items-center justify-between transition-all duration-300",
         isScrolled ? "h-14" : "h-20"
       )}>
-        {/* Left Spacer for Desktop Balance */}
+        {/* Left Spacer */}
         <div className="flex-1 hidden md:block" />
 
-        {/* Center Logo */}
+        {/* Center Logo - Asian Paint Style Strokes */}
         <div className="flex-none text-center">
-          <Link href="/" className="font-headline text-xl md:text-2xl tracking-tight hover:opacity-80 transition-opacity font-bold block">
-            <span className="text-primary italic">Errol</span> <span className="text-white">Aditya</span>
+          <Link href="/" className="font-headline text-2xl tracking-tight hover:opacity-90 transition-opacity block">
+            <span className="text-primary font-medium">Errol</span> <span className="text-white font-medium">Aditya</span>
           </Link>
         </div>
 
-        {/* Right Contact Button */}
+        {/* Right Contact Button - Rounded-LG as requested */}
         <div className="flex-1 flex justify-end">
           <Button 
-            className="rounded-lg bg-primary text-black hover:bg-white hover:text-black px-8 h-10 text-[11px] tracking-[0.1em] uppercase transition-all font-bold"
+            className="rounded-lg bg-primary text-black hover:bg-white hover:text-black px-6 h-10 text-[13px] tracking-tight transition-all font-medium"
             asChild
           >
             <Link href="#contact">Contact Us</Link>
@@ -93,7 +93,7 @@ export function VaelHeader() {
         </div>
       </nav>
 
-      {/* Secondary Scrollable Category Bar - Tightened & Clear */}
+      {/* Secondary Category Bar - Tightened & Google Sans */}
       <div className="relative group bg-black h-12 flex items-center border-t border-white/5 overflow-hidden">
         <div className="absolute left-0 top-0 bottom-0 w-24 z-10 pointer-events-none nav-fade-left" />
         <div className="absolute right-0 top-0 bottom-0 w-24 z-10 pointer-events-none nav-fade-right" />
@@ -108,7 +108,7 @@ export function VaelHeader() {
               key={cat}
               onClick={() => setCategory(cat)}
               className={cn(
-                "relative text-[13px] tracking-[0.15em] uppercase whitespace-nowrap transition-all duration-300 font-body py-1 italic font-medium",
+                "relative text-[13px] tracking-tight whitespace-nowrap transition-all duration-300 font-body py-1 font-medium",
                 activeCategory === cat ? "text-primary" : "text-white/60 hover:text-white"
               )}
             >
@@ -116,7 +116,7 @@ export function VaelHeader() {
               {activeCategory === cat && (
                 <motion.div 
                   layoutId="activeCategoryHeader" 
-                  className="absolute -bottom-1 left-0 right-0 h-[2px] bg-primary" 
+                  className="absolute -bottom-1 left-0 right-0 h-[1.5px] bg-primary" 
                 />
               )}
             </button>

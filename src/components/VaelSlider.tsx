@@ -94,7 +94,7 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
   if (loading || slides.length === 0) return null;
 
   return (
-    <section className="relative w-full bg-black flex flex-col justify-center overflow-hidden select-none py-4 md:py-8">
+    <section className="relative w-full bg-black flex flex-col justify-center overflow-hidden select-none py-4 md:py-10">
       <div className="relative max-w-[1800px] mx-auto w-full px-4 md:px-12">
         <div className="embla overflow-visible" ref={emblaRef}>
           <div className="embla__container flex items-center">
@@ -106,14 +106,14 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
               return (
                 <div 
                   key={slide.id} 
-                  className="embla__slide flex-[0_0_90%] md:flex-[0_0_80%] min-w-0 px-2 md:px-4 relative"
+                  className="embla__slide flex-[0_0_92%] md:flex-[0_0_80%] min-w-0 px-2 md:px-4 relative"
                   onClick={() => isActive && setSelectedVideo(slide)}
                 >
                   <motion.div
                     initial={false}
                     animate={{ 
                       scale: isActive ? 1 : 0.96,
-                      opacity: isActive ? 1 : 0.3,
+                      opacity: isActive ? 1 : 0.4,
                     }}
                     transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
                     className="relative aspect-video md:aspect-[21/9] overflow-hidden bg-zinc-900 shadow-2xl group cursor-pointer border border-white/5 rounded-lg"
@@ -131,21 +131,21 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
                       ) : (
                         <div className="flex flex-col items-center gap-4 text-white/10">
                           <Video className="w-16 h-16" />
-                          <span className="text-[10px] tracking-[0.4em] uppercase font-bold italic">Media Required</span>
+                          <span className="text-[10px] tracking-widest font-medium">Media Required</span>
                         </div>
                       )}
                     </div>
 
-                    {/* Content Overlay - Asian Paint Style: White Italic Upper / Yellow Tracking Lower */}
-                    <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/95 to-transparent pointer-events-none z-10" />
+                    <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 to-transparent pointer-events-none z-10" />
 
                     {isActive && (
-                      <div className="absolute inset-0 z-20 p-8 md:p-12 flex flex-col justify-end pointer-events-none">
+                      <div className="absolute inset-0 z-20 p-8 md:p-14 flex flex-col justify-end pointer-events-none">
                         <div className="space-y-1">
-                          <h2 className="text-2xl md:text-5xl font-headline text-white italic tracking-tight uppercase leading-none">
+                          {/* Asian Paint Style - Title Case (First capital then small) */}
+                          <h2 className="text-2xl md:text-5xl font-headline text-white font-medium tracking-tight leading-none">
                             {slide.upperText}
                           </h2>
-                          <span className="text-[10px] md:text-[12px] tracking-[0.5em] text-primary uppercase font-bold block pt-2 italic">
+                          <span className="text-[11px] md:text-[13px] text-primary font-medium block pt-1 tracking-tight">
                             {slide.lowerText}
                           </span>
                         </div>
@@ -158,16 +158,16 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
           </div>
         </div>
 
-        {/* Minimalist Nav Arrows - Vertically Centered */}
+        {/* Minimalist Nav Arrows - Direct on video frame as requested */}
         <button 
           onClick={scrollPrev}
-          className="absolute left-[6%] md:left-[10%] top-1/2 -translate-y-1/2 z-40 p-3 transition-all group hover:scale-110 focus:outline-none"
+          className="absolute left-[6%] md:left-[11%] top-1/2 -translate-y-1/2 z-40 p-2 transition-all hover:scale-125 group focus:outline-none"
         >
           <ChevronLeft className="w-6 h-6 md:w-8 md:h-8 text-white/40 group-hover:text-primary transition-colors" />
         </button>
         <button 
           onClick={scrollNext}
-          className="absolute right-[6%] md:left-auto md:right-[10%] top-1/2 -translate-y-1/2 z-40 p-3 transition-all group hover:scale-110 focus:outline-none"
+          className="absolute right-[6%] md:right-[11%] top-1/2 -translate-y-1/2 z-40 p-2 transition-all hover:scale-125 group focus:outline-none"
         >
           <ChevronRight className="w-6 h-6 md:w-8 md:h-8 text-white/40 group-hover:text-primary transition-colors" />
         </button>
@@ -177,8 +177,8 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
         <DialogPortal>
           <DialogOverlay className="z-[400] bg-black/95 backdrop-blur-sm" />
           <DialogContent className="z-[500] max-w-5xl w-[95vw] bg-black border border-white/10 p-0 overflow-hidden shadow-2xl rounded-lg aspect-video focus:outline-none">
-            <DialogTitle className="sr-only italic">{selectedVideo?.title}</DialogTitle>
-            <DialogDescription className="sr-only">Cinematic entry view</DialogDescription>
+            <DialogTitle className="sr-only">{selectedVideo?.title}</DialogTitle>
+            <DialogDescription className="sr-only">Cinematic project view</DialogDescription>
             {selectedVideo && (
               <div className="relative w-full h-full">
                 <UnifiedVideoPlayer url={selectedVideo.youtubeId} />
