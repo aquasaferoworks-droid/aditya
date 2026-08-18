@@ -1,4 +1,3 @@
-
 'use client';
 
 import React from 'react';
@@ -43,7 +42,7 @@ export function ContactCard({
 
       <div className="flex flex-col justify-between lg:col-span-2">
         <div className="relative h-full space-y-8 px-8 py-12 md:p-16">
-          <h2 className="text-4xl md:text-7xl font-headline italic font-bold uppercase tracking-tighter text-white">
+          <h2 className="text-4xl md:text-7xl font-headline font-bold uppercase tracking-tighter text-white">
             {title}
           </h2>
           <p className="text-muted-foreground max-w-xl text-base md:text-lg font-body leading-relaxed border-l-2 border-primary/20 pl-6">

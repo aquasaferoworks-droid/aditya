@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -55,7 +54,6 @@ export default function AdminPage() {
   const [isSavingSettings, setIsSavingSettings] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
 
-  // Protected route check
   useEffect(() => {
     if (!user && !userLoading) {
       router.push('/login');
@@ -290,19 +288,18 @@ export default function AdminPage() {
       
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <div className="flex pt-32 min-h-screen">
-          {/* Management Sidebar */}
           <aside className="w-[480px] border-r border-white/5 bg-black/60 flex flex-col sticky top-32 h-[calc(100vh-8rem)] p-10 overflow-y-auto no-scrollbar">
             <div className="flex items-center justify-between mb-8 px-1">
-              <span className="text-[11px] tracking-[0.3em] uppercase text-primary font-bold italic">Admin Mode</span>
+              <span className="text-[11px] tracking-[0.3em] uppercase text-primary font-bold">Admin Mode</span>
               <button onClick={handleSignOut} className="text-[10px] tracking-widest uppercase text-white/40 hover:text-destructive flex items-center gap-2 transition-colors font-bold">
                 <LogOut className="w-3 h-3" /> Sign Out
               </button>
             </div>
 
             <TabsList className="bg-white/5 rounded-lg p-1 w-full grid grid-cols-3 mb-10">
-              <TabsTrigger value="videos" className="rounded-md text-[12px] tracking-tight py-3 font-medium italic">Projects</TabsTrigger>
-              <TabsTrigger value="settings" className="rounded-md text-[12px] tracking-tight py-3 font-medium italic">Studio</TabsTrigger>
-              <TabsTrigger value="submissions" className="rounded-md text-[12px] tracking-tight py-3 font-medium italic">Submissions</TabsTrigger>
+              <TabsTrigger value="videos" className="rounded-md text-[12px] tracking-tight py-3 font-medium">Projects</TabsTrigger>
+              <TabsTrigger value="settings" className="rounded-md text-[12px] tracking-tight py-3 font-medium">Studio</TabsTrigger>
+              <TabsTrigger value="submissions" className="rounded-md text-[12px] tracking-tight py-3 font-medium">Submissions</TabsTrigger>
             </TabsList>
 
             <TabsContent value="videos" className="space-y-8">
@@ -313,14 +310,14 @@ export default function AdminPage() {
                 <div className="flex items-center justify-between mb-8">
                   <div className="flex flex-col">
                     <h2 className={cn(
-                      "text-[14px] tracking-tight font-medium italic",
+                      "text-[14px] tracking-tight font-medium",
                       editingId ? "text-primary" : "text-white/60"
                     )}>
                       {editingId ? 'Edit Project Entry' : 'Publish New Entry'}
                     </h2>
                   </div>
                   {editingId && (
-                    <button onClick={resetForm} className="text-[11px] tracking-tight text-white/40 hover:text-white flex items-center gap-1 font-medium italic">
+                    <button onClick={resetForm} className="text-[11px] tracking-tight text-white/40 hover:text-white flex items-center gap-1 font-medium">
                       <X className="w-3 h-3" /> Cancel
                     </button>
                   )}
@@ -329,21 +326,21 @@ export default function AdminPage() {
                 <form onSubmit={handleSubmit} className="space-y-8">
                   <div className="space-y-6">
                     <div className="space-y-3">
-                      <Label className="text-[11px] tracking-tight text-muted-foreground font-medium italic">Placement Row</Label>
+                      <Label className="text-[11px] tracking-tight text-muted-foreground font-medium">Placement Row</Label>
                       <Select value={formData.type} onValueChange={val => setFormData({...formData, type: val})}>
-                        <SelectTrigger className="rounded-lg bg-background border-white/10 h-12 text-[13px] font-medium italic">
+                        <SelectTrigger className="rounded-lg bg-background border-white/10 h-12 text-[13px] font-medium">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent className="rounded-lg bg-black border-white/10">
                           {PLACEMENT_TYPES.map(pt => (
-                            <SelectItem key={pt.value} value={pt.value} className="text-[13px] font-medium italic">{pt.label}</SelectItem>
+                            <SelectItem key={pt.value} value={pt.value} className="text-[13px] font-medium">{pt.label}</SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
                     </div>
 
                     <div className="space-y-3">
-                      <Label className="text-[11px] tracking-tight text-muted-foreground font-medium italic">Select Genres</Label>
+                      <Label className="text-[11px] tracking-tight text-muted-foreground font-medium">Select Genres</Label>
                       <div className="grid grid-cols-2 gap-3 border border-white/5 p-4 bg-black/40 max-h-56 overflow-y-auto no-scrollbar rounded-lg">
                         {CATEGORIES.map(cat => (
                           <div key={cat} className="flex items-center space-x-2">
@@ -354,7 +351,7 @@ export default function AdminPage() {
                               className="rounded-sm border-white/20" 
                             />
                             <label htmlFor={`cat-${cat}`} className={cn(
-                              "text-[10px] tracking-tight cursor-pointer font-medium italic",
+                              "text-[10px] tracking-tight cursor-pointer font-medium",
                               formData.category.includes(cat) ? "text-primary" : "text-white/40"
                             )}>{cat}</label>
                           </div>
@@ -363,12 +360,12 @@ export default function AdminPage() {
                     </div>
 
                     <div className="space-y-5">
-                      <Label className="text-[11px] tracking-tight text-muted-foreground font-medium italic">Content Details</Label>
+                      <Label className="text-[11px] tracking-tight text-muted-foreground font-medium">Content Details</Label>
                       
                       <div className="space-y-4">
                         <div className="space-y-2">
                           <div className="flex items-center justify-between mb-1">
-                            <Label className="text-[10px] text-white/40 italic">Cinematic Heading</Label>
+                            <Label className="text-[10px] text-white/40">Cinematic Heading</Label>
                             <div className="flex items-center gap-2">
                               <button type="button" onClick={() => {
                                 const newSize = Math.max(10, formData.upperTextSize - 1);
@@ -383,12 +380,12 @@ export default function AdminPage() {
                               }} className="p-1 text-white/40 hover:text-primary"><Plus className="w-3 h-3" /></button>
                             </div>
                           </div>
-                          <Input placeholder="e.g. Pudin Hara" className="rounded-lg bg-background border-white/10 h-12 text-[13px] italic font-medium" value={formData.upperText} onChange={e => setFormData({...formData, upperText: e.target.value})} />
+                          <Input placeholder="e.g. Pudin Hara" className="rounded-lg bg-background border-white/10 h-12 text-[13px] font-medium" value={formData.upperText} onChange={e => setFormData({...formData, upperText: e.target.value})} />
                         </div>
 
                         <div className="space-y-2">
                           <div className="flex items-center justify-between mb-1">
-                            <Label className="text-[10px] text-white/40 italic">Cinematic Subtext</Label>
+                            <Label className="text-[10px] text-white/40">Cinematic Subtext</Label>
                             <div className="flex items-center gap-2">
                               <button type="button" onClick={() => {
                                 const newSize = Math.max(8, formData.lowerTextSize - 1);
@@ -403,21 +400,21 @@ export default function AdminPage() {
                               }} className="p-1 text-white/40 hover:text-primary"><Plus className="w-3 h-3" /></button>
                             </div>
                           </div>
-                          <Input placeholder="e.g. Nation On Vacation" className="rounded-lg bg-background border-white/10 h-12 text-[13px] italic text-primary font-medium" value={formData.lowerText} onChange={e => setFormData({...formData, lowerText: e.target.value})} />
+                          <Input placeholder="e.g. Nation On Vacation" className="rounded-lg bg-background border-white/10 h-12 text-[13px] text-primary font-medium" value={formData.lowerText} onChange={e => setFormData({...formData, lowerText: e.target.value})} />
                         </div>
 
                         <Input required placeholder="YouTube Link or ID" className="rounded-lg bg-background border-white/10 h-12 text-[13px] font-medium" value={formData.youtubeId} onChange={e => setFormData({...formData, youtubeId: e.target.value})} />
                         <Input placeholder="Custom Thumbnail URL (Optional)" className="rounded-lg bg-background border-white/10 h-12 text-[13px] font-medium" value={formData.thumbnailUrl} onChange={e => setFormData({...formData, thumbnailUrl: e.target.value})} />
                         
                         <div className="space-y-2">
-                          <Label className="text-[10px] tracking-tight text-white/20 font-medium italic">Series Sequence</Label>
+                          <Label className="text-[10px] tracking-tight text-white/20 font-medium">Series Sequence</Label>
                           <Input type="number" className="rounded-lg bg-background border-white/10 h-10 text-[13px] font-medium" value={formData.order} onChange={e => setFormData({...formData, order: Number(e.target.value)})} />
                         </div>
                       </div>
                     </div>
                   </div>
                   <Button type="submit" disabled={isSubmitting} className={cn(
-                    "w-full rounded-lg text-black text-[13px] tracking-tight font-medium py-8 italic shadow-2xl transition-all",
+                    "w-full rounded-lg text-black text-[13px] tracking-tight font-medium py-8 shadow-2xl transition-all",
                     editingId ? "bg-primary hover:bg-white" : "bg-white hover:bg-primary"
                   )}>
                     {isSubmitting ? <Loader2 className="animate-spin" /> : editingId ? 'Update Cinematic Entry' : 'Publish Cinematic Entry'}
@@ -429,10 +426,10 @@ export default function AdminPage() {
             <TabsContent value="settings" className="space-y-8">
               <form onSubmit={handleSaveSettings} className="space-y-8">
                 <div className="space-y-5">
-                  <Label className="text-[11px] tracking-tight text-muted-foreground font-medium italic">Branding & Layout</Label>
+                  <Label className="text-[11px] tracking-tight text-muted-foreground font-medium">Branding & Layout</Label>
                   <div className="space-y-2">
                     <div className="flex items-center justify-between mb-1">
-                      <Label className="text-[10px] text-white/40 italic">Logo Font Size</Label>
+                      <Label className="text-[10px] text-white/40">Logo Font Size</Label>
                       <div className="flex items-center gap-2">
                         <button type="button" onClick={() => {
                           const newSize = Math.max(12, contactSettings.logoSize - 1);
@@ -451,19 +448,19 @@ export default function AdminPage() {
                 </div>
 
                 <div className="space-y-5">
-                  <Label className="text-[11px] tracking-tight text-muted-foreground font-medium italic">Inquiry Section</Label>
-                  <Input placeholder="Form Heading" className="rounded-lg bg-background border-white/10 h-12 text-[13px] italic font-medium" value={contactSettings.formHeading} onChange={e => setContactSettings({...contactSettings, formHeading: e.target.value})} />
-                  <Textarea placeholder="Short Welcome Message" className="rounded-lg bg-background border-white/10 min-h-[120px] text-[13px] italic leading-relaxed" value={contactSettings.formDescription} onChange={e => setContactSettings({...contactSettings, formDescription: e.target.value})} />
+                  <Label className="text-[11px] tracking-tight text-muted-foreground font-medium">Inquiry Section</Label>
+                  <Input placeholder="Form Heading" className="rounded-lg bg-background border-white/10 h-12 text-[13px] font-medium" value={contactSettings.formHeading} onChange={e => setContactSettings({...contactSettings, formHeading: e.target.value})} />
+                  <Textarea placeholder="Short Welcome Message" className="rounded-lg bg-background border-white/10 min-h-[120px] text-[13px] leading-relaxed" value={contactSettings.formDescription} onChange={e => setContactSettings({...contactSettings, formDescription: e.target.value})} />
                 </div>
                 <div className="space-y-5">
-                  <Label className="text-[11px] tracking-tight text-muted-foreground font-medium italic">Direct Contact & Socials</Label>
+                  <Label className="text-[11px] tracking-tight text-muted-foreground font-medium">Direct Contact & Socials</Label>
                   <Input placeholder="Public Email" className="rounded-lg bg-background border-white/10 h-10 text-[13px] font-medium" value={contactSettings.email} onChange={e => setContactSettings({...contactSettings, email: e.target.value})} />
                   <Input placeholder="Locations" className="rounded-lg bg-background border-white/10 h-10 text-[13px] font-medium" value={contactSettings.locations} onChange={e => setContactSettings({...contactSettings, locations: e.target.value})} />
                   <Input placeholder="Instagram URL" className="rounded-lg bg-background border-white/10 h-10 text-[13px] font-medium" value={contactSettings.instagram} onChange={e => setContactSettings({...contactSettings, instagram: e.target.value})} />
                   <Input placeholder="YouTube Channel URL" className="rounded-lg bg-background border-white/10 h-10 text-[13px] font-medium" value={contactSettings.youtube} onChange={e => setContactSettings({...contactSettings, youtube: e.target.value})} />
                   <Input placeholder="WhatsApp Number" className="rounded-lg bg-background border-white/10 h-10 text-[13px] font-medium" value={contactSettings.whatsapp} onChange={e => setContactSettings({...contactSettings, whatsapp: e.target.value})} />
                 </div>
-                <Button type="submit" disabled={isSavingSettings} className="w-full rounded-lg bg-primary text-black text-[13px] tracking-tight font-medium py-8 italic shadow-2xl">
+                <Button type="submit" disabled={isSavingSettings} className="w-full rounded-lg bg-primary text-black text-[13px] tracking-tight font-medium py-8 shadow-2xl">
                   {isSavingSettings ? <Loader2 className="animate-spin" /> : 'Synchronize Studio Settings'}
                 </Button>
               </form>
@@ -475,8 +472,8 @@ export default function AdminPage() {
                   <MessageSquare className="w-8 h-8" />
                 </div>
                 <div className="space-y-2">
-                  <h3 className="text-[14px] font-medium italic tracking-tight text-white">Inbox Management</h3>
-                  <p className="text-[11px] text-white/40 italic leading-relaxed">
+                  <h3 className="text-[14px] font-medium tracking-tight text-white">Inbox Management</h3>
+                  <p className="text-[11px] text-white/40 leading-relaxed">
                     Review and archive client inquiries directly from your directorial studio.
                   </p>
                 </div>
@@ -484,12 +481,11 @@ export default function AdminPage() {
             </TabsContent>
           </aside>
 
-          {/* Project Archive View */}
           <div className="flex-1 p-16 overflow-y-auto no-scrollbar bg-white/[0.01]">
             <TabsContent value="videos" className="m-0">
               <div className="max-w-4xl mx-auto">
-                <h1 className="text-6xl font-headline italic tracking-tighter mb-4 text-white">Project <span className="text-primary not-italic">Archive</span></h1>
-                <p className="text-muted-foreground font-body text-sm tracking-widest uppercase mb-16 italic opacity-40">Manage your directorial series and placement sequence.</p>
+                <h1 className="text-6xl font-headline tracking-tighter mb-4 text-white">Project <span className="text-primary font-normal">Archive</span></h1>
+                <p className="text-muted-foreground font-body text-sm tracking-widest uppercase mb-16 opacity-40">Manage your directorial series and placement sequence.</p>
 
                 <div className="space-y-24">
                   {PLACEMENT_TYPES.map(section => {
@@ -502,8 +498,8 @@ export default function AdminPage() {
                               <section.icon className="w-5 h-5" />
                             </div>
                             <div className="flex flex-col">
-                              <h2 className="text-[13px] tracking-tight font-medium italic text-white">{section.label}</h2>
-                              <span className="text-[10px] tracking-tight text-white/20 font-medium italic mt-1">
+                              <h2 className="text-[13px] tracking-tight font-medium text-white">{section.label}</h2>
+                              <span className="text-[10px] tracking-tight text-white/20 font-medium mt-1">
                                 {videos.length} Entries
                               </span>
                             </div>
@@ -532,14 +528,14 @@ export default function AdminPage() {
                                     )}
                                   </div>
                                   <div className="space-y-2">
-                                    <h3 className="text-xl font-headline italic text-white tracking-tight leading-none truncate mb-1">{v.upperText || "Untitled Project"}</h3>
-                                    <p className="text-[11px] tracking-tight text-primary font-medium italic">{v.lowerText}</p>
+                                    <h3 className="text-xl font-headline text-white tracking-tight leading-none truncate mb-1">{v.upperText || "Untitled Project"}</h3>
+                                    <p className="text-[11px] tracking-tight text-primary font-medium">{v.lowerText}</p>
                                   </div>
                                 </div>
                                 
                                 <div className="flex items-center gap-6">
                                   <div className="flex flex-col items-end gap-1">
-                                    <span className="text-[10px] tracking-tight text-white/20 font-medium italic">Order</span>
+                                    <span className="text-[10px] tracking-tight text-white/20 font-medium">Order</span>
                                     <input 
                                       type="number" 
                                       value={v.order || 0}
@@ -558,13 +554,13 @@ export default function AdminPage() {
                                     <DropdownMenuContent className="rounded-lg bg-black border-white/10 min-w-[160px] p-2">
                                       <DropdownMenuItem 
                                         onClick={() => handleEditClick(v)}
-                                        className="text-[12px] tracking-tight cursor-pointer focus:bg-primary focus:text-black font-medium italic py-3 rounded-md"
+                                        className="text-[12px] tracking-tight cursor-pointer focus:bg-primary focus:text-black font-medium py-3 rounded-md"
                                       >
                                         <Pencil className="w-3 h-3 mr-3" /> Edit Entry
                                       </DropdownMenuItem>
                                       <DropdownMenuItem 
                                         onClick={() => handleDelete(v.id)}
-                                        className="text-[12px] tracking-tight cursor-pointer text-destructive focus:bg-destructive focus:text-white font-medium italic py-3 rounded-md"
+                                        className="text-[12px] tracking-tight cursor-pointer text-destructive focus:bg-destructive focus:text-white font-medium py-3 rounded-md"
                                       >
                                         <Trash2 className="w-3 h-3 mr-3" /> Remove Permanent
                                       </DropdownMenuItem>
@@ -577,7 +573,7 @@ export default function AdminPage() {
                           {videos.length === 0 && (
                             <div className="py-12 flex flex-col items-center justify-center opacity-10 border border-dashed border-white/20 rounded-lg">
                               <ImageIcon className="w-8 h-8 mb-2" />
-                              <p className="text-[11px] tracking-tight font-medium italic">No entries for this row</p>
+                              <p className="text-[11px] tracking-tight font-medium">No entries for this row</p>
                             </div>
                           )}
                         </div>
@@ -590,16 +586,16 @@ export default function AdminPage() {
 
             <TabsContent value="settings" className="m-0">
               <div className="max-w-4xl mx-auto">
-                <h1 className="text-6xl font-headline italic tracking-tighter mb-4 text-white">Studio <span className="text-primary not-italic">Settings</span></h1>
-                <p className="text-muted-foreground font-body text-sm tracking-widest uppercase mb-16 italic opacity-40">Configure global directorial branding and socials.</p>
+                <h1 className="text-6xl font-headline tracking-tighter mb-4 text-white">Studio <span className="text-primary font-normal">Settings</span></h1>
+                <p className="text-muted-foreground font-body text-sm tracking-widest uppercase mb-16 opacity-40">Configure global directorial branding and socials.</p>
                 
                 <div className="p-20 border border-white/5 bg-black/40 rounded-lg text-center">
                   <div className="max-w-md mx-auto space-y-6">
                     <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
                       <Film className="w-10 h-10 text-primary" />
                     </div>
-                    <h3 className="text-2xl font-headline italic text-white">Global Configuration</h3>
-                    <p className="text-sm text-white/40 italic leading-relaxed">
+                    <h3 className="text-2xl font-headline text-white">Global Configuration</h3>
+                    <p className="text-sm text-white/40 leading-relaxed">
                       Adjust your directorial identity and contact settings using the panel on the left. Changes are synchronized in real-time.
                     </p>
                   </div>
@@ -609,8 +605,8 @@ export default function AdminPage() {
 
             <TabsContent value="submissions" className="m-0">
               <div className="max-w-4xl mx-auto">
-                <h1 className="text-6xl font-headline italic tracking-tighter mb-4 text-white">Client <span className="text-primary not-italic">Submissions</span></h1>
-                <p className="text-muted-foreground font-body text-sm tracking-widest uppercase mb-16 italic opacity-40">Direct inquiries from your cinematic portfolio.</p>
+                <h1 className="text-6xl font-headline tracking-tighter mb-4 text-white">Client <span className="text-primary font-normal">Submissions</span></h1>
+                <p className="text-muted-foreground font-body text-sm tracking-widest uppercase mb-16 opacity-40">Direct inquiries from your cinematic portfolio.</p>
 
                 <div className="space-y-6">
                   {submissionsLoading ? (
@@ -629,11 +625,11 @@ export default function AdminPage() {
                                 <MessageSquare className="w-5 h-5" />
                               </div>
                               <div>
-                                <h3 className="text-2xl font-headline italic text-white tracking-tight leading-none">{sub.name}</h3>
+                                <h3 className="text-2xl font-headline text-white tracking-tight leading-none">{sub.name}</h3>
                                 <div className="flex items-center gap-3 mt-1">
-                                  <span className="text-[10px] tracking-widest text-primary uppercase font-medium italic">{sub.type || "General Inquiry"}</span>
+                                  <span className="text-[10px] tracking-widest text-primary uppercase font-medium">{sub.type || "General Inquiry"}</span>
                                   <span className="w-1 h-1 bg-white/20 rounded-full" />
-                                  <span className="text-[10px] tracking-tight text-white/40 italic flex items-center gap-1">
+                                  <span className="text-[10px] tracking-tight text-white/40 flex items-center gap-1">
                                     <Calendar className="w-3 h-3" />
                                     {sub.createdAt ? format(sub.createdAt.toDate(), 'MMM dd, yyyy') : 'N/A'}
                                   </span>
@@ -645,7 +641,7 @@ export default function AdminPage() {
                           <div className="flex items-center gap-4">
                             <a 
                               href={`mailto:${sub.email}`} 
-                              className="px-6 py-3 border border-white/10 hover:border-primary/40 hover:bg-primary/5 text-[11px] tracking-widest text-white uppercase font-medium italic rounded-lg transition-all flex items-center gap-2"
+                              className="px-6 py-3 border border-white/10 hover:border-primary/40 hover:bg-primary/5 text-[11px] tracking-widest text-white uppercase font-medium rounded-lg transition-all flex items-center gap-2"
                             >
                               <Mail className="w-3 h-3" /> Reply Email
                             </a>
@@ -659,8 +655,8 @@ export default function AdminPage() {
                         </div>
 
                         <div className="p-6 bg-white/[0.02] border border-white/5 rounded-lg">
-                          <p className="text-[9px] tracking-[0.3em] uppercase text-primary/40 font-medium italic mb-2">Project Brief</p>
-                          <p className="text-[13px] text-white/70 italic leading-relaxed whitespace-pre-wrap font-body">
+                          <p className="text-[9px] tracking-[0.3em] uppercase text-primary/40 font-medium mb-2">Project Brief</p>
+                          <p className="text-[13px] text-white/70 leading-relaxed whitespace-pre-wrap font-body">
                             {sub.brief || "No brief provided."}
                           </p>
                         </div>
@@ -671,7 +667,7 @@ export default function AdminPage() {
                       <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto text-white/10">
                         <MessageSquare className="w-8 h-8" />
                       </div>
-                      <p className="text-[12px] text-white/20 italic tracking-widest uppercase">No client submissions found</p>
+                      <p className="text-[12px] text-white/20 tracking-widest uppercase">No client submissions found</p>
                     </div>
                   )}
                 </div>

@@ -71,13 +71,13 @@ const VideoCard = ({ video, aspectRatio, onClick }: { video: VideoItem, aspectRa
 
       <div className="absolute bottom-0 left-0 right-0 z-30 p-6 md:p-8 flex flex-col justify-end transition-all duration-700 pointer-events-none translate-y-2 group-hover:translate-y-0">
         <h3 
-          className="font-headline text-white font-medium italic tracking-tight leading-none truncate mb-1"
+          className="font-headline text-white font-bold tracking-tight leading-none truncate mb-1"
           style={{ fontSize: video.upperTextSize ? `${video.upperTextSize}px` : '24px' }}
         >
           {video.upperText}
         </h3>
         <span 
-          className="text-primary font-medium block tracking-tight italic"
+          className="text-primary font-medium block tracking-tight"
           style={{ fontSize: video.lowerTextSize ? `${video.lowerTextSize}px` : '13px' }}
         >
           {video.lowerText}
@@ -117,7 +117,7 @@ export function VaelReel({ activeCategory }: VaelReelProps) {
       <div className="max-w-[1600px] mx-auto px-6 md:px-16 space-y-8 md:space-y-12">
         
         <div className="flex items-center gap-6 mb-4">
-          <span className="text-[13px] tracking-tight text-primary font-medium italic whitespace-nowrap">{activeCategory}</span>
+          <span className="text-[13px] tracking-tight text-primary font-medium whitespace-nowrap">{activeCategory}</span>
           <div className="h-[1px] flex-1 bg-white/10" />
         </div>
 

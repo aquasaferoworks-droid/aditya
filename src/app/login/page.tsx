@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -65,13 +64,13 @@ export default function LoginPage() {
  
         <div className="bg-black/40 p-8 md:p-16 md:w-1/2 relative flex flex-col justify-center border-b md:border-b-0 md:border-r border-white/5 z-20">
           <div className="space-y-6">
-            <Link href="/" className="font-headline text-2xl italic tracking-tight block font-medium">
+            <Link href="/" className="font-headline text-2xl tracking-tight block font-medium">
               <span className="text-primary">Errol</span> <span className="text-white">Aditya</span>
             </Link>
-            <h1 className="text-4xl md:text-5xl font-headline italic font-medium leading-tight tracking-tighter text-white">
-              Studio <br /> <span className="text-primary not-italic font-light">Access Portal</span>
+            <h1 className="text-4xl md:text-5xl font-headline font-medium leading-tight tracking-tighter text-white">
+              Studio <br /> <span className="text-primary font-light">Access Portal</span>
             </h1>
-            <p className="text-white/40 font-body text-sm leading-relaxed max-w-xs italic border-l border-primary/20 pl-4">
+            <p className="text-white/40 font-body text-sm leading-relaxed max-w-xs border-l border-primary/20 pl-4">
               Architecture of Emotion. Enter your directorial credentials to manage the cinematic archive.
             </p>
           </div>
@@ -82,13 +81,13 @@ export default function LoginPage() {
             <div className="text-primary mb-6">
               <Sunburst className="h-10 w-10" />
             </div>
-            <h2 className="text-3xl font-headline italic text-white tracking-tight mb-2 font-medium">Welcome Back</h2>
-            <p className="text-white/40 text-sm font-body italic">Identify yourself — Access the archive.</p>
+            <h2 className="text-3xl font-headline text-white tracking-tight mb-2 font-medium">Welcome Back</h2>
+            <p className="text-white/40 text-sm font-body">Identify yourself — Access the archive.</p>
           </div>
  
           <form className="space-y-6" onSubmit={handleSubmit} noValidate>
             <div className="space-y-2">
-              <label htmlFor="email" className="block text-[11px] tracking-widest uppercase text-white/40 font-bold italic">Email Address</label>
+              <label htmlFor="email" className="block text-[11px] tracking-widest uppercase text-white/40 font-bold">Email Address</label>
               <input
                 type="email"
                 id="email"
@@ -100,7 +99,7 @@ export default function LoginPage() {
             </div>
  
             <div className="space-y-2">
-              <label htmlFor="password" className="block text-[11px] tracking-widest uppercase text-white/40 font-bold italic">Password</label>
+              <label htmlFor="password" className="block text-[11px] tracking-widest uppercase text-white/40 font-bold">Password</label>
               <input
                 type="password"
                 id="password"
@@ -112,7 +111,7 @@ export default function LoginPage() {
             </div>
 
             {error && (
-              <p className="text-destructive text-xs italic font-medium bg-destructive/10 p-3 rounded-lg border border-destructive/20">
+              <p className="text-destructive text-xs font-medium bg-destructive/10 p-3 rounded-lg border border-destructive/20">
                 {error}
               </p>
             )}
@@ -120,7 +119,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-primary hover:bg-white text-black font-headline italic font-medium py-4 rounded-lg transition-all flex items-center justify-center gap-2 shadow-2xl"
+              className="w-full bg-primary hover:bg-white text-black font-headline font-medium py-4 rounded-lg transition-all flex items-center justify-center gap-2 shadow-2xl"
             >
               {loading ? <Loader2 className="animate-spin" /> : "Access Directorial Studio"}
             </button>

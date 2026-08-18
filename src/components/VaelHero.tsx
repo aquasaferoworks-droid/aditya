@@ -32,9 +32,9 @@ export function VaelHero() {
           <span className="text-[10px] tracking-[0.4em] uppercase text-primary font-body font-bold">2026 Directing Reel</span>
         </div>
 
-        <h1 className="font-headline text-[clamp(3.5rem,10vw,8rem)] leading-[0.9] tracking-tighter mb-8 italic text-white mix-blend-difference">
+        <h1 className="font-headline text-[clamp(3.5rem,10vw,8rem)] leading-[0.9] tracking-tighter mb-8 text-white mix-blend-difference">
           Architecture <br /> 
-          of <span className="text-primary not-italic">Emotion</span>
+          of <span className="text-primary font-normal">Emotion</span>
         </h1>
 
         <p className="max-w-md text-white/90 leading-relaxed text-sm md:text-base mb-10 font-body backdrop-blur-sm bg-black/10 p-4 border-l border-primary/30">

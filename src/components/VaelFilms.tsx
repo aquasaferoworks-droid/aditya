@@ -53,7 +53,7 @@ export function VaelFilms({ activeCategory }: VaelFilmsProps) {
   return (
     <section id="work" className="py-24 md:py-32 bg-background px-6 md:px-16 border-t border-white/5">
       <div className="max-w-[1600px] mx-auto mb-16 flex items-center gap-6">
-        <span className="text-[13px] tracking-tight text-primary font-medium italic whitespace-nowrap">New</span>
+        <span className="text-[13px] tracking-tight text-primary font-medium whitespace-nowrap">New</span>
         <div className="h-[1px] w-32 bg-primary/20" />
       </div>
 
@@ -87,7 +87,7 @@ export function VaelFilms({ activeCategory }: VaelFilmsProps) {
                   ) : (
                     <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 text-white/5 bg-white/[0.02]">
                       <Video className="w-16 h-16" />
-                      <span className="text-[10px] tracking-widest font-medium italic uppercase">Media Required</span>
+                      <span className="text-[10px] tracking-widest font-medium uppercase">Media Required</span>
                     </div>
                   )}
                   <div className="absolute inset-0 bg-black/30 group-hover:bg-black/0 transition-colors duration-700" />
@@ -95,13 +95,13 @@ export function VaelFilms({ activeCategory }: VaelFilmsProps) {
                   
                   <div className="absolute inset-x-0 bottom-0 z-30 p-10 flex flex-col justify-end translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-700 pointer-events-none">
                     <h3 
-                      className="font-headline text-white italic tracking-tight leading-none truncate mb-1"
+                      className="font-headline text-white tracking-tight leading-none truncate mb-1"
                       style={{ fontSize: film.upperTextSize ? `${film.upperTextSize}px` : '32px' }}
                     >
                       {film.upperText}
                     </h3>
                     <span 
-                      className="text-primary italic font-medium truncate tracking-tight"
+                      className="text-primary font-medium truncate tracking-tight"
                       style={{ fontSize: film.lowerTextSize ? `${film.lowerTextSize}px` : '14px' }}
                     >
                       {film.lowerText}

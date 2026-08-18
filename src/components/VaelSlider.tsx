@@ -54,7 +54,6 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
     .filter(v => {
       const isSlider = v.type === 'slider';
       if (!isSlider) return false;
-      // Case-insensitive check for 'All'
       if (activeCategory.toLowerCase() === 'all') return true;
       const categories = Array.isArray(v.category) ? v.category : [v.category];
       return categories.some(c => c?.toLowerCase() === activeCategory.toLowerCase());
@@ -133,7 +132,7 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
                       ) : (
                         <div className="flex flex-col items-center gap-4 text-white/10">
                           <Video className="w-16 h-16" />
-                          <span className="text-[10px] tracking-widest font-medium italic">Media Required</span>
+                          <span className="text-[10px] tracking-widest font-medium">Media Required</span>
                         </div>
                       )}
                     </div>
@@ -144,13 +143,13 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
                       <div className="absolute inset-0 z-20 p-8 md:p-14 flex flex-col justify-end pointer-events-none">
                         <div className="space-y-1">
                           <h2 
-                            className="font-headline text-white font-medium italic tracking-tight leading-none"
+                            className="font-headline text-white font-bold tracking-tight leading-none"
                             style={{ fontSize: slide.upperTextSize ? `${slide.upperTextSize}px` : '48px' }}
                           >
                             {slide.upperText}
                           </h2>
                           <span 
-                            className="text-primary font-medium italic block pt-1 tracking-tight"
+                            className="text-primary font-medium block pt-1 tracking-tight"
                             style={{ fontSize: slide.lowerTextSize ? `${slide.lowerTextSize}px` : '13px' }}
                           >
                             {slide.lowerText}
