@@ -52,10 +52,19 @@
         "createdAt": { "type": "string", "format": "date-time" }
       },
       "required": ["name", "email"]
+    },
+    "AdminConfig": {
+      "title": "Admin Config",
+      "description": "Tracking the application initialization state.",
+      "type": "object",
+      "properties": {
+        "initialized": { "type": "boolean" },
+        "adminEmail": { "type": "string" }
+      }
     }
   },
   "auth": {
-    "providers": ["google.com"]
+    "providers": ["password"]
   },
   "firestore": {
     "/videos/{videoId}": {
@@ -65,6 +74,10 @@
     "/settings/contact": {
       "schema": "ContactSettings",
       "description": "Single document for global contact settings."
+    },
+    "/settings/admin": {
+      "schema": "AdminConfig",
+      "description": "App initialization state."
     },
     "/submissions/{submissionId}": {
       "schema": "ContactSubmission",

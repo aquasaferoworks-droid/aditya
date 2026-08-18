@@ -2,14 +2,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useFirestore, useCollection, useDoc } from '@/firebase';
+import { useRouter } from 'next/navigation';
+import { useFirestore, useCollection, useDoc, useAuth, useUser } from '@/firebase';
 import { collection, addDoc, deleteDoc, doc, serverTimestamp, updateDoc, setDoc } from 'firebase/firestore';
+import { signOut } from 'firebase/auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { VaelHeader } from '@/components/VaelHeader';
-import { Loader2, Trash2, LayoutGrid, Film, Smartphone, Maximize, Box, MoreVertical, Pencil, X, Video, AlertCircle, Image as ImageIcon, Plus, Minus, Grid, MessageSquare, Mail, Calendar } from 'lucide-react';
+import { Loader2, Trash2, LayoutGrid, Film, Smartphone, Maximize, Box, MoreVertical, Pencil, X, Video, AlertCircle, Image as ImageIcon, Plus, Minus, Grid, MessageSquare, Mail, Calendar, LogOut } from 'lucide-react';
 import { useMemoFirebase } from '@/firebase/firestore/use-collection';
 import { useToast } from '@/hooks/use-toast';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -41,14 +43,25 @@ const CATEGORIES = [
 ];
 
 export default function AdminPage() {
+  const { user, loading: userLoading } = useUser();
+  const auth = useAuth();
   const firestore = useFirestore();
+  const router = useRouter();
   const { toast } = useToast();
+  
   const [activeTab, setActiveTab] = useState('videos');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUpdatingOrder, setIsUpdatingOrder] = useState<string | null>(null);
   const [isSavingSettings, setIsSavingSettings] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  
+
+  // Protected route check
+  useEffect(() => {
+    if (!user && !userLoading) {
+      router.push('/login');
+    }
+  }, [user, userLoading, router]);
+
   const [formData, setFormData] = useState({
     upperText: '',
     lowerText: '',
@@ -126,6 +139,16 @@ export default function AdminPage() {
       type: 'reel-grid',
       order: sortedVideos.length + 1
     });
+  };
+
+  const handleSignOut = async () => {
+    if (!auth) return;
+    try {
+      await signOut(auth);
+      router.push('/login');
+    } catch (err) {
+      toast({ title: "Sign out failed", variant: "destructive" });
+    }
   };
 
   const updateRealtimeVideoFontSize = (type: 'upper' | 'lower', size: number) => {
@@ -253,6 +276,14 @@ export default function AdminPage() {
     }
   };
 
+  if (userLoading) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-primary animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <main className="min-h-screen bg-background text-foreground font-body selection:bg-primary selection:text-black">
       <VaelHeader />
@@ -261,6 +292,13 @@ export default function AdminPage() {
         <div className="flex pt-32 min-h-screen">
           {/* Management Sidebar */}
           <aside className="w-[480px] border-r border-white/5 bg-black/60 flex flex-col sticky top-32 h-[calc(100vh-8rem)] p-10 overflow-y-auto no-scrollbar">
+            <div className="flex items-center justify-between mb-8 px-1">
+              <span className="text-[11px] tracking-[0.3em] uppercase text-primary font-bold italic">Admin Mode</span>
+              <button onClick={handleSignOut} className="text-[10px] tracking-widest uppercase text-white/40 hover:text-destructive flex items-center gap-2 transition-colors font-bold">
+                <LogOut className="w-3 h-3" /> Sign Out
+              </button>
+            </div>
+
             <TabsList className="bg-white/5 rounded-lg p-1 w-full grid grid-cols-3 mb-10">
               <TabsTrigger value="videos" className="rounded-md text-[12px] tracking-tight py-3 font-medium italic">Projects</TabsTrigger>
               <TabsTrigger value="settings" className="rounded-md text-[12px] tracking-tight py-3 font-medium italic">Studio</TabsTrigger>

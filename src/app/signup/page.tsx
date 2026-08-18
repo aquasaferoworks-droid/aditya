@@ -3,44 +3,79 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth, useUser } from '@/firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useAuth, useFirestore, useDoc } from '@/firebase';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 import { SunIcon as Sunburst, Loader2 } from "lucide-react";
 import Link from 'next/link';
 
-export default function LoginPage() {
+export default function SignupPage() {
   const auth = useAuth();
-  const { user, loading: userLoading } = useUser();
+  const firestore = useFirestore();
   const router = useRouter();
   
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [checkingInit, setCheckingInit] = useState(true);
 
+  // Check if admin is already initialized
   useEffect(() => {
-    if (user && !userLoading) {
-      router.push('/admin');
-    }
-  }, [user, userLoading, router]);
+    if (!firestore) return;
+    const checkAdmin = async () => {
+      const { getDoc } = await import('firebase/firestore');
+      const docRef = doc(firestore, 'settings', 'admin');
+      const snap = await getDoc(docRef);
+      if (snap.exists() && snap.data().initialized) {
+        router.push('/login');
+      } else {
+        setCheckingInit(false);
+      }
+    };
+    checkAdmin();
+  }, [firestore, router]);
+
+  const validateEmail = (value: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!auth) return;
+    if (!auth || !firestore) return;
     setError("");
-    setLoading(true);
 
+    if (!validateEmail(email)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters.");
+      return;
+    }
+
+    setLoading(true);
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      // 1. Create User
+      const userCred = await createUserWithEmailAndPassword(auth, email, password);
+      
+      // 2. Mark as initialized in Firestore
+      await setDoc(doc(firestore, 'settings', 'admin'), {
+        initialized: true,
+        adminEmail: email,
+        createdAt: new Date().toISOString()
+      });
+
       router.push('/admin');
     } catch (err: any) {
-      setError("Access denied. Invalid studio credentials.");
+      setError(err.message || "Failed to initialize studio.");
     } finally {
       setLoading(false);
     }
   };
 
-  if (userLoading) {
+  if (checkingInit) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <Loader2 className="w-8 h-8 text-primary animate-spin" />
@@ -69,10 +104,10 @@ export default function LoginPage() {
               <span className="text-primary">Errol</span> <span className="text-white">Aditya</span>
             </Link>
             <h1 className="text-4xl md:text-5xl font-headline italic font-bold leading-tight tracking-tighter text-white">
-              Studio <br /> <span className="text-primary not-italic font-light">Access Portal</span>
+              Initialize Your <br /> <span className="text-primary not-italic font-light">Directorial Studio</span>
             </h1>
             <p className="text-white/40 font-body text-sm leading-relaxed max-w-xs italic border-l border-primary/20 pl-4">
-              Authorized personnel only. Enter your credentials to manage the architectural archive.
+              Architecture of emotion. Setup your unique access to the cinematic archive management portal.
             </p>
           </div>
         </div>
@@ -82,13 +117,13 @@ export default function LoginPage() {
             <div className="text-primary mb-6">
               <Sunburst className="h-10 w-10" />
             </div>
-            <h2 className="text-3xl font-headline italic text-white tracking-tight mb-2">Welcome Back</h2>
-            <p className="text-white/40 text-sm font-body italic">Identify yourself — Access the archive.</p>
+            <h2 className="text-3xl font-headline italic text-white tracking-tight mb-2">Get Started</h2>
+            <p className="text-white/40 text-sm font-body italic">First-time initialization — Secure your studio.</p>
           </div>
  
           <form className="space-y-6" onSubmit={handleSubmit} noValidate>
             <div className="space-y-2">
-              <label htmlFor="email" className="block text-[11px] tracking-widest uppercase text-white/40 font-bold italic">Email Address</label>
+              <label htmlFor="email" className="block text-[11px] tracking-widest uppercase text-white/40 font-bold italic">Studio Email</label>
               <input
                 type="email"
                 id="email"
@@ -100,7 +135,7 @@ export default function LoginPage() {
             </div>
  
             <div className="space-y-2">
-              <label htmlFor="password" className="block text-[11px] tracking-widest uppercase text-white/40 font-bold italic">Password</label>
+              <label htmlFor="password" className="block text-[11px] tracking-widest uppercase text-white/40 font-bold italic">Master Password</label>
               <input
                 type="password"
                 id="password"
@@ -122,13 +157,13 @@ export default function LoginPage() {
               disabled={loading}
               className="w-full bg-primary hover:bg-white text-black font-headline italic font-bold py-4 rounded-lg transition-all flex items-center justify-center gap-2 shadow-2xl"
             >
-              {loading ? <Loader2 className="animate-spin" /> : "Access Directorial Studio"}
+              {loading ? <Loader2 className="animate-spin" /> : "Initialize Master Account"}
             </button>
  
             <div className="text-center text-white/40 text-xs font-body italic">
-              New studio instance?{" "}
-              <Link href="/signup" className="text-white hover:text-primary underline transition-colors">
-                Initialize Studio
+              Already initialized?{" "}
+              <Link href="/login" className="text-white hover:text-primary underline transition-colors">
+                Studio Login
               </Link>
             </div>
           </form>
