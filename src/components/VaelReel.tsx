@@ -99,7 +99,6 @@ export function VaelReel({ activeCategory }: VaelReelProps) {
   const { data: allVideos, loading } = useCollection(reelQuery);
 
   const filteredVideos = (allVideos as VideoItem[] || []).filter(v => {
-    // Case-insensitive check for 'All'
     if (activeCategory.toLowerCase() === 'all') return true;
     const categories = Array.isArray(v.category) ? v.category : [v.category];
     return categories.some(c => c?.toLowerCase() === activeCategory.toLowerCase());
@@ -118,7 +117,7 @@ export function VaelReel({ activeCategory }: VaelReelProps) {
       <div className="max-w-[1600px] mx-auto px-6 md:px-16 space-y-8 md:space-y-12">
         
         <div className="flex items-center gap-6 mb-4">
-          <span className="text-[12px] tracking-tight text-primary font-medium italic whitespace-nowrap">{activeCategory} Archive</span>
+          <span className="text-[13px] tracking-tight text-primary font-medium italic whitespace-nowrap">{activeCategory}</span>
           <div className="h-[1px] flex-1 bg-white/10" />
         </div>
 
