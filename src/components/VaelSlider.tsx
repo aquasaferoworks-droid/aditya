@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
@@ -29,6 +30,8 @@ interface VideoData {
   type: string;
   upperText?: string;
   lowerText?: string;
+  upperTextSize?: number;
+  lowerTextSize?: number;
   order?: number;
 }
 
@@ -140,10 +143,16 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
                     {isActive && (
                       <div className="absolute inset-0 z-20 p-8 md:p-14 flex flex-col justify-end pointer-events-none">
                         <div className="space-y-1">
-                          <h2 className="text-2xl md:text-5xl font-headline text-white font-medium italic tracking-tight leading-none">
+                          <h2 
+                            className="font-headline text-white font-medium italic tracking-tight leading-none"
+                            style={{ fontSize: slide.upperTextSize ? `${slide.upperTextSize}px` : '48px' }}
+                          >
                             {slide.upperText}
                           </h2>
-                          <span className="text-[11px] md:text-[13px] text-primary font-medium italic block pt-1 tracking-tight">
+                          <span 
+                            className="text-primary font-medium italic block pt-1 tracking-tight"
+                            style={{ fontSize: slide.lowerTextSize ? `${slide.lowerTextSize}px` : '13px' }}
+                          >
                             {slide.lowerText}
                           </span>
                         </div>

@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState } from 'react';
@@ -27,6 +28,8 @@ interface VideoItem {
   type: string;
   upperText?: string;
   lowerText?: string;
+  upperTextSize?: number;
+  lowerTextSize?: number;
   order?: number;
 }
 
@@ -51,7 +54,7 @@ const VideoCard = ({ video, aspectRatio, onClick }: { video: VideoItem, aspectRa
         {thumbUrl ? (
           <Image 
             src={thumbUrl} 
-            alt={video.title || "Video Entry"}
+            alt={video.upperText || "Video Entry"}
             fill
             className="object-cover transition-transform duration-1000 group-hover:scale-105 opacity-60 group-hover:opacity-100"
             unoptimized
@@ -68,10 +71,16 @@ const VideoCard = ({ video, aspectRatio, onClick }: { video: VideoItem, aspectRa
       <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 to-transparent z-15 pointer-events-none" />
 
       <div className="absolute bottom-0 left-0 right-0 z-30 p-6 md:p-8 flex flex-col justify-end transition-all duration-700 pointer-events-none translate-y-2 group-hover:translate-y-0">
-        <h3 className="text-xl md:text-2xl font-headline text-white font-medium tracking-tight leading-none truncate mb-1">
+        <h3 
+          className="font-headline text-white font-medium italic tracking-tight leading-none truncate mb-1"
+          style={{ fontSize: video.upperTextSize ? `${video.upperTextSize}px` : '24px' }}
+        >
           {video.upperText}
         </h3>
-        <span className="text-[11px] md:text-[13px] text-primary font-medium block tracking-tight">
+        <span 
+          className="text-primary font-medium block tracking-tight italic"
+          style={{ fontSize: video.lowerTextSize ? `${video.lowerTextSize}px` : '13px' }}
+        >
           {video.lowerText}
         </span>
       </div>
@@ -109,7 +118,7 @@ export function VaelReel({ activeCategory }: VaelReelProps) {
       <div className="max-w-[1600px] mx-auto px-6 md:px-16 space-y-8 md:space-y-12">
         
         <div className="flex items-center gap-6 mb-4">
-          <span className="text-[12px] tracking-tight text-primary font-medium whitespace-nowrap">{activeCategory} Archive</span>
+          <span className="text-[12px] tracking-tight text-primary font-medium italic whitespace-nowrap">{activeCategory} Archive</span>
           <div className="h-[1px] flex-1 bg-white/10" />
         </div>
 
@@ -150,8 +159,8 @@ export function VaelReel({ activeCategory }: VaelReelProps) {
         <DialogPortal>
           <DialogOverlay className="z-[400] bg-black/95 backdrop-blur-sm" />
           <DialogContent className="z-[500] max-w-5xl w-[95vw] bg-black border border-white/10 p-0 overflow-hidden shadow-2xl rounded-lg aspect-video focus:outline-none">
-            <DialogTitle className="sr-only">{selectedVideo?.title}</DialogTitle>
-            <DialogDescription className="sr-only">Viewing project: {selectedVideo?.title}</DialogDescription>
+            <DialogTitle className="sr-only">{selectedVideo?.upperText}</DialogTitle>
+            <DialogDescription className="sr-only">Viewing project: {selectedVideo?.upperText}</DialogDescription>
             {selectedVideo && (
               <UnifiedVideoPlayer url={selectedVideo.youtubeId} />
             )}

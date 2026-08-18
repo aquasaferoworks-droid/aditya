@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -8,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { VaelHeader } from '@/components/VaelHeader';
-import { Loader2, Trash2, LayoutGrid, Film, Smartphone, Maximize, Box, MoreVertical, Pencil, X, Video, AlertCircle, Image as ImageIcon } from 'lucide-react';
+import { Loader2, Trash2, LayoutGrid, Film, Smartphone, Maximize, Box, MoreVertical, Pencil, X, Video, AlertCircle, Image as ImageIcon, Plus, Minus } from 'lucide-react';
 import { useMemoFirebase } from '@/firebase/firestore/use-collection';
 import { useToast } from '@/hooks/use-toast';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -48,6 +49,8 @@ export default function AdminPage() {
   const [formData, setFormData] = useState({
     upperText: '',
     lowerText: '',
+    upperTextSize: 24,
+    lowerTextSize: 13,
     category: ['Ads'] as string[],
     youtubeId: '',
     thumbnailUrl: '',
@@ -155,6 +158,8 @@ export default function AdminPage() {
     setFormData({
       upperText: '',
       lowerText: '',
+      upperTextSize: 24,
+      lowerTextSize: 13,
       category: ['Ads'],
       youtubeId: '',
       thumbnailUrl: '',
@@ -168,6 +173,8 @@ export default function AdminPage() {
     setFormData({
       upperText: v.upperText || '',
       lowerText: v.lowerText || '',
+      upperTextSize: v.upperTextSize || 24,
+      lowerTextSize: v.lowerTextSize || 13,
       category: Array.isArray(v.category) ? v.category : [v.category],
       youtubeId: v.youtubeId || '',
       thumbnailUrl: v.thumbnailUrl || '',
@@ -218,20 +225,20 @@ export default function AdminPage() {
   };
 
   return (
-    <main className="min-h-screen bg-background text-foreground font-body">
+    <main className="min-h-screen bg-background text-foreground font-body selection:bg-primary selection:text-black">
       <VaelHeader />
       <div className="flex pt-32 min-h-screen">
         {/* Management Sidebar */}
-        <aside className="w-[450px] border-r border-white/5 bg-black/60 flex flex-col sticky top-32 h-[calc(100vh-8rem)] p-10 overflow-y-auto no-scrollbar">
+        <aside className="w-[480px] border-r border-white/5 bg-black/60 flex flex-col sticky top-32 h-[calc(100vh-8rem)] p-10 overflow-y-auto no-scrollbar">
           <Tabs defaultValue="videos" className="w-full">
             <TabsList className="bg-white/5 rounded-lg p-1 w-full grid grid-cols-2 mb-10">
-              <TabsTrigger value="videos" className="rounded-md text-[13px] tracking-tight py-3 font-medium italic">Series Manager</TabsTrigger>
+              <TabsTrigger value="videos" className="rounded-md text-[13px] tracking-tight py-3 font-medium italic">Project Manager</TabsTrigger>
               <TabsTrigger value="settings" className="rounded-md text-[13px] tracking-tight py-3 font-medium italic">Studio Settings</TabsTrigger>
             </TabsList>
 
             <TabsContent value="videos" className="space-y-8">
               <div className={cn(
-                "p-6 border border-white/5 transition-colors duration-500 rounded-lg",
+                "p-6 border border-white/5 transition-all duration-500 rounded-lg",
                 editingId ? "bg-primary/5 border-primary/20" : "bg-black/20"
               )}>
                 <div className="flex items-center justify-between mb-8">
@@ -294,11 +301,35 @@ export default function AdminPage() {
 
                     <div className="space-y-5">
                       <Label className="text-[11px] tracking-tight text-muted-foreground font-medium italic">Content Details</Label>
-                      <div className="space-y-3">
-                        <Input placeholder="Cinematic Heading (e.g. Pudin Hara)" className="rounded-lg bg-background border-white/10 h-12 text-[13px] italic font-medium" value={formData.upperText} onChange={e => setFormData({...formData, upperText: e.target.value})} />
-                        <Input placeholder="Cinematic Subtext (e.g. Nation On Vacation)" className="rounded-lg bg-background border-white/10 h-12 text-[13px] italic text-primary font-medium" value={formData.lowerText} onChange={e => setFormData({...formData, lowerText: e.target.value})} />
+                      
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between mb-1">
+                            <Label className="text-[10px] text-white/40 italic">Cinematic Heading</Label>
+                            <div className="flex items-center gap-2">
+                              <button type="button" onClick={() => setFormData(f => ({...f, upperTextSize: Math.max(10, f.upperTextSize - 1)}))} className="p-1 text-white/40 hover:text-primary"><Minus className="w-3 h-3" /></button>
+                              <span className="text-[10px] text-primary font-bold">{formData.upperTextSize}px</span>
+                              <button type="button" onClick={() => setFormData(f => ({...f, upperTextSize: Math.min(100, f.upperTextSize + 1)}))} className="p-1 text-white/40 hover:text-primary"><Plus className="w-3 h-3" /></button>
+                            </div>
+                          </div>
+                          <Input placeholder="e.g. Pudin Hara" className="rounded-lg bg-background border-white/10 h-12 text-[13px] italic font-medium" value={formData.upperText} onChange={e => setFormData({...formData, upperText: e.target.value})} />
+                        </div>
+
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between mb-1">
+                            <Label className="text-[10px] text-white/40 italic">Cinematic Subtext</Label>
+                            <div className="flex items-center gap-2">
+                              <button type="button" onClick={() => setFormData(f => ({...f, lowerTextSize: Math.max(8, f.lowerTextSize - 1)}))} className="p-1 text-white/40 hover:text-primary"><Minus className="w-3 h-3" /></button>
+                              <span className="text-[10px] text-primary font-bold">{formData.lowerTextSize}px</span>
+                              <button type="button" onClick={() => setFormData(f => ({...f, lowerTextSize: Math.min(40, f.lowerTextSize + 1)}))} className="p-1 text-white/40 hover:text-primary"><Plus className="w-3 h-3" /></button>
+                            </div>
+                          </div>
+                          <Input placeholder="e.g. Nation On Vacation" className="rounded-lg bg-background border-white/10 h-12 text-[13px] italic text-primary font-medium" value={formData.lowerText} onChange={e => setFormData({...formData, lowerText: e.target.value})} />
+                        </div>
+
                         <Input required placeholder="YouTube Link or ID" className="rounded-lg bg-background border-white/10 h-12 text-[13px] font-medium" value={formData.youtubeId} onChange={e => setFormData({...formData, youtubeId: e.target.value})} />
                         <Input placeholder="Custom Thumbnail URL (Optional)" className="rounded-lg bg-background border-white/10 h-12 text-[13px] font-medium" value={formData.thumbnailUrl} onChange={e => setFormData({...formData, thumbnailUrl: e.target.value})} />
+                        
                         <div className="space-y-2">
                           <Label className="text-[10px] tracking-tight text-white/20 font-medium italic">Series Sequence (Manual Re-order)</Label>
                           <Input type="number" className="rounded-lg bg-background border-white/10 h-10 text-[13px] font-medium" value={formData.order} onChange={e => setFormData({...formData, order: Number(e.target.value)})} />

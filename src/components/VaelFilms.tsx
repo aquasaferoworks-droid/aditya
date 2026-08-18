@@ -1,3 +1,4 @@
+
 'use client';
 
 import Image from 'next/image';
@@ -52,8 +53,8 @@ export function VaelFilms() {
       <div className="max-w-7xl mx-auto mb-16 md:mb-24 flex flex-col md:flex-row md:items-end justify-between gap-12">
         <div className="space-y-6">
           <span className="text-[11px] tracking-[0.5em] uppercase text-primary/60 block font-bold italic">Curated Works</span>
-          <h2 className="text-5xl md:text-7xl font-headline leading-tight italic tracking-tight text-white">
-            {activeCategory}
+          <h2 className="text-5xl md:text-7xl font-headline leading-tight italic tracking-tight text-white capitalize">
+            {activeCategory.toLowerCase()}
           </h2>
         </div>
         <div className="flex flex-col md:items-end gap-4">
@@ -101,11 +102,17 @@ export function VaelFilms() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-transparent z-10" />
                     
                     <div className="absolute inset-x-0 bottom-0 z-30 p-6 md:p-8 flex flex-col justify-end translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-700">
-                      <h3 className="text-xl font-headline text-white italic tracking-tight uppercase leading-none truncate mb-1">
+                      <h3 
+                        className="font-headline text-white italic tracking-tight leading-none truncate mb-1"
+                        style={{ fontSize: film.upperTextSize ? `${film.upperTextSize}px` : '20px' }}
+                      >
                         {film.upperText}
                       </h3>
                       <div className="flex justify-between items-end gap-4">
-                        <span className="text-[11px] tracking-tight text-primary italic font-medium truncate">
+                        <span 
+                          className="text-primary italic font-medium truncate tracking-tight"
+                          style={{ fontSize: film.lowerTextSize ? `${film.lowerTextSize}px` : '11px' }}
+                        >
                           {film.lowerText}
                         </span>
                       </div>
