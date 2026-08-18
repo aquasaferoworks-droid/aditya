@@ -11,7 +11,7 @@
         "thumbnailUrl": { "type": "string" },
         "type": { 
           "type": "string", 
-          "enum": ["slider", "reel-horizontal", "reel-feature", "reel-medium", "reel-vertical", "sidebar"] 
+          "enum": ["slider", "reel-grid", "reel-horizontal", "reel-feature", "reel-medium", "reel-vertical", "sidebar"] 
         },
         "upperText": { "type": "string" },
         "lowerText": { "type": "string" },

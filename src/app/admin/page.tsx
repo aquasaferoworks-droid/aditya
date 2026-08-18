@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { VaelHeader } from '@/components/VaelHeader';
-import { Loader2, Trash2, LayoutGrid, Film, Smartphone, Maximize, Box, MoreVertical, Pencil, X, Video, AlertCircle, Image as ImageIcon, Plus, Minus } from 'lucide-react';
+import { Loader2, Trash2, LayoutGrid, Film, Smartphone, Maximize, Box, MoreVertical, Pencil, X, Video, AlertCircle, Image as ImageIcon, Plus, Minus, Grid } from 'lucide-react';
 import { useMemoFirebase } from '@/firebase/firestore/use-collection';
 import { useToast } from '@/hooks/use-toast';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -26,6 +26,7 @@ import { cn } from '@/lib/utils';
 
 const PLACEMENT_TYPES = [
   { value: 'slider', label: 'Hero Slider', icon: Film, limit: 99 },
+  { value: 'reel-grid', label: 'Project Grid (16:9)', icon: Grid, limit: 99 },
   { value: 'reel-horizontal', label: 'Row 1 & 2 (Horizontal)', icon: LayoutGrid, limit: 4 },
   { value: 'reel-feature', label: 'Row 3 (Feature)', icon: Maximize, limit: 1 },
   { value: 'reel-medium', label: 'Row 4 (Medium)', icon: Box, limit: 2 },
@@ -54,7 +55,7 @@ export default function AdminPage() {
     category: ['Ads'] as string[],
     youtubeId: '',
     thumbnailUrl: '',
-    type: 'reel-horizontal',
+    type: 'reel-grid',
     order: 0
   });
 
@@ -101,12 +102,20 @@ export default function AdminPage() {
 
   const sortedVideos = (rawVideos || []).sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
 
-  const getSlotCount = (type: string) => {
-    return sortedVideos.filter(v => v.type === type).length;
+  const resetForm = () => {
+    setEditingId(null);
+    setFormData({
+      upperText: '',
+      lowerText: '',
+      upperTextSize: 24,
+      lowerTextSize: 13,
+      category: ['Ads'],
+      youtubeId: '',
+      thumbnailUrl: '',
+      type: 'reel-grid',
+      order: sortedVideos.length + 1
+    });
   };
-
-  const currentPlacement = PLACEMENT_TYPES.find(p => p.value === formData.type);
-  const isSlotFull = currentPlacement ? getSlotCount(formData.type) >= currentPlacement.limit : false;
 
   const handleCategoryToggle = (cat: string) => {
     setFormData(prev => {
@@ -153,21 +162,6 @@ export default function AdminPage() {
     }
   };
 
-  const resetForm = () => {
-    setEditingId(null);
-    setFormData({
-      upperText: '',
-      lowerText: '',
-      upperTextSize: 24,
-      lowerTextSize: 13,
-      category: ['Ads'],
-      youtubeId: '',
-      thumbnailUrl: '',
-      type: 'reel-horizontal',
-      order: sortedVideos.length + 1
-    });
-  };
-
   const handleEditClick = (v: any) => {
     setEditingId(v.id);
     setFormData({
@@ -178,7 +172,7 @@ export default function AdminPage() {
       category: Array.isArray(v.category) ? v.category : [v.category],
       youtubeId: v.youtubeId || '',
       thumbnailUrl: v.thumbnailUrl || '',
-      type: v.type || 'reel-horizontal',
+      type: v.type || 'reel-grid',
       order: v.order || 0
     });
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -271,12 +265,6 @@ export default function AdminPage() {
                           ))}
                         </SelectContent>
                       </Select>
-                      
-                      {isSlotFull && !editingId && (
-                        <div className="flex items-center gap-2 p-3 bg-primary/10 border border-primary/20 text-[10px] text-primary uppercase font-medium tracking-wider rounded-lg">
-                          <AlertCircle className="w-3 h-3" /> Slot capacity reached for this layout row.
-                        </div>
-                      )}
                     </div>
 
                     <div className="space-y-3">
@@ -331,7 +319,7 @@ export default function AdminPage() {
                         <Input placeholder="Custom Thumbnail URL (Optional)" className="rounded-lg bg-background border-white/10 h-12 text-[13px] font-medium" value={formData.thumbnailUrl} onChange={e => setFormData({...formData, thumbnailUrl: e.target.value})} />
                         
                         <div className="space-y-2">
-                          <Label className="text-[10px] tracking-tight text-white/20 font-medium italic">Series Sequence (Manual Re-order)</Label>
+                          <Label className="text-[10px] tracking-tight text-white/20 font-medium italic">Series Sequence</Label>
                           <Input type="number" className="rounded-lg bg-background border-white/10 h-10 text-[13px] font-medium" value={formData.order} onChange={e => setFormData({...formData, order: Number(e.target.value)})} />
                         </div>
                       </div>
@@ -357,7 +345,7 @@ export default function AdminPage() {
                 <div className="space-y-5">
                   <Label className="text-[11px] tracking-tight text-muted-foreground font-medium italic">Direct Contact & Socials</Label>
                   <Input placeholder="Public Email" className="rounded-lg bg-background border-white/10 h-10 text-[13px] font-medium" value={contactSettings.email} onChange={e => setContactSettings({...contactSettings, email: e.target.value})} />
-                  <Input placeholder="Locations (Mumbai, Delhi, etc)" className="rounded-lg bg-background border-white/10 h-10 text-[13px] font-medium" value={contactSettings.locations} onChange={e => setContactSettings({...contactSettings, locations: e.target.value})} />
+                  <Input placeholder="Locations" className="rounded-lg bg-background border-white/10 h-10 text-[13px] font-medium" value={contactSettings.locations} onChange={e => setContactSettings({...contactSettings, locations: e.target.value})} />
                   <Input placeholder="Instagram URL" className="rounded-lg bg-background border-white/10 h-10 text-[13px] font-medium" value={contactSettings.instagram} onChange={e => setContactSettings({...contactSettings, instagram: e.target.value})} />
                   <Input placeholder="WhatsApp Number" className="rounded-lg bg-background border-white/10 h-10 text-[13px] font-medium" value={contactSettings.whatsapp} onChange={e => setContactSettings({...contactSettings, whatsapp: e.target.value})} />
                 </div>
@@ -388,7 +376,7 @@ export default function AdminPage() {
                         <div className="flex flex-col">
                           <h2 className="text-[13px] tracking-tight font-medium italic text-white">{section.label}</h2>
                           <span className="text-[10px] tracking-tight text-white/20 font-medium italic mt-1">
-                            {videos.length} / {section.limit === 99 ? '∞' : section.limit} Entries
+                            {videos.length} Entries
                           </span>
                         </div>
                       </div>
@@ -417,9 +405,7 @@ export default function AdminPage() {
                               </div>
                               <div className="space-y-2">
                                 <h3 className="text-xl font-headline italic text-white tracking-tight leading-none truncate mb-1">{v.upperText || "Untitled Project"}</h3>
-                                <div className="flex items-center gap-4">
-                                  <p className="text-[11px] tracking-tight text-primary font-medium italic">{v.lowerText}</p>
-                                </div>
+                                <p className="text-[11px] tracking-tight text-primary font-medium italic">{v.lowerText}</p>
                               </div>
                             </div>
                             

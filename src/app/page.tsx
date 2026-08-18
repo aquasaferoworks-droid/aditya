@@ -1,25 +1,27 @@
+
 import { VaelHeader } from '@/components/VaelHeader';
 import { VaelReel } from '@/components/VaelReel';
 import { VaelFooter } from '@/components/VaelFooter';
 import { VaelSlider } from '@/components/VaelSlider';
+import { VaelFilms } from '@/components/VaelFilms';
 import { VaelContact } from '@/components/VaelContact';
 
 export default async function Home(props: {
   searchParams: Promise<{ category?: string }>;
 }) {
   const searchParams = await props.searchParams;
-  // Standardize default category to 'All' to match component logic
   const activeCategory = searchParams.category || 'All';
 
   return (
     <main className="relative bg-background min-h-screen selection:bg-primary/30">
       <VaelHeader />
       
-      <div className="pt-16 md:pt-20">
+      <div className="pt-20">
         <VaelSlider activeCategory={activeCategory} />
       </div>
 
       <div className="bg-background">
+        <VaelFilms activeCategory={activeCategory} />
         <VaelReel activeCategory={activeCategory} />
         <VaelContact />
         <VaelFooter />

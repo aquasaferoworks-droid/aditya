@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -8,23 +9,9 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 
 const categories = [
-  'All',
-  'Ads',
-  'Promo',
-  'Celebrity',
-  'Humor',
-  'Cricketers',
-  'VFX',
-  'Home & Living',
-  'Food',
-  'Car',
-  'Lifestyle',
-  'Drama',
-  'Sports',
-  'High Concept',
-  'Story',
-  'Fashion',
-  'Anthem'
+  'All', 'Ads', 'Promo', 'Celebrity', 'Humor', 'Cricketers', 'VFX',
+  'Home & Living', 'Food', 'Car', 'Lifestyle', 'Drama',
+  'Sports', 'High Concept', 'Story', 'Fashion', 'Anthem'
 ];
 
 export function VaelHeader() {
@@ -51,12 +38,6 @@ export function VaelHeader() {
       params.set('category', cat);
     }
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
-    if (cat !== 'All') {
-      const workSection = document.getElementById('work');
-      if (workSection) {
-        workSection.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
   };
 
   const handleWheel = (e: React.WheelEvent) => {
@@ -72,17 +53,14 @@ export function VaelHeader() {
         "px-6 md:px-16 flex items-center justify-between transition-all duration-300",
         isScrolled ? "h-14" : "h-20"
       )}>
-        {/* Left Spacer */}
         <div className="flex-1 hidden md:block" />
 
-        {/* Center Logo - Asian Paint Style Strokes */}
         <div className="flex-none text-center">
           <Link href="/" className="font-headline text-2xl tracking-tight hover:opacity-90 transition-opacity block">
             <span className="text-primary font-medium italic">Errol</span> <span className="text-white font-medium italic">Aditya</span>
           </Link>
         </div>
 
-        {/* Right Contact Button - Rounded-LG as requested */}
         <div className="flex-1 flex justify-end">
           <Button 
             className="rounded-lg bg-primary text-black hover:bg-white hover:text-black px-6 h-10 text-[13px] tracking-tight transition-all font-medium italic"
@@ -93,7 +71,7 @@ export function VaelHeader() {
         </div>
       </nav>
 
-      {/* Secondary Category Bar - Tightened & Google Sans */}
+      {/* Secondary Category Bar - Tightened & Larger Visible Labels */}
       <div className="relative group bg-black h-12 flex items-center border-t border-white/5 overflow-hidden">
         <div className="absolute left-0 top-0 bottom-0 w-24 z-10 pointer-events-none nav-fade-left" />
         <div className="absolute right-0 top-0 bottom-0 w-24 z-10 pointer-events-none nav-fade-right" />
@@ -109,7 +87,7 @@ export function VaelHeader() {
               onClick={() => setCategory(cat)}
               className={cn(
                 "relative text-[13px] tracking-tight whitespace-nowrap transition-all duration-300 font-body py-1 font-medium italic",
-                activeCategory === cat ? "text-primary" : "text-white/60 hover:text-white"
+                activeCategory === cat ? "text-primary opacity-100" : "text-white/60 hover:text-white"
               )}
             >
               {cat}
