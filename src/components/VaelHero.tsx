@@ -11,7 +11,7 @@ export function VaelHero() {
           loop
           playsInline
           preload="auto"
-          className="absolute inset-0 w-full h-full object-cover opacity-70"
+          className="absolute inset-0 w-full h-full object-cover opacity-100"
           poster="https://picsum.photos/seed/vael-hero/1920/1080"
         >
           <source 
@@ -21,7 +21,6 @@ export function VaelHero() {
         </video>
         <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-black/20" />
         <div className="absolute inset-0 grain-overlay opacity-10" />
-        <div className="absolute inset-0 cinematic-vignette opacity-50" />
       </div>
 
       <div className="absolute top-0 left-8 md:left-16 w-px h-[60%] bg-gradient-to-b from-transparent via-primary/40 to-transparent" />
