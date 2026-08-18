@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -8,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { VaelHeader } from '@/components/VaelHeader';
-import { Loader2, Trash2, LayoutGrid, Film, Smartphone, Maximize, Box, MoreVertical, Pencil, X, Video, AlertCircle, Image as ImageIcon, Plus, Minus, Grid } from 'lucide-react';
+import { Loader2, Trash2, LayoutGrid, Film, Smartphone, Maximize, Box, MoreVertical, Pencil, X, Video, AlertCircle, Image as ImageIcon, Plus, Minus, Grid, MessageSquare, Mail, Calendar } from 'lucide-react';
 import { useMemoFirebase } from '@/firebase/firestore/use-collection';
 import { useToast } from '@/hooks/use-toast';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -22,6 +23,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from '@/lib/utils';
+import { format } from 'date-fns';
 
 const PLACEMENT_TYPES = [
   { value: 'slider', label: 'Hero Slider', icon: Film },
@@ -41,6 +43,7 @@ const CATEGORIES = [
 export default function AdminPage() {
   const firestore = useFirestore();
   const { toast } = useToast();
+  const [activeTab, setActiveTab] = useState('videos');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUpdatingOrder, setIsUpdatingOrder] = useState<string | null>(null);
   const [isSavingSettings, setIsSavingSettings] = useState(false);
@@ -76,12 +79,18 @@ export default function AdminPage() {
     return collection(firestore, 'videos');
   }, [firestore]);
 
+  const submissionsQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return collection(firestore, 'submissions');
+  }, [firestore]);
+
   const settingsRef = useMemoFirebase(() => {
     if (!firestore) return null;
     return doc(firestore, 'settings', 'contact');
   }, [firestore]);
 
   const { data: rawVideos, loading: videosLoading } = useCollection(videosQuery);
+  const { data: rawSubmissions, loading: submissionsLoading } = useCollection(submissionsQuery);
   const { data: settingsDoc } = useDoc(settingsRef);
 
   useEffect(() => {
@@ -102,6 +111,7 @@ export default function AdminPage() {
   }, [settingsDoc]);
 
   const sortedVideos = (rawVideos || []).sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
+  const sortedSubmissions = (rawSubmissions || []).sort((a: any, b: any) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
 
   const resetForm = () => {
     setEditingId(null);
@@ -188,6 +198,7 @@ export default function AdminPage() {
       type: v.type || 'reel-grid',
       order: v.order || 0
     });
+    setActiveTab('videos');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -217,6 +228,17 @@ export default function AdminPage() {
     }
   };
 
+  const handleDeleteSubmission = async (id: string) => {
+    if (!firestore) return;
+    if (!confirm("Are you sure you want to remove this client inquiry?")) return;
+    try {
+      await deleteDoc(doc(firestore, 'submissions', id));
+      toast({ title: "Submission Removed" });
+    } catch (error: any) {
+      toast({ title: "Error Removing Submission", variant: "destructive" });
+    }
+  };
+
   const handleSaveSettings = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!firestore) return;
@@ -234,13 +256,15 @@ export default function AdminPage() {
   return (
     <main className="min-h-screen bg-background text-foreground font-body selection:bg-primary selection:text-black">
       <VaelHeader />
-      <div className="flex pt-32 min-h-screen">
-        {/* Management Sidebar */}
-        <aside className="w-[480px] border-r border-white/5 bg-black/60 flex flex-col sticky top-32 h-[calc(100vh-8rem)] p-10 overflow-y-auto no-scrollbar">
-          <Tabs defaultValue="videos" className="w-full">
-            <TabsList className="bg-white/5 rounded-lg p-1 w-full grid grid-cols-2 mb-10">
-              <TabsTrigger value="videos" className="rounded-md text-[13px] tracking-tight py-3 font-medium italic">Project Manager</TabsTrigger>
-              <TabsTrigger value="settings" className="rounded-md text-[13px] tracking-tight py-3 font-medium italic">Studio Settings</TabsTrigger>
+      
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <div className="flex pt-32 min-h-screen">
+          {/* Management Sidebar */}
+          <aside className="w-[480px] border-r border-white/5 bg-black/60 flex flex-col sticky top-32 h-[calc(100vh-8rem)] p-10 overflow-y-auto no-scrollbar">
+            <TabsList className="bg-white/5 rounded-lg p-1 w-full grid grid-cols-3 mb-10">
+              <TabsTrigger value="videos" className="rounded-md text-[12px] tracking-tight py-3 font-medium italic">Projects</TabsTrigger>
+              <TabsTrigger value="settings" className="rounded-md text-[12px] tracking-tight py-3 font-medium italic">Studio</TabsTrigger>
+              <TabsTrigger value="submissions" className="rounded-md text-[12px] tracking-tight py-3 font-medium italic">Submissions</TabsTrigger>
             </TabsList>
 
             <TabsContent value="videos" className="space-y-8">
@@ -406,112 +430,218 @@ export default function AdminPage() {
                 </Button>
               </form>
             </TabsContent>
-          </Tabs>
-        </aside>
 
-        {/* Project Archive View */}
-        <div className="flex-1 p-16 overflow-y-auto no-scrollbar bg-white/[0.01]">
-          <div className="max-w-4xl mx-auto">
-            <h1 className="text-6xl font-headline italic tracking-tighter mb-4 text-white">Project <span className="text-primary not-italic">Archive</span></h1>
-            <p className="text-muted-foreground font-body text-sm tracking-widest uppercase mb-16 italic opacity-40">Manage your directorial series and placement sequence.</p>
+            <TabsContent value="submissions" className="space-y-8">
+              <div className="p-8 border border-white/5 bg-black/20 rounded-lg text-center space-y-4">
+                <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto text-primary">
+                  <MessageSquare className="w-8 h-8" />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-[14px] font-medium italic tracking-tight text-white">Inbox Management</h3>
+                  <p className="text-[11px] text-white/40 italic leading-relaxed">
+                    Review and archive client inquiries directly from your directorial studio.
+                  </p>
+                </div>
+              </div>
+            </TabsContent>
+          </aside>
 
-            <div className="space-y-24">
-              {PLACEMENT_TYPES.map(section => {
-                const videos = sortedVideos.filter(v => v.type === section.value);
-                return (
-                  <div key={section.value} className="space-y-8">
-                    <div className="flex items-center justify-between group">
-                      <div className="flex items-center gap-5">
-                        <div className="p-3 border border-white/5 bg-white/5 text-white/40 rounded-lg">
-                          <section.icon className="w-5 h-5" />
-                        </div>
-                        <div className="flex flex-col">
-                          <h2 className="text-[13px] tracking-tight font-medium italic text-white">{section.label}</h2>
-                          <span className="text-[10px] tracking-tight text-white/20 font-medium italic mt-1">
-                            {videos.length} Entries
-                          </span>
-                        </div>
-                      </div>
-                      <div className="h-px flex-1 bg-white/5 mx-10" />
-                    </div>
+          {/* Project Archive View */}
+          <div className="flex-1 p-16 overflow-y-auto no-scrollbar bg-white/[0.01]">
+            <TabsContent value="videos" className="m-0">
+              <div className="max-w-4xl mx-auto">
+                <h1 className="text-6xl font-headline italic tracking-tighter mb-4 text-white">Project <span className="text-primary not-italic">Archive</span></h1>
+                <p className="text-muted-foreground font-body text-sm tracking-widest uppercase mb-16 italic opacity-40">Manage your directorial series and placement sequence.</p>
 
-                    <div className="grid grid-cols-1 gap-4">
-                      {videos.map(v => {
-                        const ytId = extractYoutubeId(v.youtubeId);
-                        const displayThumbnail = v.thumbnailUrl || (ytId ? getYoutubeThumbnail(ytId, 'hq') : null);
-                        
-                        return (
-                          <div key={v.id} className={cn(
-                            "group border transition-all duration-500 p-6 flex items-center justify-between bg-black/40 rounded-lg",
-                            editingId === v.id ? 'border-primary shadow-[0_0_30px_rgba(255,215,0,0.1)]' : 'border-white/5 hover:border-white/10'
-                          )}>
-                            <div className="flex items-center gap-10">
-                              <div className="w-32 aspect-video relative bg-black border border-white/5 overflow-hidden rounded-lg">
-                                {displayThumbnail ? (
-                                  <img src={displayThumbnail} className="object-cover w-full h-full opacity-60 group-hover:opacity-100 transition-opacity duration-700" alt="" />
-                                ) : (
-                                  <div className="flex items-center justify-center h-full opacity-20">
-                                    <Video className="w-8 h-8" />
-                                  </div>
-                                )}
-                              </div>
-                              <div className="space-y-2">
-                                <h3 className="text-xl font-headline italic text-white tracking-tight leading-none truncate mb-1">{v.upperText || "Untitled Project"}</h3>
-                                <p className="text-[11px] tracking-tight text-primary font-medium italic">{v.lowerText}</p>
-                              </div>
+                <div className="space-y-24">
+                  {PLACEMENT_TYPES.map(section => {
+                    const videos = sortedVideos.filter(v => v.type === section.value);
+                    return (
+                      <div key={section.value} className="space-y-8">
+                        <div className="flex items-center justify-between group">
+                          <div className="flex items-center gap-5">
+                            <div className="p-3 border border-white/5 bg-white/5 text-white/40 rounded-lg">
+                              <section.icon className="w-5 h-5" />
                             </div>
-                            
-                            <div className="flex items-center gap-6">
-                              <div className="flex flex-col items-end gap-1">
-                                <span className="text-[10px] tracking-tight text-white/20 font-medium italic">Order</span>
-                                <input 
-                                  type="number" 
-                                  value={v.order || 0}
-                                  onChange={(e) => handleUpdateOrder(v.id, Number(e.target.value))}
-                                  disabled={isUpdatingOrder === v.id}
-                                  className="w-12 bg-transparent border-b border-white/10 text-[13px] text-center font-medium text-primary focus:outline-none focus:border-primary"
-                                />
-                              </div>
-
-                              <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                  <button className="p-3 bg-white/5 hover:bg-white/10 text-white/20 hover:text-white transition-all rounded-lg">
-                                    <MoreVertical className="w-5 h-5" />
-                                  </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent className="rounded-lg bg-black border-white/10 min-w-[160px] p-2">
-                                  <DropdownMenuItem 
-                                    onClick={() => handleEditClick(v)}
-                                    className="text-[12px] tracking-tight cursor-pointer focus:bg-primary focus:text-black font-medium italic py-3 rounded-md"
-                                  >
-                                    <Pencil className="w-3 h-3 mr-3" /> Edit Entry
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem 
-                                    onClick={() => handleDelete(v.id)}
-                                    className="text-[12px] tracking-tight cursor-pointer text-destructive focus:bg-destructive focus:text-white font-medium italic py-3 rounded-md"
-                                  >
-                                    <Trash2 className="w-3 h-3 mr-3" /> Remove Permanent
-                                  </DropdownMenuItem>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
+                            <div className="flex flex-col">
+                              <h2 className="text-[13px] tracking-tight font-medium italic text-white">{section.label}</h2>
+                              <span className="text-[10px] tracking-tight text-white/20 font-medium italic mt-1">
+                                {videos.length} Entries
+                              </span>
                             </div>
                           </div>
-                        );
-                      })}
-                      {videos.length === 0 && (
-                        <div className="py-12 flex flex-col items-center justify-center opacity-10 border border-dashed border-white/20 rounded-lg">
-                          <ImageIcon className="w-8 h-8 mb-2" />
-                          <p className="text-[11px] tracking-tight font-medium italic">No entries for this row</p>
+                          <div className="h-px flex-1 bg-white/5 mx-10" />
                         </div>
-                      )}
+
+                        <div className="grid grid-cols-1 gap-4">
+                          {videos.map(v => {
+                            const ytId = extractYoutubeId(v.youtubeId);
+                            const displayThumbnail = v.thumbnailUrl || (ytId ? getYoutubeThumbnail(ytId, 'hq') : null);
+                            
+                            return (
+                              <div key={v.id} className={cn(
+                                "group border transition-all duration-500 p-6 flex items-center justify-between bg-black/40 rounded-lg",
+                                editingId === v.id ? 'border-primary shadow-[0_0_30px_rgba(255,215,0,0.1)]' : 'border-white/5 hover:border-white/10'
+                              )}>
+                                <div className="flex items-center gap-10">
+                                  <div className="w-32 aspect-video relative bg-black border border-white/5 overflow-hidden rounded-lg">
+                                    {displayThumbnail ? (
+                                      <img src={displayThumbnail} className="object-cover w-full h-full opacity-60 group-hover:opacity-100 transition-opacity duration-700" alt="" />
+                                    ) : (
+                                      <div className="flex items-center justify-center h-full opacity-20">
+                                        <Video className="w-8 h-8" />
+                                      </div>
+                                    )}
+                                  </div>
+                                  <div className="space-y-2">
+                                    <h3 className="text-xl font-headline italic text-white tracking-tight leading-none truncate mb-1">{v.upperText || "Untitled Project"}</h3>
+                                    <p className="text-[11px] tracking-tight text-primary font-medium italic">{v.lowerText}</p>
+                                  </div>
+                                </div>
+                                
+                                <div className="flex items-center gap-6">
+                                  <div className="flex flex-col items-end gap-1">
+                                    <span className="text-[10px] tracking-tight text-white/20 font-medium italic">Order</span>
+                                    <input 
+                                      type="number" 
+                                      value={v.order || 0}
+                                      onChange={(e) => handleUpdateOrder(v.id, Number(e.target.value))}
+                                      disabled={isUpdatingOrder === v.id}
+                                      className="w-12 bg-transparent border-b border-white/10 text-[13px] text-center font-medium text-primary focus:outline-none focus:border-primary"
+                                    />
+                                  </div>
+
+                                  <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                      <button className="p-3 bg-white/5 hover:bg-white/10 text-white/20 hover:text-white transition-all rounded-lg">
+                                        <MoreVertical className="w-5 h-5" />
+                                      </button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent className="rounded-lg bg-black border-white/10 min-w-[160px] p-2">
+                                      <DropdownMenuItem 
+                                        onClick={() => handleEditClick(v)}
+                                        className="text-[12px] tracking-tight cursor-pointer focus:bg-primary focus:text-black font-medium italic py-3 rounded-md"
+                                      >
+                                        <Pencil className="w-3 h-3 mr-3" /> Edit Entry
+                                      </DropdownMenuItem>
+                                      <DropdownMenuItem 
+                                        onClick={() => handleDelete(v.id)}
+                                        className="text-[12px] tracking-tight cursor-pointer text-destructive focus:bg-destructive focus:text-white font-medium italic py-3 rounded-md"
+                                      >
+                                        <Trash2 className="w-3 h-3 mr-3" /> Remove Permanent
+                                      </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                  </DropdownMenu>
+                                </div>
+                              </div>
+                            );
+                          })}
+                          {videos.length === 0 && (
+                            <div className="py-12 flex flex-col items-center justify-center opacity-10 border border-dashed border-white/20 rounded-lg">
+                              <ImageIcon className="w-8 h-8 mb-2" />
+                              <p className="text-[11px] tracking-tight font-medium italic">No entries for this row</p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="settings" className="m-0">
+              <div className="max-w-4xl mx-auto">
+                <h1 className="text-6xl font-headline italic tracking-tighter mb-4 text-white">Studio <span className="text-primary not-italic">Settings</span></h1>
+                <p className="text-muted-foreground font-body text-sm tracking-widest uppercase mb-16 italic opacity-40">Configure global directorial branding and socials.</p>
+                
+                <div className="p-20 border border-white/5 bg-black/40 rounded-lg text-center">
+                  <div className="max-w-md mx-auto space-y-6">
+                    <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
+                      <Film className="w-10 h-10 text-primary" />
                     </div>
+                    <h3 className="text-2xl font-headline italic text-white">Global Configuration</h3>
+                    <p className="text-sm text-white/40 italic leading-relaxed">
+                      Adjust your directorial identity and contact settings using the panel on the left. Changes are synchronized in real-time.
+                    </p>
                   </div>
-                );
-              })}
-            </div>
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="submissions" className="m-0">
+              <div className="max-w-4xl mx-auto">
+                <h1 className="text-6xl font-headline italic tracking-tighter mb-4 text-white">Client <span className="text-primary not-italic">Submissions</span></h1>
+                <p className="text-muted-foreground font-body text-sm tracking-widest uppercase mb-16 italic opacity-40">Direct inquiries from your cinematic portfolio.</p>
+
+                <div className="space-y-6">
+                  {submissionsLoading ? (
+                    <div className="py-32 flex items-center justify-center">
+                      <Loader2 className="w-10 h-10 text-primary animate-spin" />
+                    </div>
+                  ) : sortedSubmissions.length > 0 ? (
+                    sortedSubmissions.map((sub: any) => (
+                      <div key={sub.id} className="group border border-white/5 bg-black/40 hover:border-primary/20 transition-all duration-500 p-8 rounded-lg space-y-6 relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-1 h-full bg-primary/20 group-hover:bg-primary transition-colors" />
+                        
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                          <div className="space-y-4">
+                            <div className="flex items-center gap-4">
+                              <div className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center text-primary">
+                                <MessageSquare className="w-5 h-5" />
+                              </div>
+                              <div>
+                                <h3 className="text-2xl font-headline italic text-white tracking-tight leading-none">{sub.name}</h3>
+                                <div className="flex items-center gap-3 mt-1">
+                                  <span className="text-[10px] tracking-widest text-primary uppercase font-medium italic">{sub.type || "General Inquiry"}</span>
+                                  <span className="w-1 h-1 bg-white/20 rounded-full" />
+                                  <span className="text-[10px] tracking-tight text-white/40 italic flex items-center gap-1">
+                                    <Calendar className="w-3 h-3" />
+                                    {sub.createdAt ? format(sub.createdAt.toDate(), 'MMM dd, yyyy') : 'N/A'}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="flex items-center gap-4">
+                            <a 
+                              href={`mailto:${sub.email}`} 
+                              className="px-6 py-3 border border-white/10 hover:border-primary/40 hover:bg-primary/5 text-[11px] tracking-widest text-white uppercase font-medium italic rounded-lg transition-all flex items-center gap-2"
+                            >
+                              <Mail className="w-3 h-3" /> Reply Email
+                            </a>
+                            <button 
+                              onClick={() => handleDeleteSubmission(sub.id)}
+                              className="p-3 bg-destructive/10 text-destructive hover:bg-destructive hover:text-white transition-all rounded-lg"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="p-6 bg-white/[0.02] border border-white/5 rounded-lg">
+                          <p className="text-[9px] tracking-[0.3em] uppercase text-primary/40 font-medium italic mb-2">Project Brief</p>
+                          <p className="text-[13px] text-white/70 italic leading-relaxed whitespace-pre-wrap font-body">
+                            {sub.brief || "No brief provided."}
+                          </p>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="py-32 text-center space-y-4 border border-dashed border-white/10 rounded-lg">
+                      <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto text-white/10">
+                        <MessageSquare className="w-8 h-8" />
+                      </div>
+                      <p className="text-[12px] text-white/20 italic tracking-widest uppercase">No client submissions found</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </TabsContent>
           </div>
         </div>
-      </div>
+      </Tabs>
     </main>
   );
 }

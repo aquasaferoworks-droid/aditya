@@ -39,6 +39,19 @@
         "twitter": { "type": "string" },
         "logoSize": { "type": "number", "default": 24 }
       }
+    },
+    "ContactSubmission": {
+      "title": "Contact Submission",
+      "description": "Information submitted via the contact form by potential clients.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "type": { "type": "string" },
+        "brief": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "email"]
     }
   },
   "auth": {
@@ -52,6 +65,10 @@
     "/settings/contact": {
       "schema": "ContactSettings",
       "description": "Single document for global contact settings."
+    },
+    "/submissions/{submissionId}": {
+      "schema": "ContactSubmission",
+      "description": "Collection of all client contact submissions."
     }
   }
 }
