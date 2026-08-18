@@ -25,7 +25,7 @@
     },
     "ContactSettings": {
       "title": "Contact Settings",
-      "description": "Global settings for contact information and social links.",
+      "description": "Global settings for contact information, social links, and branding.",
       "type": "object",
       "properties": {
         "email": { "type": "string" },
@@ -36,7 +36,8 @@
         "youtube": { "type": "string" },
         "whatsapp": { "type": "string" },
         "facebook": { "type": "string" },
-        "twitter": { "type": "string" }
+        "twitter": { "type": "string" },
+        "logoSize": { "type": "number", "default": 24 }
       }
     }
   },

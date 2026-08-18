@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -24,12 +25,12 @@ import {
 import { cn } from '@/lib/utils';
 
 const PLACEMENT_TYPES = [
-  { value: 'slider', label: 'Hero Slider', icon: Film, limit: 99 },
-  { value: 'reel-grid', label: 'New', icon: Grid, limit: 99 },
-  { value: 'reel-horizontal', label: 'Row 1 & 2 (Horizontal)', icon: LayoutGrid, limit: 4 },
-  { value: 'reel-feature', label: 'Row 3 (Feature)', icon: Maximize, limit: 1 },
-  { value: 'reel-medium', label: 'Row 4 (Medium)', icon: Box, limit: 2 },
-  { value: 'reel-vertical', label: 'Row 5 (Vertical)', icon: Smartphone, limit: 4 },
+  { value: 'slider', label: 'Hero Slider', icon: Film },
+  { value: 'reel-grid', label: 'New (16:9)', icon: Grid },
+  { value: 'reel-horizontal', label: 'Row 1 & 2 (Horizontal)', icon: LayoutGrid },
+  { value: 'reel-feature', label: 'Row 3 (Feature)', icon: Maximize },
+  { value: 'reel-medium', label: 'Row 4 (Medium)', icon: Box },
+  { value: 'reel-vertical', label: 'Row 5 (Vertical)', icon: Smartphone },
 ];
 
 const CATEGORIES = [
@@ -67,7 +68,8 @@ export default function AdminPage() {
     youtube: '',
     whatsapp: '',
     facebook: '',
-    twitter: ''
+    twitter: '',
+    logoSize: 24
   });
 
   const videosQuery = useMemoFirebase(() => {
@@ -94,7 +96,8 @@ export default function AdminPage() {
         youtube: settingsDoc.youtube || '',
         whatsapp: settingsDoc.whatsapp || '',
         facebook: settingsDoc.facebook || '',
-        twitter: settingsDoc.twitter || ''
+        twitter: settingsDoc.twitter || '',
+        logoSize: settingsDoc.logoSize || 24
       });
     }
   }, [settingsDoc]);
@@ -337,6 +340,20 @@ export default function AdminPage() {
             <TabsContent value="settings" className="space-y-8">
               <form onSubmit={handleSaveSettings} className="space-y-8">
                 <div className="space-y-5">
+                  <Label className="text-[11px] tracking-tight text-muted-foreground font-medium italic">Branding & Layout</Label>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between mb-1">
+                      <Label className="text-[10px] text-white/40 italic">Logo Font Size</Label>
+                      <div className="flex items-center gap-2">
+                        <button type="button" onClick={() => setContactSettings(s => ({...s, logoSize: Math.max(12, s.logoSize - 1)}))} className="p-1 text-white/40 hover:text-primary"><Minus className="w-3 h-3" /></button>
+                        <span className="text-[10px] text-primary font-bold">{contactSettings.logoSize}px</span>
+                        <button type="button" onClick={() => setContactSettings(s => ({...s, logoSize: Math.min(60, s.logoSize + 1)}))} className="p-1 text-white/40 hover:text-primary"><Plus className="w-3 h-3" /></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-5">
                   <Label className="text-[11px] tracking-tight text-muted-foreground font-medium italic">Inquiry Section</Label>
                   <Input placeholder="Form Heading" className="rounded-lg bg-background border-white/10 h-12 text-[13px] italic font-medium" value={contactSettings.formHeading} onChange={e => setContactSettings({...contactSettings, formHeading: e.target.value})} />
                   <Textarea placeholder="Short Welcome Message" className="rounded-lg bg-background border-white/10 min-h-[120px] text-[13px] italic leading-relaxed" value={contactSettings.formDescription} onChange={e => setContactSettings({...contactSettings, formDescription: e.target.value})} />
@@ -346,6 +363,7 @@ export default function AdminPage() {
                   <Input placeholder="Public Email" className="rounded-lg bg-background border-white/10 h-10 text-[13px] font-medium" value={contactSettings.email} onChange={e => setContactSettings({...contactSettings, email: e.target.value})} />
                   <Input placeholder="Locations" className="rounded-lg bg-background border-white/10 h-10 text-[13px] font-medium" value={contactSettings.locations} onChange={e => setContactSettings({...contactSettings, locations: e.target.value})} />
                   <Input placeholder="Instagram URL" className="rounded-lg bg-background border-white/10 h-10 text-[13px] font-medium" value={contactSettings.instagram} onChange={e => setContactSettings({...contactSettings, instagram: e.target.value})} />
+                  <Input placeholder="YouTube Channel URL" className="rounded-lg bg-background border-white/10 h-10 text-[13px] font-medium" value={contactSettings.youtube} onChange={e => setContactSettings({...contactSettings, youtube: e.target.value})} />
                   <Input placeholder="WhatsApp Number" className="rounded-lg bg-background border-white/10 h-10 text-[13px] font-medium" value={contactSettings.whatsapp} onChange={e => setContactSettings({...contactSettings, whatsapp: e.target.value})} />
                 </div>
                 <Button type="submit" disabled={isSavingSettings} className="w-full rounded-lg bg-primary text-black text-[13px] tracking-tight font-medium py-8 italic shadow-2xl">
