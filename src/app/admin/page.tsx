@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -26,7 +25,7 @@ import { cn } from '@/lib/utils';
 
 const PLACEMENT_TYPES = [
   { value: 'slider', label: 'Hero Slider', icon: Film, limit: 99 },
-  { value: 'reel-grid', label: 'Project Grid (16:9)', icon: Grid, limit: 99 },
+  { value: 'reel-grid', label: 'New', icon: Grid, limit: 99 },
   { value: 'reel-horizontal', label: 'Row 1 & 2 (Horizontal)', icon: LayoutGrid, limit: 4 },
   { value: 'reel-feature', label: 'Row 3 (Feature)', icon: Maximize, limit: 1 },
   { value: 'reel-medium', label: 'Row 4 (Medium)', icon: Box, limit: 2 },

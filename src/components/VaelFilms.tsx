@@ -1,4 +1,3 @@
-
 'use client';
 
 import Image from 'next/image';
@@ -55,7 +54,7 @@ export function VaelFilms({ activeCategory }: VaelFilmsProps) {
     <section id="work" className="py-24 md:py-32 bg-background px-6 md:px-16 border-t border-white/5">
       <div className="max-w-[1600px] mx-auto mb-12 flex items-center justify-between">
         <div className="flex items-center gap-6">
-          <span className="text-[12px] tracking-tight text-primary font-medium italic whitespace-nowrap">Project Grid</span>
+          <span className="text-[12px] tracking-tight text-primary font-medium italic whitespace-nowrap">New</span>
           <div className="h-[1px] w-24 bg-primary/20" />
         </div>
       </div>
