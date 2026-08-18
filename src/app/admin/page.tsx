@@ -48,6 +48,7 @@ const PLACEMENT_TYPES = [
   { value: 'row-27-feature', label: 'Row 27 (Feature)', icon: Maximize },
   { value: 'row-28-29-horizontal', label: 'Row 28 & 29 (Horizontal)', icon: LayoutGrid },
   { value: 'row-30-feature', label: 'Row 30 (Feature)', icon: Maximize },
+  { value: 'row-31-unlimited', label: 'Row 31 (Unlimited 16:9)', icon: Grid },
 ];
 
 const CATEGORIES = [
@@ -535,7 +536,7 @@ export default function AdminPage() {
                                 <div className="flex items-center gap-10">
                                   <div className="w-32 aspect-video relative bg-black border border-white/5 overflow-hidden rounded-lg">
                                     {displayThumbnail ? (
-                                      <img src={displayThumbnail} className="object-cover w-full h-full opacity-60 group-hover:opacity-100 transition-opacity duration-700" alt="" />
+                                      <img src={displayThumbnail} className="object-cover w-full h-full opacity-100 transition-opacity duration-700" alt="" />
                                     ) : (
                                       <div className="flex items-center justify-center h-full opacity-20">
                                         <Video className="w-8 h-8" />

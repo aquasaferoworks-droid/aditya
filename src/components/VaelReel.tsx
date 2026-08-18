@@ -106,6 +106,7 @@ const ROW_SEQUENCE = [
   { id: 'row-27-feature', layout: 'feature', label: 'Row 27' },
   { id: 'row-28-29-horizontal', layout: 'horizontal', label: 'Row 28 & 29' },
   { id: 'row-30-feature', layout: 'feature', label: 'Row 30' },
+  { id: 'row-31-unlimited', layout: 'horizontal', label: 'Row 31' },
 ];
 
 export function VaelReel({ activeCategory }: VaelReelProps) {
