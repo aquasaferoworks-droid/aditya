@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState } from 'react';
@@ -6,7 +7,7 @@ import Image from 'next/image';
 import { useFirestore, useCollection } from '@/firebase';
 import { collection } from 'firebase/firestore';
 import { useMemoFirebase } from '@/firebase/firestore/use-collection';
-import { getVideoType, getYoutubeThumbnail, extractYoutubeId } from '@/lib/video-utils';
+import { getYoutubeThumbnail, extractYoutubeId } from '@/lib/video-utils';
 import { UnifiedVideoPlayer } from './UnifiedVideoPlayer';
 import { Video } from 'lucide-react';
 import {
@@ -86,6 +87,27 @@ const VideoCard = ({ video, aspectRatio, onClick }: { video: VideoItem, aspectRa
   );
 };
 
+const ROW_SEQUENCE = [
+  { id: 'row-1-2-horizontal', layout: 'horizontal', label: 'Row 1 & 2' },
+  { id: 'row-3-feature', layout: 'feature', label: 'Row 3' },
+  { id: 'row-4-medium', layout: 'horizontal', label: 'Row 4' },
+  { id: 'row-5-vertical', layout: 'vertical', label: 'Row 5' },
+  { id: 'row-6-feature', layout: 'feature', label: 'Row 6' },
+  { id: 'row-7-8-horizontal', layout: 'horizontal', label: 'Row 7 & 8' },
+  { id: 'row-9-feature', layout: 'feature', label: 'Row 9' },
+  { id: 'row-10-11-horizontal', layout: 'horizontal', label: 'Row 10 & 11' },
+  { id: 'row-12-feature', layout: 'feature', label: 'Row 12' },
+  { id: 'row-13-vertical', layout: 'vertical', label: 'Row 13' },
+  { id: 'row-14-21-horizontal', layout: 'horizontal', label: 'Row 14-21' },
+  { id: 'row-22-feature', layout: 'feature', label: 'Row 22' },
+  { id: 'row-23-horizontal', layout: 'horizontal', label: 'Row 23' },
+  { id: 'row-24-feature', layout: 'feature', label: 'Row 24' },
+  { id: 'row-25-26-horizontal', layout: 'horizontal', label: 'Row 25 & 26' },
+  { id: 'row-27-feature', layout: 'feature', label: 'Row 27' },
+  { id: 'row-28-29-horizontal', layout: 'horizontal', label: 'Row 28 & 29' },
+  { id: 'row-30-feature', layout: 'feature', label: 'Row 30' },
+];
+
 export function VaelReel({ activeCategory }: VaelReelProps) {
   const firestore = useFirestore();
   const [selectedVideo, setSelectedVideo] = useState<VideoItem | null>(null);
@@ -97,60 +119,56 @@ export function VaelReel({ activeCategory }: VaelReelProps) {
 
   const { data: allVideos, loading } = useCollection(reelQuery);
 
-  const filteredVideos = (allVideos as VideoItem[] || []).filter(v => {
+  if (loading || !allVideos) return null;
+
+  const filteredVideos = (allVideos as VideoItem[]).filter(v => {
     if (activeCategory.toLowerCase() === 'all') return true;
     const categories = Array.isArray(v.category) ? v.category : [v.category];
     return categories.some(c => c?.toLowerCase() === activeCategory.toLowerCase());
   }).sort((a, b) => (a.order || 0) - (b.order || 0));
 
-  const horizontals = filteredVideos.filter(v => v.type === 'reel-horizontal');
-  const features = filteredVideos.filter(v => v.type === 'reel-feature');
-  const mediums = filteredVideos.filter(v => v.type === 'reel-medium');
-  const verticals = filteredVideos.filter(v => v.type === 'reel-vertical');
-
-  if (loading) return null;
-  if (filteredVideos.length === 0) return null;
-
   return (
     <section id="reel" className="py-24 md:py-32 bg-background overflow-hidden border-t border-white/5">
-      <div className="max-w-[1600px] mx-auto px-6 md:px-16 space-y-8 md:space-y-12">
+      <div className="max-w-[1600px] mx-auto px-6 md:px-16 space-y-24">
         
-        <div className="flex items-center gap-6 mb-4">
-          <span className="text-[13px] tracking-tight text-primary font-medium whitespace-nowrap">{activeCategory}</span>
-          <div className="h-[1px] flex-1 bg-white/10" />
-        </div>
+        {ROW_SEQUENCE.map((row) => {
+          const rowVideos = filteredVideos.filter(v => v.type === row.id);
+          if (rowVideos.length === 0) return null;
 
-        {horizontals.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
-            {horizontals.map((v) => (
-              <VideoCard key={v.id} video={v} aspectRatio="aspect-video" onClick={setSelectedVideo} />
-            ))}
-          </div>
-        )}
+          return (
+            <div key={row.id} className="space-y-12">
+              <div className="flex items-center gap-6">
+                <span className="text-[13px] tracking-tight text-primary font-medium whitespace-nowrap">{row.label}</span>
+                <div className="h-[1px] flex-1 bg-white/10" />
+                <span className="text-[10px] tracking-widest text-white/20 uppercase font-medium">{activeCategory}</span>
+              </div>
 
-        {features.length > 0 && (
-          <div className="w-full">
-            {features.map((v) => (
-              <VideoCard key={v.id} video={v} aspectRatio="aspect-video md:aspect-[21/9]" onClick={setSelectedVideo} />
-            ))}
-          </div>
-        )}
+              {row.layout === 'horizontal' && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
+                  {rowVideos.map((v) => (
+                    <VideoCard key={v.id} video={v} aspectRatio="aspect-video" onClick={setSelectedVideo} />
+                  ))}
+                </div>
+              )}
 
-        {mediums.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
-            {mediums.map((v) => (
-              <VideoCard key={v.id} video={v} aspectRatio="aspect-video" onClick={setSelectedVideo} />
-            ))}
-          </div>
-        )}
+              {row.layout === 'feature' && (
+                <div className="w-full">
+                  {rowVideos.map((v) => (
+                    <VideoCard key={v.id} video={v} aspectRatio="aspect-video md:aspect-[21/9]" onClick={setSelectedVideo} />
+                  ))}
+                </div>
+              )}
 
-        {verticals.length > 0 && (
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-10">
-            {verticals.map((v) => (
-              <VideoCard key={v.id} video={v} aspectRatio="aspect-[9/16]" onClick={setSelectedVideo} />
-            ))}
-          </div>
-        )}
+              {row.layout === 'vertical' && (
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-10">
+                  {rowVideos.map((v) => (
+                    <VideoCard key={v.id} video={v} aspectRatio="aspect-[9/16]" onClick={setSelectedVideo} />
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
 
       <Dialog open={!!selectedVideo} onOpenChange={(open) => !open && setSelectedVideo(null)}>

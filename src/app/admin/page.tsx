@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -10,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { VaelHeader } from '@/components/VaelHeader';
-import { Loader2, Trash2, LayoutGrid, Film, Smartphone, Maximize, Box, MoreVertical, Pencil, X, Video, AlertCircle, Image as ImageIcon, Plus, Minus, Grid, MessageSquare, Mail, Calendar, LogOut } from 'lucide-react';
+import { Loader2, Trash2, LayoutGrid, Film, Smartphone, Maximize, Box, MoreVertical, Pencil, X, Video, Image as ImageIcon, Plus, Minus, Grid, MessageSquare, Mail, Calendar, LogOut } from 'lucide-react';
 import { useMemoFirebase } from '@/firebase/firestore/use-collection';
 import { useToast } from '@/hooks/use-toast';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -29,10 +30,24 @@ import { format } from 'date-fns';
 const PLACEMENT_TYPES = [
   { value: 'slider', label: 'Hero Slider', icon: Film },
   { value: 'reel-grid', label: 'New (16:9)', icon: Grid },
-  { value: 'reel-horizontal', label: 'Row 1 & 2 (Horizontal)', icon: LayoutGrid },
-  { value: 'reel-feature', label: 'Row 3 (Feature)', icon: Maximize },
-  { value: 'reel-medium', label: 'Row 4 (Medium)', icon: Box },
-  { value: 'reel-vertical', label: 'Row 5 (Vertical)', icon: Smartphone },
+  { value: 'row-1-2-horizontal', label: 'Row 1 & 2 (Horizontal)', icon: LayoutGrid },
+  { value: 'row-3-feature', label: 'Row 3 (Feature)', icon: Maximize },
+  { value: 'row-4-medium', label: 'Row 4 (Medium)', icon: Box },
+  { value: 'row-5-vertical', label: 'Row 5 (Vertical)', icon: Smartphone },
+  { value: 'row-6-feature', label: 'Row 6 (Feature)', icon: Maximize },
+  { value: 'row-7-8-horizontal', label: 'Row 7 & 8 (Horizontal)', icon: LayoutGrid },
+  { value: 'row-9-feature', label: 'Row 9 (Feature)', icon: Maximize },
+  { value: 'row-10-11-horizontal', label: 'Row 10 & 11 (Horizontal)', icon: LayoutGrid },
+  { value: 'row-12-feature', label: 'Row 12 (Feature)', icon: Maximize },
+  { value: 'row-13-vertical', label: 'Row 13 (Vertical)', icon: Smartphone },
+  { value: 'row-14-21-horizontal', label: 'Row 14-21 (Horizontal)', icon: LayoutGrid },
+  { value: 'row-22-feature', label: 'Row 22 (Feature)', icon: Maximize },
+  { value: 'row-23-horizontal', label: 'Row 23 (Horizontal)', icon: LayoutGrid },
+  { value: 'row-24-feature', label: 'Row 24 (Feature)', icon: Maximize },
+  { value: 'row-25-26-horizontal', label: 'Row 25 & 26 (Horizontal)', icon: LayoutGrid },
+  { value: 'row-27-feature', label: 'Row 27 (Feature)', icon: Maximize },
+  { value: 'row-28-29-horizontal', label: 'Row 28 & 29 (Horizontal)', icon: LayoutGrid },
+  { value: 'row-30-feature', label: 'Row 30 (Feature)', icon: Maximize },
 ];
 
 const CATEGORIES = [
@@ -63,8 +78,8 @@ export default function AdminPage() {
   const [formData, setFormData] = useState({
     upperText: '',
     lowerText: '',
-    upperTextSize: 30, // Updated from 24
-    lowerTextSize: 20, // Updated from 13
+    upperTextSize: 30,
+    lowerTextSize: 20,
     category: ['Ads'] as string[],
     youtubeId: '',
     thumbnailUrl: '',
@@ -129,8 +144,8 @@ export default function AdminPage() {
     setFormData({
       upperText: '',
       lowerText: '',
-      upperTextSize: 30, // Updated from 24
-      lowerTextSize: 20, // Updated from 13
+      upperTextSize: 30,
+      lowerTextSize: 20,
       category: ['Ads'],
       youtubeId: '',
       thumbnailUrl: '',
