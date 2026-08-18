@@ -224,6 +224,7 @@ export default function AdminPage() {
     <main className="min-h-screen bg-background text-foreground font-body">
       <VaelHeader />
       <div className="flex pt-32 min-h-screen">
+        {/* Management Sidebar */}
         <aside className="w-[450px] border-r border-white/5 bg-black/60 flex flex-col sticky top-32 h-[calc(100vh-8rem)] p-10 overflow-y-auto no-scrollbar">
           <Tabs defaultValue="videos" className="w-full">
             <TabsList className="bg-white/5 rounded-lg p-1 w-full grid grid-cols-2 mb-10">
@@ -269,7 +270,7 @@ export default function AdminPage() {
                       
                       {isSlotFull && !editingId && (
                         <div className="flex items-center gap-2 p-3 bg-primary/10 border border-primary/20 text-[9px] text-primary uppercase font-bold italic tracking-wider rounded-md">
-                          <AlertCircle className="w-3 h-3" /> Slot capacity reached.
+                          <AlertCircle className="w-3 h-3" /> Slot capacity reached for this layout row.
                         </div>
                       )}
                     </div>
@@ -297,13 +298,13 @@ export default function AdminPage() {
                     <div className="space-y-5">
                       <Label className="text-[9px] uppercase tracking-widest text-muted-foreground font-bold italic">Content Details</Label>
                       <div className="space-y-3">
-                        <Input placeholder="INTERNAL TITLE" className="rounded-md bg-background border-white/10 h-12 text-xs italic font-bold" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} />
-                        <Input placeholder="HEADING (UPPER TEXT)" className="rounded-md bg-background border-white/10 h-12 text-xs italic font-bold" value={formData.upperText} onChange={e => setFormData({...formData, upperText: e.target.value})} />
-                        <Input placeholder="SUBTEXT (LOWER TEXT)" className="rounded-md bg-background border-white/10 h-12 text-xs italic text-primary font-bold" value={formData.lowerText} onChange={e => setFormData({...formData, lowerText: e.target.value})} />
-                        <Input required placeholder="YOUTUBE LINK" className="rounded-md bg-background border-white/10 h-12 text-xs font-mono" value={formData.youtubeId} onChange={e => setFormData({...formData, youtubeId: e.target.value})} />
-                        <Input placeholder="CUSTOM THUMBNAIL URL" className="rounded-md bg-background border-white/10 h-12 text-xs font-mono" value={formData.thumbnailUrl} onChange={e => setFormData({...formData, thumbnailUrl: e.target.value})} />
+                        <Input placeholder="INTERNAL TITLE (FOR REFERENCE)" className="rounded-md bg-background border-white/10 h-12 text-xs italic font-bold" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} />
+                        <Input placeholder="HEADING (UPPER TEXT - WHITE)" className="rounded-md bg-background border-white/10 h-12 text-xs italic font-bold" value={formData.upperText} onChange={e => setFormData({...formData, upperText: e.target.value})} />
+                        <Input placeholder="SUBTEXT (LOWER TEXT - YELLOW)" className="rounded-md bg-background border-white/10 h-12 text-xs italic text-primary font-bold" value={formData.lowerText} onChange={e => setFormData({...formData, lowerText: e.target.value})} />
+                        <Input required placeholder="YOUTUBE LINK OR ID" className="rounded-md bg-background border-white/10 h-12 text-xs font-mono" value={formData.youtubeId} onChange={e => setFormData({...formData, youtubeId: e.target.value})} />
+                        <Input placeholder="CUSTOM THUMBNAIL URL (OPTIONAL)" className="rounded-md bg-background border-white/10 h-12 text-xs font-mono" value={formData.thumbnailUrl} onChange={e => setFormData({...formData, thumbnailUrl: e.target.value})} />
                         <div className="space-y-2">
-                          <Label className="text-[8px] uppercase tracking-widest text-white/20 font-bold italic">Sequence</Label>
+                          <Label className="text-[8px] uppercase tracking-widest text-white/20 font-bold italic">Series Sequence (Manual Re-order)</Label>
                           <Input type="number" className="rounded-md bg-background border-white/10 h-10 text-xs font-bold" value={formData.order} onChange={e => setFormData({...formData, order: Number(e.target.value)})} />
                         </div>
                       </div>
@@ -313,7 +314,7 @@ export default function AdminPage() {
                     "w-full rounded-md text-black text-[10px] tracking-[0.2em] uppercase font-bold py-8 italic shadow-2xl transition-all",
                     editingId ? "bg-primary hover:bg-white" : "bg-white hover:bg-primary"
                   )}>
-                    {isSubmitting ? <Loader2 className="animate-spin" /> : editingId ? 'Update Entry' : 'Publish Entry'}
+                    {isSubmitting ? <Loader2 className="animate-spin" /> : editingId ? 'Update Cinematic Entry' : 'Publish Cinematic Entry'}
                   </Button>
                 </form>
               </div>
@@ -326,18 +327,27 @@ export default function AdminPage() {
                   <Input placeholder="FORM HEADING" className="rounded-md bg-background border-white/10 h-12 text-xs italic font-bold" value={contactSettings.formHeading} onChange={e => setContactSettings({...contactSettings, formHeading: e.target.value})} />
                   <Textarea placeholder="SHORT WELCOME MESSAGE" className="rounded-md bg-background border-white/10 min-h-[120px] text-xs italic leading-relaxed" value={contactSettings.formDescription} onChange={e => setContactSettings({...contactSettings, formDescription: e.target.value})} />
                 </div>
+                <div className="space-y-5">
+                  <Label className="text-[9px] uppercase tracking-widest text-muted-foreground font-bold italic">Direct Contact & Socials</Label>
+                  <Input placeholder="PUBLIC EMAIL" className="rounded-md bg-background border-white/10 h-10 text-xs" value={contactSettings.email} onChange={e => setContactSettings({...contactSettings, email: e.target.value})} />
+                  <Input placeholder="LOCATIONS (MUMBAI, DELHI, ETC)" className="rounded-md bg-background border-white/10 h-10 text-xs" value={contactSettings.locations} onChange={e => setContactSettings({...contactSettings, locations: e.target.value})} />
+                  <Input placeholder="INSTAGRAM URL" className="rounded-md bg-background border-white/10 h-10 text-xs" value={contactSettings.instagram} onChange={e => setContactSettings({...contactSettings, instagram: e.target.value})} />
+                  <Input placeholder="WHATSAPP NUMBER" className="rounded-md bg-background border-white/10 h-10 text-xs" value={contactSettings.whatsapp} onChange={e => setContactSettings({...contactSettings, whatsapp: e.target.value})} />
+                </div>
                 <Button type="submit" disabled={isSavingSettings} className="w-full rounded-md bg-primary text-black text-[10px] tracking-[0.2em] uppercase font-bold py-8 italic shadow-2xl">
-                  {isSavingSettings ? <Loader2 className="animate-spin" /> : 'Synchronize Settings'}
+                  {isSavingSettings ? <Loader2 className="animate-spin" /> : 'Synchronize Studio Settings'}
                 </Button>
               </form>
             </TabsContent>
           </Tabs>
         </aside>
 
+        {/* Project Archive View */}
         <div className="flex-1 p-16 overflow-y-auto no-scrollbar bg-white/[0.01]">
           <div className="max-w-4xl mx-auto">
             <h1 className="text-6xl font-headline italic uppercase tracking-tighter mb-4 text-white">Project <span className="text-primary not-italic">Archive</span></h1>
-            
+            <p className="text-muted-foreground font-body text-sm tracking-widest uppercase mb-16 italic opacity-40">Manage your directorial series and placement sequence.</p>
+
             <div className="space-y-24">
               {PLACEMENT_TYPES.map(section => {
                 const videos = sortedVideos.filter(v => v.type === section.value);
@@ -351,7 +361,7 @@ export default function AdminPage() {
                         <div className="flex flex-col">
                           <h2 className="text-[12px] uppercase tracking-widest font-bold italic text-white">{section.label}</h2>
                           <span className="text-[8px] uppercase tracking-widest text-white/20 font-bold italic mt-1">
-                            Slots: {videos.length}
+                            {videos.length} / {section.limit === 99 ? '∞' : section.limit} Entries
                           </span>
                         </div>
                       </div>
@@ -379,11 +389,27 @@ export default function AdminPage() {
                                 )}
                               </div>
                               <div className="space-y-2">
-                                <h3 className="text-xl font-headline italic uppercase text-white tracking-normal">{v.upperText}</h3>
-                                <p className="text-[9px] uppercase tracking-[0.2em] text-primary font-bold italic">{v.lowerText}</p>
+                                <h3 className="text-xl font-headline italic uppercase text-white tracking-normal leading-none">{v.upperText || v.title}</h3>
+                                <div className="flex items-center gap-4">
+                                  <p className="text-[9px] uppercase tracking-[0.2em] text-primary font-bold italic">{v.lowerText}</p>
+                                  <span className="w-1 h-1 bg-white/10 rounded-full" />
+                                  <p className="text-[9px] uppercase tracking-widest text-white/20 font-bold italic">{v.title}</p>
+                                </div>
                               </div>
                             </div>
+                            
                             <div className="flex items-center gap-6">
+                              <div className="flex flex-col items-end gap-1">
+                                <span className="text-[8px] uppercase tracking-widest text-white/20 font-bold italic">Order</span>
+                                <input 
+                                  type="number" 
+                                  value={v.order || 0}
+                                  onChange={(e) => handleUpdateOrder(v.id, Number(e.target.value))}
+                                  disabled={isUpdatingOrder === v.id}
+                                  className="w-12 bg-transparent border-b border-white/10 text-[10px] text-center font-bold text-primary focus:outline-none focus:border-primary"
+                                />
+                              </div>
+
                               <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                   <button className="p-3 bg-white/5 hover:bg-white/10 text-white/20 hover:text-white transition-all rounded-md">
@@ -409,6 +435,12 @@ export default function AdminPage() {
                           </div>
                         );
                       })}
+                      {videos.length === 0 && (
+                        <div className="py-12 flex flex-col items-center justify-center opacity-10 border border-dashed border-white/20 rounded-lg">
+                          <ImageIcon className="w-8 h-8 mb-2" />
+                          <p className="text-[10px] uppercase tracking-[0.2em] font-bold italic">No entries for this row</p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 );

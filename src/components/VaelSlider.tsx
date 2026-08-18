@@ -8,7 +8,7 @@ import Image from 'next/image';
 import { useFirestore, useCollection } from '@/firebase';
 import { collection } from 'firebase/firestore';
 import { useMemoFirebase } from '@/firebase/firestore/use-collection';
-import { ChevronLeft, ChevronRight, Video } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Video, X } from 'lucide-react';
 import { getVideoType, getYoutubeThumbnail, extractYoutubeId } from '@/lib/video-utils';
 import { UnifiedVideoPlayer } from './UnifiedVideoPlayer';
 import {
@@ -18,6 +18,7 @@ import {
   DialogDescription,
   DialogPortal,
   DialogOverlay,
+  DialogClose,
 } from '@/components/ui/dialog';
 
 interface VideoData {
@@ -135,6 +136,7 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
                       )}
                     </div>
 
+                    {/* Content Overlay - Asian Paint Style: White Italic Upper / Yellow Tracking Lower */}
                     <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/95 to-transparent pointer-events-none z-10" />
 
                     {isActive && (
@@ -156,6 +158,7 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
           </div>
         </div>
 
+        {/* Minimalist Nav Arrows - Vertically Centered */}
         <button 
           onClick={scrollPrev}
           className="absolute left-[6%] md:left-[10%] top-1/2 -translate-y-1/2 z-40 p-3 transition-all group hover:scale-110 focus:outline-none"
@@ -164,7 +167,7 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
         </button>
         <button 
           onClick={scrollNext}
-          className="absolute right-[6%] md:right-[10%] top-1/2 -translate-y-1/2 z-40 p-3 transition-all group hover:scale-110 focus:outline-none"
+          className="absolute right-[6%] md:left-auto md:right-[10%] top-1/2 -translate-y-1/2 z-40 p-3 transition-all group hover:scale-110 focus:outline-none"
         >
           <ChevronRight className="w-6 h-6 md:w-8 md:h-8 text-white/40 group-hover:text-primary transition-colors" />
         </button>
@@ -177,7 +180,14 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
             <DialogTitle className="sr-only italic">{selectedVideo?.title}</DialogTitle>
             <DialogDescription className="sr-only">Cinematic entry view</DialogDescription>
             {selectedVideo && (
-              <UnifiedVideoPlayer url={selectedVideo.youtubeId} />
+              <div className="relative w-full h-full">
+                <UnifiedVideoPlayer url={selectedVideo.youtubeId} />
+                <DialogClose className="absolute top-6 right-6 z-[201]">
+                  <div className="w-10 h-10 bg-black/60 border border-white/10 flex items-center justify-center rounded-lg hover:bg-black transition-colors">
+                    <X className="w-5 h-5 text-white" />
+                  </div>
+                </DialogClose>
+              </div>
             )}
           </DialogContent>
         </DialogPortal>
