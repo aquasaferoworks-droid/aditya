@@ -81,7 +81,7 @@ export function VaelFilms({ activeCategory }: VaelFilmsProps) {
                       src={thumbUrl} 
                       alt={film.upperText || "Cinematic Work"}
                       fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-1000 opacity-70 group-hover:opacity-100"
+                      className="object-cover group-hover:scale-105 transition-transform duration-1000 opacity-80 group-hover:opacity-100"
                       unoptimized
                     />
                   ) : (
@@ -93,7 +93,7 @@ export function VaelFilms({ activeCategory }: VaelFilmsProps) {
                   <div className="absolute inset-0 bg-black/30 group-hover:bg-black/0 transition-colors duration-700" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-transparent z-10" />
                   
-                  <div className="absolute inset-x-0 bottom-0 z-30 p-10 flex flex-col justify-end translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-700 pointer-events-none">
+                  <div className="absolute inset-x-0 bottom-0 z-30 p-10 flex flex-col justify-end transition-all duration-700 pointer-events-none">
                     <h3 
                       className="font-headline text-white tracking-tight leading-none truncate mb-1"
                       style={{ fontSize: film.upperTextSize ? `${film.upperTextSize}px` : '32px' }}

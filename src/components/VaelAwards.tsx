@@ -19,9 +19,9 @@ export function VaelAwards() {
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 relative z-10">
         <div className="lg:col-span-5 space-y-12">
           <div className="space-y-4">
-            <span className="text-[10px] tracking-[0.6em] uppercase text-primary block font-bold">Kinetic Archive</span>
-            <h2 className="text-5xl md:text-8xl font-headline leading-[0.9] italic">
-              Industry <br /> <span className="text-primary not-italic">Honors</span>
+            <span className="text-[10px] tracking-raw-6 uppercase text-primary block font-bold">Kinetic Archive</span>
+            <h2 className="text-5xl md:text-8xl font-headline leading-[0.9]">
+              Industry <br /> <span className="text-primary font-normal">Honors</span>
             </h2>
           </div>
           <div className="relative pt-12">
@@ -38,7 +38,7 @@ export function VaelAwards() {
               <div className="flex items-center gap-10">
                 <span className="text-primary font-body text-[11px] tracking-widest font-bold min-w-[40px]">{award.year}</span>
                 <div className="space-y-1">
-                  <h3 className="text-xl md:text-2xl font-headline group-hover:text-primary transition-colors italic">{award.name}</h3>
+                  <h3 className="text-xl md:text-2xl font-headline group-hover:text-primary transition-colors">{award.name}</h3>
                   <p className="text-[10px] tracking-[0.2em] text-muted-foreground uppercase font-body">{award.film}</p>
                 </div>
               </div>

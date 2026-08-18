@@ -69,7 +69,7 @@ const VideoCard = ({ video, aspectRatio, onClick }: { video: VideoItem, aspectRa
       <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-700 z-10" />
       <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 to-transparent z-15 pointer-events-none" />
 
-      <div className="absolute bottom-0 left-0 right-0 z-30 p-6 md:p-8 flex flex-col justify-end transition-all duration-700 pointer-events-none translate-y-2 group-hover:translate-y-0">
+      <div className="absolute bottom-0 left-0 right-0 z-30 p-6 md:p-8 flex flex-col justify-end transition-all duration-700 pointer-events-none">
         <h3 
           className="font-headline text-white font-bold tracking-tight leading-none truncate mb-1"
           style={{ fontSize: video.upperTextSize ? `${video.upperTextSize}px` : '24px' }}

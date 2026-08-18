@@ -52,7 +52,7 @@ export function VaelLab() {
       <div className="max-w-6xl mx-auto space-y-16">
         <div className="text-center space-y-4">
           <span className="text-[10px] tracking-[0.5em] uppercase text-primary/60 block">R&D / Process</span>
-          <h2 className="text-4xl md:text-7xl font-headline italic">Director's <span className="text-primary not-italic">Lab</span></h2>
+          <h2 className="text-4xl md:text-7xl font-headline">Director's <span className="text-primary font-normal">Lab</span></h2>
           <p className="max-w-2xl mx-auto text-muted-foreground font-body text-sm leading-relaxed">
             Collaborative AI tools to translate abstract sparks into cinematic treatments. 
             Bridge the gap between vision and execution.
@@ -110,7 +110,7 @@ export function VaelLab() {
                         className="object-cover" 
                       />
                     </div>
-                    <p className="font-headline italic text-lg opacity-40">Waiting for your vision...</p>
+                    <p className="font-headline text-lg opacity-40">Waiting for your vision...</p>
                   </div>
                 )}
                 {isVisionLoading && (
@@ -137,7 +137,7 @@ export function VaelLab() {
                     </div>
                     <div className="space-y-3">
                       <h4 className="text-[10px] tracking-[0.2em] uppercase text-primary font-body">Atmosphere</h4>
-                      <p className="text-muted-foreground text-sm leading-relaxed italic">{visionResult.atmosphereDescription}</p>
+                      <p className="text-muted-foreground text-sm leading-relaxed">{visionResult.atmosphereDescription}</p>
                     </div>
                     <div className="space-y-3">
                       <h4 className="text-[10px] tracking-[0.2em] uppercase text-primary font-body">Cinematic Treatment</h4>
@@ -195,7 +195,7 @@ export function VaelLab() {
                         className="object-cover" 
                       />
                     </div>
-                    <p className="font-headline italic text-lg opacity-40">Define style and genre...</p>
+                    <p className="font-headline text-lg opacity-40">Define style and genre...</p>
                   </div>
                 )}
                 {isScriptLoading && (
@@ -223,15 +223,15 @@ export function VaelLab() {
                       <h4 className="text-[10px] tracking-[0.2em] uppercase text-primary font-body">Storytelling Hooks</h4>
                       <ul className="space-y-2 list-none">
                         {scriptResult.storytellingHooks.map((hook: string, i: number) => (
-                          <li key={i} className="text-muted-foreground text-sm flex gap-3 italic">
-                            <span className="text-primary not-italic font-bold">{i+1}.</span> {hook}
+                          <li key={i} className="text-muted-foreground text-sm flex gap-3">
+                            <span className="text-primary font-bold">{i+1}.</span> {hook}
                           </li>
                         ))}
                       </ul>
                     </div>
                     <div className="space-y-3">
                       <h4 className="text-[10px] tracking-[0.2em] uppercase text-primary font-body">Scene Directions</h4>
-                      <p className="text-foreground text-sm leading-relaxed font-body whitespace-pre-wrap border-l border-primary/20 pl-4 italic">{scriptResult.sceneDirections}</p>
+                      <p className="text-foreground text-sm leading-relaxed font-body whitespace-pre-wrap border-l border-primary/20 pl-4">{scriptResult.sceneDirections}</p>
                     </div>
                   </div>
                 )}
