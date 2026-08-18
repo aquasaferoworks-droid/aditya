@@ -96,13 +96,13 @@ export function VaelFilms({ activeCategory }: VaelFilmsProps) {
                   <div className="absolute inset-x-0 bottom-0 z-30 p-10 flex flex-col justify-end transition-all duration-700 pointer-events-none">
                     <h3 
                       className="font-headline text-white tracking-tight leading-none truncate mb-1"
-                      style={{ fontSize: film.upperTextSize ? `${film.upperTextSize}px` : '32px' }}
+                      style={{ fontSize: film.upperTextSize ? `${film.upperTextSize}px` : '30px' }}
                     >
                       {film.upperText}
                     </h3>
                     <span 
                       className="text-primary font-medium truncate tracking-tight"
-                      style={{ fontSize: film.lowerTextSize ? `${film.lowerTextSize}px` : '14px' }}
+                      style={{ fontSize: film.lowerTextSize ? `${film.lowerTextSize}px` : '20px' }}
                     >
                       {film.lowerText}
                     </span>

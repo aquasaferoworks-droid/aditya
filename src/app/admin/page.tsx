@@ -63,8 +63,8 @@ export default function AdminPage() {
   const [formData, setFormData] = useState({
     upperText: '',
     lowerText: '',
-    upperTextSize: 24,
-    lowerTextSize: 13,
+    upperTextSize: 30, // Updated from 24
+    lowerTextSize: 20, // Updated from 13
     category: ['Ads'] as string[],
     youtubeId: '',
     thumbnailUrl: '',
@@ -129,8 +129,8 @@ export default function AdminPage() {
     setFormData({
       upperText: '',
       lowerText: '',
-      upperTextSize: 24,
-      lowerTextSize: 13,
+      upperTextSize: 30, // Updated from 24
+      lowerTextSize: 20, // Updated from 13
       category: ['Ads'],
       youtubeId: '',
       thumbnailUrl: '',
@@ -211,8 +211,8 @@ export default function AdminPage() {
     setFormData({
       upperText: v.upperText || '',
       lowerText: v.lowerText || '',
-      upperTextSize: v.upperTextSize || 24,
-      lowerTextSize: v.lowerTextSize || 13,
+      upperTextSize: v.upperTextSize || 30,
+      lowerTextSize: v.lowerTextSize || 20,
       category: Array.isArray(v.category) ? v.category : [v.category],
       youtubeId: v.youtubeId || '',
       thumbnailUrl: v.thumbnailUrl || '',

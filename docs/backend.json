@@ -1,4 +1,3 @@
-
 {
   "entities": {
     "Video": {
@@ -15,8 +14,8 @@
         },
         "upperText": { "type": "string" },
         "lowerText": { "type": "string" },
-        "upperTextSize": { "type": "number", "default": 24 },
-        "lowerTextSize": { "type": "number", "default": 13 },
+        "upperTextSize": { "type": "number", "default": 30 },
+        "lowerTextSize": { "type": "number", "default": 20 },
         "meta": { "type": "string" },
         "award": { "type": "string" },
         "order": { "type": "number" }

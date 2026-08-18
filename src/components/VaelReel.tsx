@@ -72,13 +72,13 @@ const VideoCard = ({ video, aspectRatio, onClick }: { video: VideoItem, aspectRa
       <div className="absolute bottom-0 left-0 right-0 z-30 p-6 md:p-8 flex flex-col justify-end transition-all duration-700 pointer-events-none">
         <h3 
           className="font-headline text-white font-bold tracking-tight leading-none truncate mb-1"
-          style={{ fontSize: video.upperTextSize ? `${video.upperTextSize}px` : '24px' }}
+          style={{ fontSize: video.upperTextSize ? `${video.upperTextSize}px` : '30px' }}
         >
           {video.upperText}
         </h3>
         <span 
           className="text-primary font-medium block tracking-tight"
-          style={{ fontSize: video.lowerTextSize ? `${video.lowerTextSize}px` : '13px' }}
+          style={{ fontSize: video.lowerTextSize ? `${video.lowerTextSize}px` : '20px' }}
         >
           {video.lowerText}
         </span>
