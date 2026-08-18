@@ -119,6 +119,18 @@ export default function AdminPage() {
     });
   };
 
+  const updateRealtimeVideoFontSize = (type: 'upper' | 'lower', size: number) => {
+    if (!firestore || !editingId) return;
+    const docRef = doc(firestore, 'videos', editingId);
+    updateDoc(docRef, { [type === 'upper' ? 'upperTextSize' : 'lowerTextSize']: size });
+  };
+
+  const updateRealtimeLogoSize = (size: number) => {
+    if (!firestore) return;
+    const docRef = doc(firestore, 'settings', 'contact');
+    setDoc(docRef, { ...contactSettings, logoSize: size }, { merge: true });
+  };
+
   const handleCategoryToggle = (cat: string) => {
     setFormData(prev => {
       const current = prev.category;
@@ -297,9 +309,17 @@ export default function AdminPage() {
                           <div className="flex items-center justify-between mb-1">
                             <Label className="text-[10px] text-white/40 italic">Cinematic Heading</Label>
                             <div className="flex items-center gap-2">
-                              <button type="button" onClick={() => setFormData(f => ({...f, upperTextSize: Math.max(10, f.upperTextSize - 1)}))} className="p-1 text-white/40 hover:text-primary"><Minus className="w-3 h-3" /></button>
+                              <button type="button" onClick={() => {
+                                const newSize = Math.max(10, formData.upperTextSize - 1);
+                                setFormData(f => ({...f, upperTextSize: newSize}));
+                                updateRealtimeVideoFontSize('upper', newSize);
+                              }} className="p-1 text-white/40 hover:text-primary"><Minus className="w-3 h-3" /></button>
                               <span className="text-[10px] text-primary font-bold">{formData.upperTextSize}px</span>
-                              <button type="button" onClick={() => setFormData(f => ({...f, upperTextSize: Math.min(100, f.upperTextSize + 1)}))} className="p-1 text-white/40 hover:text-primary"><Plus className="w-3 h-3" /></button>
+                              <button type="button" onClick={() => {
+                                const newSize = Math.min(100, formData.upperTextSize + 1);
+                                setFormData(f => ({...f, upperTextSize: newSize}));
+                                updateRealtimeVideoFontSize('upper', newSize);
+                              }} className="p-1 text-white/40 hover:text-primary"><Plus className="w-3 h-3" /></button>
                             </div>
                           </div>
                           <Input placeholder="e.g. Pudin Hara" className="rounded-lg bg-background border-white/10 h-12 text-[13px] italic font-medium" value={formData.upperText} onChange={e => setFormData({...formData, upperText: e.target.value})} />
@@ -309,9 +329,17 @@ export default function AdminPage() {
                           <div className="flex items-center justify-between mb-1">
                             <Label className="text-[10px] text-white/40 italic">Cinematic Subtext</Label>
                             <div className="flex items-center gap-2">
-                              <button type="button" onClick={() => setFormData(f => ({...f, lowerTextSize: Math.max(8, f.lowerTextSize - 1)}))} className="p-1 text-white/40 hover:text-primary"><Minus className="w-3 h-3" /></button>
+                              <button type="button" onClick={() => {
+                                const newSize = Math.max(8, formData.lowerTextSize - 1);
+                                setFormData(f => ({...f, lowerTextSize: newSize}));
+                                updateRealtimeVideoFontSize('lower', newSize);
+                              }} className="p-1 text-white/40 hover:text-primary"><Minus className="w-3 h-3" /></button>
                               <span className="text-[10px] text-primary font-bold">{formData.lowerTextSize}px</span>
-                              <button type="button" onClick={() => setFormData(f => ({...f, lowerTextSize: Math.min(40, f.lowerTextSize + 1)}))} className="p-1 text-white/40 hover:text-primary"><Plus className="w-3 h-3" /></button>
+                              <button type="button" onClick={() => {
+                                const newSize = Math.min(40, formData.lowerTextSize + 1);
+                                setFormData(f => ({...f, lowerTextSize: newSize}));
+                                updateRealtimeVideoFontSize('lower', newSize);
+                              }} className="p-1 text-white/40 hover:text-primary"><Plus className="w-3 h-3" /></button>
                             </div>
                           </div>
                           <Input placeholder="e.g. Nation On Vacation" className="rounded-lg bg-background border-white/10 h-12 text-[13px] italic text-primary font-medium" value={formData.lowerText} onChange={e => setFormData({...formData, lowerText: e.target.value})} />
@@ -345,9 +373,17 @@ export default function AdminPage() {
                     <div className="flex items-center justify-between mb-1">
                       <Label className="text-[10px] text-white/40 italic">Logo Font Size</Label>
                       <div className="flex items-center gap-2">
-                        <button type="button" onClick={() => setContactSettings(s => ({...s, logoSize: Math.max(12, s.logoSize - 1)}))} className="p-1 text-white/40 hover:text-primary"><Minus className="w-3 h-3" /></button>
+                        <button type="button" onClick={() => {
+                          const newSize = Math.max(12, contactSettings.logoSize - 1);
+                          setContactSettings(s => ({...s, logoSize: newSize}));
+                          updateRealtimeLogoSize(newSize);
+                        }} className="p-1 text-white/40 hover:text-primary"><Minus className="w-3 h-3" /></button>
                         <span className="text-[10px] text-primary font-bold">{contactSettings.logoSize}px</span>
-                        <button type="button" onClick={() => setContactSettings(s => ({...s, logoSize: Math.min(60, s.logoSize + 1)}))} className="p-1 text-white/40 hover:text-primary"><Plus className="w-3 h-3" /></button>
+                        <button type="button" onClick={() => {
+                          const newSize = Math.min(60, contactSettings.logoSize + 1);
+                          setContactSettings(s => ({...s, logoSize: newSize}));
+                          updateRealtimeLogoSize(newSize);
+                        }} className="p-1 text-white/40 hover:text-primary"><Plus className="w-3 h-3" /></button>
                       </div>
                     </div>
                   </div>
