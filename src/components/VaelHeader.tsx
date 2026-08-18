@@ -1,4 +1,3 @@
-
 'use client';
 
 import Link from 'next/link';
@@ -48,7 +47,7 @@ export function VaelHeader() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-[300] bg-black border-b border-white/5">
-      {/* Primary Brand Bar */}
+      {/* Brand Bar */}
       <nav className={cn(
         "px-6 md:px-16 flex items-center justify-between transition-all duration-300",
         isScrolled ? "h-14" : "h-20"
@@ -56,8 +55,8 @@ export function VaelHeader() {
         <div className="flex-1 hidden md:block" />
 
         <div className="flex-none text-center">
-          <Link href="/" className="font-headline text-2xl tracking-tight hover:opacity-90 transition-opacity block">
-            <span className="text-primary font-medium italic">Errol</span> <span className="text-white font-medium italic">Aditya</span>
+          <Link href="/" className="font-headline text-2xl tracking-tight hover:opacity-90 transition-opacity block font-medium italic">
+            <span className="text-primary">Errol</span> <span className="text-white">Aditya</span>
           </Link>
         </div>
 
@@ -71,7 +70,7 @@ export function VaelHeader() {
         </div>
       </nav>
 
-      {/* Secondary Category Bar - Tightened & Larger Visible Labels */}
+      {/* Category Bar */}
       <div className="relative group bg-black h-12 flex items-center border-t border-white/5 overflow-hidden">
         <div className="absolute left-0 top-0 bottom-0 w-24 z-10 pointer-events-none nav-fade-left" />
         <div className="absolute right-0 top-0 bottom-0 w-24 z-10 pointer-events-none nav-fade-right" />
