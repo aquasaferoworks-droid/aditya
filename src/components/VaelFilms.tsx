@@ -1,4 +1,3 @@
-
 'use client';
 
 import Image from 'next/image';
@@ -36,7 +35,7 @@ export function VaelFilms() {
   
   const rawFilms = (allVideos || []).sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
 
-  const films = activeCategory === 'All' 
+  const films = activeCategory.toLowerCase() === 'all' 
     ? rawFilms 
     : rawFilms.filter((v: any) => {
         const categories = v.category;

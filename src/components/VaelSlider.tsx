@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
@@ -55,7 +54,8 @@ export function VaelSlider({ activeCategory }: VaelSliderProps) {
     .filter(v => {
       const isSlider = v.type === 'slider';
       if (!isSlider) return false;
-      if (activeCategory === 'All') return true;
+      // Case-insensitive check for 'All'
+      if (activeCategory.toLowerCase() === 'all') return true;
       const categories = Array.isArray(v.category) ? v.category : [v.category];
       return categories.some(c => c?.toLowerCase() === activeCategory.toLowerCase());
     })

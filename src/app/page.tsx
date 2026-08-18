@@ -8,7 +8,8 @@ export default async function Home(props: {
   searchParams: Promise<{ category?: string }>;
 }) {
   const searchParams = await props.searchParams;
-  const activeCategory = searchParams.category || 'all';
+  // Standardize default category to 'All' to match component logic
+  const activeCategory = searchParams.category || 'All';
 
   return (
     <main className="relative bg-background min-h-screen selection:bg-primary/30">

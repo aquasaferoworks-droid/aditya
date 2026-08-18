@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState } from 'react';
@@ -100,7 +99,8 @@ export function VaelReel({ activeCategory }: VaelReelProps) {
   const { data: allVideos, loading } = useCollection(reelQuery);
 
   const filteredVideos = (allVideos as VideoItem[] || []).filter(v => {
-    if (activeCategory === 'All') return true;
+    // Case-insensitive check for 'All'
+    if (activeCategory.toLowerCase() === 'all') return true;
     const categories = Array.isArray(v.category) ? v.category : [v.category];
     return categories.some(c => c?.toLowerCase() === activeCategory.toLowerCase());
   }).sort((a, b) => (a.order || 0) - (b.order || 0));
