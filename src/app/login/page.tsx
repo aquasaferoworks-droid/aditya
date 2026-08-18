@@ -52,7 +52,7 @@ export default function LoginPage() {
     <div className="min-h-screen bg-black flex items-center justify-center overflow-hidden p-4">
       <div className="w-full relative max-w-5xl overflow-hidden flex flex-col md:flex-row shadow-2xl rounded-2xl border border-white/5 bg-zinc-950/50 backdrop-blur-xl">
         
-        {/* Background Visuals */}
+        {/* Cinematic Visual Background */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-black via-transparent to-transparent opacity-60 z-10" />
           <div className="flex absolute z-0 opacity-10">
@@ -65,14 +65,14 @@ export default function LoginPage() {
  
         <div className="bg-black/40 p-8 md:p-16 md:w-1/2 relative flex flex-col justify-center border-b md:border-b-0 md:border-r border-white/5 z-20">
           <div className="space-y-6">
-            <Link href="/" className="font-headline text-2xl italic tracking-tight block">
+            <Link href="/" className="font-headline text-2xl italic tracking-tight block font-medium">
               <span className="text-primary">Errol</span> <span className="text-white">Aditya</span>
             </Link>
-            <h1 className="text-4xl md:text-5xl font-headline italic font-bold leading-tight tracking-tighter text-white">
+            <h1 className="text-4xl md:text-5xl font-headline italic font-medium leading-tight tracking-tighter text-white">
               Studio <br /> <span className="text-primary not-italic font-light">Access Portal</span>
             </h1>
             <p className="text-white/40 font-body text-sm leading-relaxed max-w-xs italic border-l border-primary/20 pl-4">
-              Authorized personnel only. Enter your credentials to manage the architectural archive.
+              Architecture of Emotion. Enter your directorial credentials to manage the cinematic archive.
             </p>
           </div>
         </div>
@@ -82,7 +82,7 @@ export default function LoginPage() {
             <div className="text-primary mb-6">
               <Sunburst className="h-10 w-10" />
             </div>
-            <h2 className="text-3xl font-headline italic text-white tracking-tight mb-2">Welcome Back</h2>
+            <h2 className="text-3xl font-headline italic text-white tracking-tight mb-2 font-medium">Welcome Back</h2>
             <p className="text-white/40 text-sm font-body italic">Identify yourself — Access the archive.</p>
           </div>
  
@@ -120,17 +120,10 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-primary hover:bg-white text-black font-headline italic font-bold py-4 rounded-lg transition-all flex items-center justify-center gap-2 shadow-2xl"
+              className="w-full bg-primary hover:bg-white text-black font-headline italic font-medium py-4 rounded-lg transition-all flex items-center justify-center gap-2 shadow-2xl"
             >
               {loading ? <Loader2 className="animate-spin" /> : "Access Directorial Studio"}
             </button>
- 
-            <div className="text-center text-white/40 text-xs font-body italic">
-              New studio instance?{" "}
-              <Link href="/signup" className="text-white hover:text-primary underline transition-colors">
-                Initialize Studio
-              </Link>
-            </div>
           </form>
         </div>
       </div>
